@@ -1,0 +1,1 @@
+/usr/bin/c++     CMakeFiles/my_server.dir/router/routes.cpp.o CMakeFiles/my_server.dir/server.cpp.o CMakeFiles/my_server.dir/utils/request/Request.cpp.o  -o my_server 
