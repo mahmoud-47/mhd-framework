@@ -1,3 +1,0 @@
-/home/mhd/mhd-framework/build/CMakeFiles/application.dir
-/home/mhd/mhd-framework/build/CMakeFiles/edit_cache.dir
-/home/mhd/mhd-framework/build/CMakeFiles/rebuild_cache.dir
