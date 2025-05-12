@@ -47,6 +47,7 @@ chmod +x run.sh
 This project is licensed under the MIT License – feel free to use, modify, and distribute.
 
 ## 👨‍💻 Author
+
 Made with ❤️ by Mohamed Gaye
 
 
