@@ -17,7 +17,7 @@ struct URLPattern{
     /**
      * Function from the controllers
      */
-    void (*f)(Request*);
+    void (*controller)(Request);
 };
 
 #endif

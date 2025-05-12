@@ -1,28 +1,26 @@
+
+# Consider dependencies only in project.
+set(CMAKE_DEPENDS_IN_PROJECT_ONLY OFF)
+
 # The set of languages for which implicit dependencies are needed:
 set(CMAKE_DEPENDS_LANGUAGES
-  "CXX"
-  )
-# The set of files for implicit dependencies of each language:
-set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/mhd/Documents/C++/server/router/routes.cpp" "/home/mhd/Documents/C++/server/build/CMakeFiles/my_server.dir/router/routes.cpp.o"
-  "/home/mhd/Documents/C++/server/server.cpp" "/home/mhd/Documents/C++/server/build/CMakeFiles/my_server.dir/server.cpp.o"
-  "/home/mhd/Documents/C++/server/utils/request/Request.cpp" "/home/mhd/Documents/C++/server/build/CMakeFiles/my_server.dir/utils/request/Request.cpp.o"
-  )
-set(CMAKE_CXX_COMPILER_ID "GNU")
-
-# The include file search paths:
-set(CMAKE_CXX_TARGET_INCLUDE_PATH
-  "../"
-  "../router"
-  "../utils"
-  "../utils/request"
-  "../controllers"
-  "../database"
-  "../server"
   )
 
-# Targets to which this target links.
-set(CMAKE_TARGET_LINKED_INFO_FILES
+# The set of dependency files which are needed:
+set(CMAKE_DEPENDS_DEPENDENCY_FILES
+  "/home/mhd/mhd-framework/server.cpp" "CMakeFiles/my_server.dir/server.cpp.o" "gcc" "CMakeFiles/my_server.dir/server.cpp.o.d"
+  "/home/mhd/mhd-framework/utils/current_path/current_path.cpp" "CMakeFiles/my_server.dir/utils/current_path/current_path.cpp.o" "gcc" "CMakeFiles/my_server.dir/utils/current_path/current_path.cpp.o.d"
+  "/home/mhd/mhd-framework/utils/render/HttpRender.cpp" "CMakeFiles/my_server.dir/utils/render/HttpRender.cpp.o" "gcc" "CMakeFiles/my_server.dir/utils/render/HttpRender.cpp.o.d"
+  "/home/mhd/mhd-framework/utils/request/Request.cpp" "CMakeFiles/my_server.dir/utils/request/Request.cpp.o" "gcc" "CMakeFiles/my_server.dir/utils/request/Request.cpp.o.d"
+  "/home/mhd/mhd-framework/utils/route/routes.cpp" "CMakeFiles/my_server.dir/utils/route/routes.cpp.o" "gcc" "CMakeFiles/my_server.dir/utils/route/routes.cpp.o.d"
+  )
+
+# Targets to which this target links which contain Fortran sources.
+set(CMAKE_Fortran_TARGET_LINKED_INFO_FILES
+  )
+
+# Targets to which this target links which contain Fortran sources.
+set(CMAKE_Fortran_TARGET_FORWARD_LINKED_INFO_FILES
   )
 
 # Fortran module output directory.

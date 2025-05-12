@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/application.dir/server.cpp.o CMakeFiles/application.dir/utils/current_path/current_path.cpp.o CMakeFiles/application.dir/utils/render/HttpRender.cpp.o CMakeFiles/application.dir/utils/request/Request.cpp.o CMakeFiles/application.dir/utils/route/routes.cpp.o -o application 

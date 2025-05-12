@@ -1,7 +1,9 @@
 #ifndef __MHD_FRAM_REQUEST_
 #define __MHD_FRAM_REQUEST_
-#include<string>
+#include <string>
 #include <sstream>
+#include <vector>
+#include <unordered_map>
 
 
 /**
@@ -33,6 +35,10 @@ class Request{
          * Format of the url
          */
         std::string urlFormat;
+        /**
+         * Socket
+         */
+        int socket;
 
 
         /**********  Computations */
@@ -53,10 +59,8 @@ class Request{
          * Set the Hostname from the buffer
          */
         void setHostanameFromBuffer();
-        /**
-         * Get parameter by parameter name as string
-         */
-        std::string getGETParameterByParameterName(const std::string parameterName);
+
+        
 
     public:
         Request() = default;
@@ -81,9 +85,47 @@ class Request{
          */
         std::string getHostName() const;
         /**
+         * Get Socket
+         */
+        int getSocket() const;
+        /**
+         * Get Header value
+         */
+        std::string getHeaderValue(const std::string& headerName);
+        /**
          * Set the url pattern
          */
         void setUrlFormat(std::string urlFormat);
+        /**
+         * Set Socket
+         */
+        void setSocket(int socket);
+        /**
+         * Client wants HTML
+         */
+        bool clientWantsHtml() const;
+        /**
+         * Client wants Anything
+         */
+        bool clientWantAnything() const;
+
+        /*---------------- GET METHOD*/
+
+        /**
+         * Get parameter by parameter name as string
+         */
+        std::string getGETParameterByParameterName(const std::string parameterName);
+
+        /**
+         * Get Query parameter by name (?var=val)
+         */
+        std::string getQueryParameterByParameterName(const std::string parameterName);
+
+        /*---------------- POST METHOD*/
+        /**
+         * Get Form data parameter by name 
+         */
+        std::string getFormDataParameterByParameterName(const std::string parameterName);
 };
 
 #endif

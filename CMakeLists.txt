@@ -18,9 +18,10 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/router
     ${CMAKE_SOURCE_DIR}/utils
     ${CMAKE_SOURCE_DIR}/utils/request
+    ${CMAKE_SOURCE_DIR}/utils/render
     ${CMAKE_SOURCE_DIR}/controllers
     ${CMAKE_SOURCE_DIR}/database
     ${CMAKE_SOURCE_DIR}/server
 )
 
-add_executable(my_server ${SRC_FILES})
+add_executable(application ${SRC_FILES})
