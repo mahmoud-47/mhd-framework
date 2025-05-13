@@ -4,6 +4,8 @@
 
 > ⚠️ **Note:** This project currently runs **only on Linux**.
 
+> ⚠️ **Note:** Make sure you have **sqlite** installed, otherwise run **sudo apt-get install libsqlite3-dev**.
+
 ---
 
 ## 🚀 Getting Started

@@ -10,6 +10,7 @@
 #include "utils/URLPattern.hpp"
 #include "urls/urls.hpp"
 #include "utils/functions.hpp"
+#include "Models/Migration/migrations.hpp"
 
 int main() {
     int server_fd, new_socket;
@@ -58,6 +59,9 @@ int main() {
     std::cout << "Base dir = " << getBaseDirectory() << std::endl;
     std::cout << "Templates dir = " << TEMPLATES_DIR << std::endl;
     std::cout << "Static dir = " << STATIC_DIR << std::endl;
+
+    /************* Migrations */
+    initialize_tables();
 
     /************* Route */
     Route *routes = new Route;

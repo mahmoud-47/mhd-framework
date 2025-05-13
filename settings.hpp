@@ -20,6 +20,12 @@
 
     // SQLITE
     const std::string DATABASE_PATH = getBaseDirectory() + "/database/db.sqlite";
+
+    // SHOW SQL queries
+    const bool showSQLQueries = true;
+
+    // DROP SQL TABLE AND Recreate them
+    const bool dropRecreateTables = true;
     
 
 #endif

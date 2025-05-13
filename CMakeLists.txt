@@ -12,6 +12,12 @@ file(GLOB_RECURSE SRC_FILES
 # Filter out any files from CMakeFiles directory (e.g., CMakeCXXCompilerId.cpp)
 list(FILTER SRC_FILES EXCLUDE REGEX ".*CMakeFiles/.*")
 
+# Find SQLite3
+find_package(SQLite3 REQUIRED)
+
+if (NOT SQLite3_FOUND)
+    message(FATAL_ERROR "SQLite3 not found. Please install it with: sudo apt-get install libsqlite3-dev")
+endif()
 
 include_directories(
     ${CMAKE_SOURCE_DIR}
@@ -22,6 +28,10 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/controllers
     ${CMAKE_SOURCE_DIR}/database
     ${CMAKE_SOURCE_DIR}/server
+    ${SQLite3_INCLUDE_DIRS}
 )
 
 add_executable(application ${SRC_FILES})
+
+# Link against SQLite3
+target_link_libraries(application ${SQLite3_LIBRARIES})

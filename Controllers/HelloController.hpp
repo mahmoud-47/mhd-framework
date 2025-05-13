@@ -38,6 +38,7 @@
                 }
                 renderText(request, message);
             }
+
     };
 
 #endif
