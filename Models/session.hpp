@@ -27,6 +27,22 @@ public:
         this->value = value;
         registerFields();
     }
+
+    // Proper copy constructor
+    Session(const Session& other) : SQLiteORM(other), 
+                            session_id(other.session_id),
+                            key(other.key),
+                            value(other.value) {
+        registerFields();  // This updates the pointers to our new members
+    }
+
+    // Virtual destructor
+    virtual ~Session() = default;
+
+    ORMModel* clone() const override {
+        return new Session(*this);
+    }
+
 };
 
 #endif

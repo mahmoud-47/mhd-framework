@@ -9,39 +9,9 @@ public:
     std::string name;
     std::string email;
 
-    // Getter for id
-    int getId() const {
-        return id;
-    }
-
-    // Setter for id
-    void setId(int newId) {
-        id = newId;
-    }
-
-    // Getter for name
-    std::string getName() const {
-        return name;
-    }
-
-    // Setter for name
-    void setName(const std::string& newName) {
-        name = newName;
-    }
-
-    // Getter for email
-    std::string getEmail() const {
-        return email;
-    }
-
-    // Setter for email
-    void setEmail(const std::string& newEmail) {
-        email = newEmail;
-    }
 
     void registerFields(){
         fields.clear();
-
         fields.push_back({"id", "INTEGER", &id, "PRIMARY KEY"});
         fields.push_back({"name", "TEXT", &name, ""});
         fields.push_back({"email", "TEXT", &email, "UNIQUE"});
@@ -49,13 +19,27 @@ public:
 
     User() : SQLiteORM("users") {
         registerFields();
-    };
+    }
 
-    User(const int id, const std::string& name, const std::string& email) : SQLiteORM("users") {
-        this->id = id;
-        this->name = name;
-        this->email = email;
+    // Proper copy constructor
+    User(const User& other) : SQLiteORM(other), 
+                            id(other.id),
+                            name(other.name),
+                            email(other.email) {
+        registerFields();  // This updates the pointers to our new members
+    }
+
+    // Parameterized constructor
+    User(const int id, const std::string& name, const std::string& email) : 
+        SQLiteORM("users"), id(id), name(name), email(email) {
         registerFields();
+    }
+
+    // Virtual destructor
+    virtual ~User() = default;
+
+    ORMModel* clone() const override {
+        return new User(*this);
     }
 };
 

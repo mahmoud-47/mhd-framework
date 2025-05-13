@@ -43,6 +43,8 @@ public:
     std::vector<Field> fields;
 
     ORMModel(const std::string& name) : table_name(name) {}
+
+    virtual ORMModel* clone() const = 0;
     
     // // Add the fields and link them to the class
     // virtual void registerFields() = 0;

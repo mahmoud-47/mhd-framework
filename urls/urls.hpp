@@ -5,9 +5,15 @@
 
 // Url format = {"name", "url/{id}", HelloController::Controller}
 URLPattern urls[] = {
+    // Hello URLS
     {"hello", "/", HelloController::Hello},
     {"documentation", "/documentation", HelloController::Documentation},
     {"string", "/string/{id}", HelloController::HelloString},
+
+    // User URLS
     {"adduser", "/adduser", UserController::createUser},
-    {"getuser", "/getuser/{userId}", UserController::getUser}
+    {"getuser", "/getuser/{userId}", UserController::getUser},
+    {"getusers", "/getusers", UserController::getAllUsers},
+    {"deluser", "/deluser/{userId}", UserController::deluser},
+    {"updateUser", "/updateuser/{userId}", UserController::updateUser}
 };

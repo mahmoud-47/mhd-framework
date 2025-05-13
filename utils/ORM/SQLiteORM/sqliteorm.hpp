@@ -22,6 +22,10 @@ public:
         }
     }
 
+    ORMModel* clone() const {
+        return new SQLiteORM(*this);
+    }
+
     // SQLiteORM() : ORMModel("default_table_name") {
     //     db = nullptr;
     // }
