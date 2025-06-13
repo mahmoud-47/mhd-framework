@@ -45,7 +45,7 @@
             static void TestParser(Request request){
                 std::map<std::string, std::string> context;
                 context["name"] = "World !!"; 
-                context["role"] = "true"; 
+                context["role"] = "false"; 
                 return renderHtml(request, "parse.html", context);
             }
 

@@ -63,7 +63,8 @@ std::string parseHtmlCode(const std::string &html, std::map<std::string, std::st
                 }
             } else {
                 if (elseTag != std::string::npos && elseTag < endTag) {
-                    rendered += parseHtmlCode(html.substr(elseTag + 9, endTag - (elseTag + 9)), context);
+                    // Fixed: {{ else }} is 10 characters, not 9
+                    rendered += parseHtmlCode(html.substr(elseTag + 10, endTag - (elseTag + 10)), context);
                 }
             }
 
