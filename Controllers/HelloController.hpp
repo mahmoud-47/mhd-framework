@@ -10,13 +10,15 @@
             // Hello World controller
             static void Hello(Request request){
                 std::string templatename = "hello.html";
-                renderHtml(request, templatename);
+                std::map<std::string, std::string> context;
+                renderHtml(request, templatename, context);
             }
 
             // Documentation Controller
             static void Documentation(Request request){
                 std::string templatename = "documentation.html";
-                renderHtml(request, templatename);
+                std::map<std::string, std::string> context;
+                renderHtml(request, templatename, context);
             }
 
             // Controller that returns a string
@@ -37,6 +39,14 @@
                     message += "<br>POST parameter fkey4 = \"" + request.getFormDataParameterByParameterName("fkey4") + "\"";
                 }
                 renderText(request, message);
+            }
+
+            // test parser
+            static void TestParser(Request request){
+                std::map<std::string, std::string> context;
+                context["name"] = "World !!"; 
+                context["role"] = "true"; 
+                return renderHtml(request, "parse.html", context);
             }
 
     };

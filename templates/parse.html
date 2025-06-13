@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Welcome {{ name }}</h1>
+
+    {{ if role }}
+    <p>Welcome Admin</p>
+    <b>bloc 1</b>
+    {{ else }}
+    <p>Access denied</p>
+    <b>bloc 2</b>
+    {{ end }}
+</body>
+</html>

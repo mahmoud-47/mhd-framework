@@ -2,7 +2,7 @@
 #define __MHD_MIGRATIONS__
 
     /**
-     * Add your model pointers in the models array
+     * Hii, Add your model pointers in the models array
      */
 
     #include <vector>

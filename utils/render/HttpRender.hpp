@@ -15,7 +15,7 @@
     std::string readHtmlFile(const std::string& filepath);
 
     // Has to take context after
-    void renderHtml(Request request ,const std::string& filepath);
+    void renderHtml(Request request ,const std::string& filepath, std::map<std::string, std::string>& context);
 
     // Render text
     void renderText(Request request ,const std::string& text);

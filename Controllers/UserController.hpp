@@ -14,7 +14,7 @@
                 User mhd(1, "Mohamed", "Gaye");
                 User csroot(2, "CS", "Root");
                 User Jule(3, "Jul", "Le");
-                User akuna(4, "Akuna", "Matat");
+                User akuna(4, "Akuna", "Matata");
                 User Ndarei(5, "Khady", "Ndarei");
                 try{
                     mhd.save();
@@ -35,8 +35,8 @@
                 User* userPtr = dynamic_cast<User*>(userquery.find_by_id(userId));
                 std::string message = "";
                 if(userPtr)
-                message += "User name = " + userPtr->name + " Email = " + userPtr->email + 
-                " Id = " + std::to_string(userPtr->id);
+                    message += "User name = " + userPtr->name + " Email = " + userPtr->email + 
+                    " Id = " + std::to_string(userPtr->id);
                 if(userPtr == nullptr) message += "Null";
                 renderText(request, message);
             }
@@ -68,7 +68,7 @@
                     }
                 }
                 
-                // Don't forget to clean up memory
+                // clean up memory
                 for (auto* model : allusers) {
                     delete model;
                 }

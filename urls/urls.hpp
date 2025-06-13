@@ -9,6 +9,7 @@ URLPattern urls[] = {
     {"hello", "/", HelloController::Hello},
     {"documentation", "/documentation", HelloController::Documentation},
     {"string", "/string/{id}", HelloController::HelloString},
+    {"parse", "/test-parse", HelloController::TestParser},
 
     // User URLS
     {"adduser", "/adduser", UserController::createUser},
