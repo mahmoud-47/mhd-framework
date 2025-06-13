@@ -17,6 +17,24 @@
             // create a client
             static void Create(Request request){
                 std::string templatename = "clients/create.html";
+
+                if(request.getMethod() == "POST"){
+                    std::string name = request.getFormDataParameterByParameterName("name");
+                    std::string email = request.getFormDataParameterByParameterName("email");
+                    std::string phone = request.getFormDataParameterByParameterName("phone");
+                    std::string company = request.getFormDataParameterByParameterName("company");
+                    std::string notes = request.getFormDataParameterByParameterName("notes");
+
+                    // Debug output
+                    std::cout << "----- Form Data Received -----" << std::endl;
+                    std::cout << "Name: " << name << std::endl;
+                    std::cout << "Email: " << email << std::endl;
+                    std::cout << "Phone: " << phone << std::endl;
+                    std::cout << "Company: " << company << std::endl;
+                    std::cout << "Notes: " << notes << std::endl;
+                    std::cout << "-----------------------------" << std::endl;
+                }
+                
                 Context context;
                 renderHtml(request, templatename, context);
             }

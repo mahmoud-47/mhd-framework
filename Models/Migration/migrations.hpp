@@ -11,6 +11,7 @@
     // Include the tables here
     #include "../user.hpp"
     #include "../session.hpp"
+    #include "../client.hpp"
 
     void initialize_tables() {
         // Create Model objects
@@ -18,7 +19,8 @@
         // *** Add your classes here (new Model)
         ORMModel* models[] = {
             new User,
-            new Session
+            new Session,
+            new Client
         };
 
         if(dropRecreateTables){
