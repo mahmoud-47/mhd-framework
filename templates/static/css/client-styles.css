@@ -1,38 +1,48 @@
 body {
-  font-family: Arial, sans-serif;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   margin: 0;
   padding: 20px;
-  background: #f4f4f4;
+  background: #f0f2f5;
 }
 
-header {
+.header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   margin-bottom: 20px;
 }
 
 h1 {
   margin: 0;
+  font-size: 1.8em;
 }
 
 .btn {
-  padding: 10px 15px;
+  padding: 10px 16px;
   background: #007bff;
   color: white;
   text-decoration: none;
   border: none;
-  border-radius: 5px;
+  border-radius: 6px;
   cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.btn:hover {
+  background: #0056b3;
 }
 
 .btn.small {
-  padding: 5px 10px;
-  font-size: 0.9em;
+  padding: 6px 10px;
+  font-size: 0.85em;
 }
 
 .btn.secondary {
-  background: gray;
+  background: #6c757d;
 }
 
 .btn.danger {
@@ -41,37 +51,67 @@ h1 {
 
 main {
   background: white;
-  padding: 20px;
-  border-radius: 8px;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
-form input, form textarea {
+.client-form input,
+.client-form textarea {
   display: block;
   width: 100%;
-  margin-bottom: 10px;
-  padding: 8px;
-  border-radius: 5px;
+  margin-bottom: 15px;
+  padding: 10px;
+  border-radius: 6px;
   border: 1px solid #ccc;
+  font-size: 1em;
 }
 
-table {
-  width: 100%;
-  border-collapse: collapse;
+.form-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.client-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+}
+
+.client-card {
   background: white;
-  border-radius: 8px;
-  overflow: hidden;
+  border-radius: 10px;
+  padding: 15px;
+  text-align: center;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  font-size: 0.9em;
 }
 
-table th, table td {
-  padding: 12px;
-  border-bottom: 1px solid #ddd;
+.client-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 10px;
 }
 
-table th {
-  background: #007bff;
-  color: white;
+.client-avatar.center {
+  display: block;
+  margin: 0 auto 15px auto;
 }
 
-table tr:hover {
-  background: #f1f1f1;
+.card-actions {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.client-profile {
+  text-align: center;
+}
+
+.client-profile p {
+  font-size: 1em;
+  margin: 8px 0;
 }

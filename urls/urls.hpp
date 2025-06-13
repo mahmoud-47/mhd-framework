@@ -22,5 +22,6 @@ URLPattern urls[] = {
     // Client URLS
     {"display-all", "/clients/all", ClientController::DisplayAll},
     {"create-client", "/clients/create", ClientController::Create},
-    {"edit-client", "/clients/edit", ClientController::Update}
+    {"edit-client", "/clients/edit/{id}", ClientController::Update},
+    {"detail-client", "/clients/details/{id}", ClientController::Details}
 };

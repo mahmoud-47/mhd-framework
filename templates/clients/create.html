@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -6,16 +7,19 @@
   <link rel="stylesheet" href="/static/css/client-styles.css">
 </head>
 <body>
-  <header><h1>Create Client</h1></header>
+  <header class="header"><h1>Create Client</h1></header>
   <main>
-    <form action="#">
-      <input type="text" placeholder="Name" required>
-      <input type="email" placeholder="Email">
-      <input type="tel" placeholder="Phone">
-      <input type="text" placeholder="Company">
-      <textarea placeholder="Notes"></textarea>
-      <button type="submit" class="btn">Save</button>
-      <a href="client-list.html" class="btn secondary">Cancel</a>
+    <form method="post" class="client-form">
+      <img src="https://avatars.githubusercontent.com/u/77865928?v=4" alt="Client Avatar" class="client-avatar center">
+      <input type="text" placeholder="Name" required name="name">
+      <input type="email" placeholder="Email" name="email">
+      <input type="tel" placeholder="Phone" name="phone">
+      <input type="text" placeholder="Company" name="Company">
+      <textarea placeholder="Notes" name="notes"></textarea>
+      <div class="form-actions">
+        <button type="submit" class="btn">Save</button>
+        <a href="client-list.html" class="btn secondary">Cancel</a>
+      </div>
     </form>
   </main>
 </body>

@@ -7,34 +7,27 @@
   <link rel="stylesheet" href="/static/css/client-styles.css">
 </head>
 <body>
-  <header>
+  <header class="header">
     <h1>Clients</h1>
-    <a href="client-create.html" class="btn">Add Client</a>
+    <a href="client-create.html" class="btn">➕ Add Client</a>
   </header>
   <main>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Email</th>
-          <th>Phone</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <!-- Repeat this row for each client -->
-        <tr>
-          <td>Jane Doe</td>
-          <td>jane@example.com</td>
-          <td>+123456789</td>
-          <td>
-            <a href="client-details.html" class="btn small">View</a>
-            <a href="client-edit.html" class="btn small">Edit</a>
-            <button class="btn small danger">Delete</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="client-grid">
+
+      <div class="client-card">
+        <img src="https://avatars.githubusercontent.com/u/77865928?v=4" alt="Client Image" class="client-avatar">
+        <h2>Jane Doe</h2>
+        <p>jane@example.com</p>
+        <p>+123456789</p>
+        <div class="card-actions">
+          <a href="client-details.html" class="btn small">View</a>
+          <a href="client-edit.html" class="btn small">Edit</a>
+          <button class="btn small danger">Delete</button>
+        </div>
+      </div>
+
+      
+    </div>
   </main>
 </body>
 </html>

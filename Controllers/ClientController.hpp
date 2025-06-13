@@ -27,6 +27,13 @@
                 Context context;
                 renderHtml(request, templatename, context);
             }
+
+            // Details of a client
+            static void Details(Request request){
+                std::string templatename = "clients/details.html";
+                Context context;
+                renderHtml(request, templatename, context);
+            }
     };
 
 #endif
