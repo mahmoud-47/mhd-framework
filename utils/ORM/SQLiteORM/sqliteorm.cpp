@@ -54,7 +54,10 @@ bool SQLiteORM::save() {
     }
     sql += ") VALUES (";
     for (size_t i = 0; i < fields.size(); ++i) {
-        sql += fields[i].to_sql_value();
+        if(fields[i].name == "id")
+            sql += "NULL";
+        else
+            sql += fields[i].to_sql_value();
         if (i < fields.size() - 1) sql += ", ";
     }
     sql += ");";

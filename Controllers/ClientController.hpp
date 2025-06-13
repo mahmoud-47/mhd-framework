@@ -4,6 +4,7 @@
     
     #include "utils/request/Request.hpp"
     #include "utils/render/HttpRender.hpp"
+    #include "../Models/client.hpp"
 
     class ClientController{
         public:
@@ -17,6 +18,7 @@
             // create a client
             static void Create(Request request){
                 std::string templatename = "clients/create.html";
+                Context context;
 
                 if(request.getMethod() == "POST"){
                     std::string name = request.getFormDataParameterByParameterName("name");
@@ -33,9 +35,16 @@
                     std::cout << "Company: " << company << std::endl;
                     std::cout << "Notes: " << notes << std::endl;
                     std::cout << "-----------------------------" << std::endl;
+
+                    try{
+                        Client client(0, name, email, phone, company, notes);
+                        client.save();
+                        context["save"] = ContextValue("true");
+                    }catch(SQLException e){
+                        context["fail"] = ContextValue("true");
+                    }
                 }
                 
-                Context context;
                 renderHtml(request, templatename, context);
             }
 

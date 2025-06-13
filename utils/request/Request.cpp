@@ -233,47 +233,94 @@ std::string Request::getQueryParameterByParameterName(const std::string paramete
 /**
  * Get Form data parameter by name 
  */
+// std::string Request::getFormDataParameterByParameterName(const std::string parameterName) {
+//     std::string contentType = getHeaderValue("Content-Type");
+//     std::string boundaryPrefix = "boundary=";
+//     size_t boundaryPos = contentType.find(boundaryPrefix);
+
+//     if (boundaryPos == std::string::npos) {
+//         return "";
+//     }
+
+//     std::string boundary = "--" + contentType.substr(boundaryPos + boundaryPrefix.length());
+
+//     // Separate headers from body
+//     size_t headerEnd = buffer.find("\r\n\r\n");
+//     if (headerEnd == std::string::npos) {
+//         return "";
+//     }
+
+//     std::string body = buffer.substr(headerEnd + 4);
+//     std::istringstream bodyStream(body);
+//     std::string line;
+//     bool foundField = false;
+//     std::string value;
+
+//     while (std::getline(bodyStream, line)) {
+//         if (line.find(boundary) != std::string::npos) {
+//             foundField = false; // Reset for each part
+//         }
+
+//         if (line.find("Content-Disposition: form-data;") != std::string::npos &&
+//             line.find("name=\"" + parameterName + "\"") != std::string::npos) {
+//             foundField = true;
+//         } else if (foundField && line == "\r") {
+//             // Next line contains the value
+//             std::getline(bodyStream, value);
+//             // Remove possible trailing \r
+//             if (!value.empty() && value.back() == '\r') {
+//                 value.pop_back();
+//             }
+//             return value;
+//         }
+//     }
+
+//     return "";
+// }
+
+static std::string urlDecode(const std::string& str) {
+    std::string result;
+    for (size_t i = 0; i < str.length(); ++i) {
+        if (str[i] == '+') {
+            result += ' ';
+        } else if (str[i] == '%' && i + 2 < str.length()) {
+            std::string hex = str.substr(i + 1, 2);
+            result += static_cast<char>(std::stoi(hex, nullptr, 16));
+            i += 2;
+        } else {
+            result += str[i];
+        }
+    }
+    return result;
+}
+
+static std::unordered_map<std::string, std::string> parseUrlEncodedBody(const std::string& body) {
+    std::unordered_map<std::string, std::string> result;
+    std::istringstream stream(body);
+    std::string pair;
+
+    while (std::getline(stream, pair, '&')) {
+        size_t equalPos = pair.find('=');
+        if (equalPos != std::string::npos) {
+            std::string key = urlDecode(pair.substr(0, equalPos));
+            std::string value = urlDecode(pair.substr(equalPos + 1));
+            result[key] = value;
+        }
+    }
+
+    return result;
+}
+
+
+
 std::string Request::getFormDataParameterByParameterName(const std::string parameterName) {
-    std::string contentType = getHeaderValue("Content-Type");
-    std::string boundaryPrefix = "boundary=";
-    size_t boundaryPos = contentType.find(boundaryPrefix);
-
-    if (boundaryPos == std::string::npos) {
-        return "";
-    }
-
-    std::string boundary = "--" + contentType.substr(boundaryPos + boundaryPrefix.length());
-
-    // Separate headers from body
+    // Find body start
     size_t headerEnd = buffer.find("\r\n\r\n");
-    if (headerEnd == std::string::npos) {
-        return "";
-    }
+    if (headerEnd == std::string::npos) return "";
 
     std::string body = buffer.substr(headerEnd + 4);
-    std::istringstream bodyStream(body);
-    std::string line;
-    bool foundField = false;
-    std::string value;
+    std::unordered_map<std::string, std::string> params = parseUrlEncodedBody(body);
 
-    while (std::getline(bodyStream, line)) {
-        if (line.find(boundary) != std::string::npos) {
-            foundField = false; // Reset for each part
-        }
-
-        if (line.find("Content-Disposition: form-data;") != std::string::npos &&
-            line.find("name=\"" + parameterName + "\"") != std::string::npos) {
-            foundField = true;
-        } else if (foundField && line == "\r") {
-            // Next line contains the value
-            std::getline(bodyStream, value);
-            // Remove possible trailing \r
-            if (!value.empty() && value.back() == '\r') {
-                value.pop_back();
-            }
-            return value;
-        }
-    }
-
-    return "";
+    auto it = params.find(parameterName);
+    return it != params.end() ? it->second : "";
 }

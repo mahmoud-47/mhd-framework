@@ -15,7 +15,7 @@ public:
 
     void registerFields(){
         fields.clear();
-        fields.push_back({"id", "INTEGER", &id, "PRIMARY KEY"});
+        fields.push_back({"id", "INTEGER", &id, "PRIMARY KEY "});
         fields.push_back({"name", "TEXT", &name, ""});
         fields.push_back({"email", "TEXT", &email, "UNIQUE"});
         fields.push_back({"phone", "TEXT", &phone, ""});

@@ -60,6 +60,10 @@ class Request{
          */
         void setHostanameFromBuffer();
 
+        // static std::unordered_map<std::string, std::string> parseUrlEncodedBody(const std::string& body);
+
+        // static std::string urlDecode(const std::string& str);
+
         
 
     public:
