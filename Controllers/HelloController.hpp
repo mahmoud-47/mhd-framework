@@ -10,14 +10,14 @@
             // Hello World controller
             static void Hello(Request request){
                 std::string templatename = "hello.html";
-                std::map<std::string, std::string> context;
+                Context context;
                 renderHtml(request, templatename, context);
             }
 
             // Documentation Controller
             static void Documentation(Request request){
                 std::string templatename = "documentation.html";
-                std::map<std::string, std::string> context;
+                Context context;
                 renderHtml(request, templatename, context);
             }
 
@@ -43,9 +43,33 @@
 
             // test parser
             static void TestParser(Request request){
-                std::map<std::string, std::string> context;
-                context["name"] = "World !!"; 
-                context["role"] = "false"; 
+                // std::map<std::string, std::string> context;
+                // context["name"] = "World !!"; 
+                // context["role"] = "false"; 
+                Context context;
+    
+                // Add simple string
+                context["name"] = ContextValue("Alice");
+
+                // add the bool guy
+                context["role"] = ContextValue("true");
+                
+                // Create users array with objects
+                ContextArray users;
+                
+                // First user object
+                ContextObject user1;
+                user1["username"] = ContextValue("toto");
+                user1["password"] = ContextValue("123");
+                users.push_back(ContextValue(user1));
+                
+                // Second user object
+                ContextObject user2;
+                user2["username"] = ContextValue("toto1");
+                user2["password"] = ContextValue("1232");
+                users.push_back(ContextValue(user2));
+                
+                context["users"] = ContextValue(users);
                 return renderHtml(request, "parse.html", context);
             }
 

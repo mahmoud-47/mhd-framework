@@ -1,4 +1,3 @@
-#include<map>
 #include "../../settings.hpp"
 #include "HttpRender.hpp"
 
@@ -16,8 +15,58 @@ std::string readHtmlFile(const std::string& filepath) {
     return ss.str();
 }
 
-// Helper functon parse the html code
-std::string parseHtmlCode(const std::string &html, std::map<std::string, std::string>& context) {
+// Helper function to get string representation of any ContextValue
+std::string getStringValue(const ContextValue& val) {
+    if (std::holds_alternative<ContextString>(val.value)) {
+        return std::get<ContextString>(val.value);
+    } else if (std::holds_alternative<ContextObject>(val.value)) {
+        return "[object]";  // Could be customized
+    } else {
+        const auto& arr = std::get<ContextArray>(val.value);
+        return "[array of " + std::to_string(arr.size()) + " items]";
+    }
+}
+
+// Helper function to check if a value is "truthy"
+bool isTruthy(const ContextValue& val) {
+    if (std::holds_alternative<ContextString>(val.value)) {
+        const std::string& str = std::get<ContextString>(val.value);
+        return !str.empty() && str != "false" && str != "0";
+    } else if (std::holds_alternative<ContextArray>(val.value)) {
+        const auto& arr = std::get<ContextArray>(val.value);
+        return !arr.empty();
+    } else {
+        const auto& obj = std::get<ContextObject>(val.value);
+        return !obj.empty();
+    }
+}
+
+// Helper function to access nested properties (e.g., "user.username")
+ContextValue getNestedValue(const Context& context, const std::string& key) {
+    size_t dotPos = key.find('.');
+    if (dotPos == std::string::npos) {
+        // Simple key lookup
+        auto it = context.find(key);
+        if (it != context.end()) {
+            return it->second;
+        }
+        return ContextValue("");
+    }
+    
+    // Nested key lookup
+    std::string rootKey = key.substr(0, dotPos);
+    std::string remainingKey = key.substr(dotPos + 1);
+    
+    auto it = context.find(rootKey);
+    if (it != context.end() && std::holds_alternative<ContextObject>(it->second.value)) {
+        const auto& obj = std::get<ContextObject>(it->second.value);
+        return getNestedValue(obj, remainingKey);
+    }
+    
+    return ContextValue("");
+}
+
+std::string parseHtmlCode(const std::string &html, Context& context) {
     std::string rendered;
     size_t pos = 0;
 
@@ -38,13 +87,61 @@ std::string parseHtmlCode(const std::string &html, std::map<std::string, std::st
         tagContent.erase(0, tagContent.find_first_not_of(" \t"));
         tagContent.erase(tagContent.find_last_not_of(" \t") + 1);
 
+        // ---- FOR LOOP ----
+        if (tagContent.rfind("for ", 0) == 0) {
+            // Parse "for variable in collection"
+            std::string forExpression = tagContent.substr(4); // Remove "for "
+            forExpression.erase(0, forExpression.find_first_not_of(" \t"));
+            
+            size_t inPos = forExpression.find(" in ");
+            if (inPos == std::string::npos) {
+                std::cerr << "Invalid for loop syntax. Expected: for variable in collection" << std::endl;
+                pos = closeTag + 2;
+                continue;
+            }
+            
+            std::string variable = forExpression.substr(0, inPos);
+            std::string collection = forExpression.substr(inPos + 4);
+            variable.erase(0, variable.find_first_not_of(" \t"));
+            variable.erase(variable.find_last_not_of(" \t") + 1);
+            collection.erase(0, collection.find_first_not_of(" \t"));
+            collection.erase(collection.find_last_not_of(" \t") + 1);
+
+            size_t forStart = closeTag + 2;
+            size_t endForTag = html.find("{{ endfor }}", forStart);
+            
+            if (endForTag == std::string::npos) {
+                std::cerr << "Missing {{ endfor }} for for block." << std::endl;
+                break;
+            }
+
+            std::string loopContent = html.substr(forStart, endForTag - forStart);
+            
+            // Get the collection value
+            ContextValue collectionValue = getNestedValue(context, collection);
+            
+            if (std::holds_alternative<ContextArray>(collectionValue.value)) {
+                const auto& items = std::get<ContextArray>(collectionValue.value);
+                
+                for (const ContextValue& item : items) {
+                    // Create a temporary context with the loop variable
+                    Context tempContext = context;
+                    tempContext[variable] = item;
+                    rendered += parseHtmlCode(loopContent, tempContext);
+                }
+            }
+
+            pos = endForTag + 12; // Skip past {{ endfor }}
+        }
+
         // ---- IF STATEMENT ----
-        if (tagContent.rfind("if ", 0) == 0) {
+        else if (tagContent.rfind("if ", 0) == 0) {
             std::string conditionKey = tagContent.substr(3);
             conditionKey.erase(0, conditionKey.find_first_not_of(" \t"));
             conditionKey.erase(conditionKey.find_last_not_of(" \t") + 1);
 
-            bool conditionTrue = context.find(conditionKey) != context.end() && context[conditionKey] != "false" && context[conditionKey] != "0";
+            ContextValue conditionValue = getNestedValue(context, conditionKey);
+            bool conditionTrue = isTruthy(conditionValue);
 
             size_t ifStart = closeTag + 2;
             size_t elseTag = html.find("{{ else }}", ifStart);
@@ -63,7 +160,6 @@ std::string parseHtmlCode(const std::string &html, std::map<std::string, std::st
                 }
             } else {
                 if (elseTag != std::string::npos && elseTag < endTag) {
-                    // Fixed: {{ else }} is 10 characters, not 9
                     rendered += parseHtmlCode(html.substr(elseTag + 10, endTag - (elseTag + 10)), context);
                 }
             }
@@ -74,8 +170,8 @@ std::string parseHtmlCode(const std::string &html, std::map<std::string, std::st
         // ---- VARIABLE REPLACEMENT ----
         else {
             std::string key = tagContent;
-            std::string value = (context.find(key) != context.end()) ? context[key] : "";
-            rendered += value;
+            ContextValue value = getNestedValue(context, key);
+            rendered += getStringValue(value);
             pos = closeTag + 2;
         }
     }
@@ -84,9 +180,8 @@ std::string parseHtmlCode(const std::string &html, std::map<std::string, std::st
 }
 
 
-
 // Has to take context after
-void renderHtml(Request request ,const std::string& filepath, std::map<std::string, std::string>& context){
+void renderHtml(Request request ,const std::string& filepath, Context& context){
     std::string html = readHtmlFile(filepath);
     std::string rendered = parseHtmlCode(html, context);
 

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Client List</title>
+  <link rel="stylesheet" href="/static/css/client-styles.css">
+</head>
+<body>
+  <header>
+    <h1>Clients</h1>
+    <a href="client-create.html" class="btn">Add Client</a>
+  </header>
+  <main>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Repeat this row for each client -->
+        <tr>
+          <td>Jane Doe</td>
+          <td>jane@example.com</td>
+          <td>+123456789</td>
+          <td>
+            <a href="client-details.html" class="btn small">View</a>
+            <a href="client-edit.html" class="btn small">Edit</a>
+            <button class="btn small danger">Delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </main>
+</body>
+</html>

@@ -15,5 +15,26 @@
     <p>Access denied</p>
     <b>bloc 2</b>
     {{ end }}
+
+    <!-- Conditional on arrays -->
+{{ if users }}
+  <h2>Users exist!</h2>
+  <!-- Loop through array of objects -->
+{{ for user in users }}
+  <p>User: {{ user.username }} ({{ user.password }})</p>
+{{ endfor }}
+{{ else }}
+  <p>No users</p>
+{{ end }}
+
+
+
+<!-- Access nested properties -->
+{{ for user in users }}
+  <div>
+    <strong>{{ user.username }}</strong>
+    <span>Password: {{ user.password }}</span>
+  </div>
+{{ endfor }}
 </body>
 </html>
