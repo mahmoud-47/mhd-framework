@@ -3,17 +3,1231 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hello World</title>
-    <link rel="stylesheet" href="/static/css/hello.css">
+    <title>mhd++ Framework v1.0 - Documentation</title>
+    <link href="/static/css/documentation.css" rel="stylesheet">
 </head>
 <body>
-    <h2>Documentation</h2> 
-    <br>
-    To be added !
-    <br>
-    <br>
-    <h3><a href="/">Home</a></h3>
-    <h3><a href="/string/5?key1=val1&key2=val2&key3=val3">Test Parameters</a></h3>
+    <header class="header">
+        <nav class="nav container">
+            <div class="logo">MHD++</div>
+            <ul class="nav-links">
+                <li><a href="#getting-started">Getting Started</a></li>
+                <li><a href="#configuration">Configuration</a></li>
+                <li><a href="#models">Models</a></li>
+                <li><a href="#controllers">Controllers</a></li>
+                <li><a href="#templates">Templates</a></li>
+                <li><a href="#routing">Routing</a></li>
+            </ul>
+        </nav>
+    </header>
 
+    <main class="main">
+        <div class="container">
+            <!-- Hero Section -->
+            <section class="hero">
+                <div class="version-badge">Version 1.0</div>
+                <h1>MHD++ Framework</h1>
+                <p class="subtitle">A modern C++ web framework designed to make backend development fun and enjoyable. Build powerful web applications with elegant syntax and comprehensive features.</p>
+            </section>
+
+            <!-- Introduction -->
+            <section class="section">
+                <h2>Welcome to mhd++</h2>
+                <div class="alert alert-info">
+                    <strong>Philosophy:</strong> This framework is more about fun than commercial opportunity seeking. The goal is to make people smile while coding in C++!
+                </div>
+                
+                <p>mhd++ is a comprehensive C++ web framework that provides everything you need to build modern web applications. It features an intuitive MVC architecture, built-in ORM, template engine, and routing system.</p>
+
+                <div class="file-tree">
+<strong>Project Structure:</strong>
+.
+├── CMakeLists.txt
+├── Controllers/
+│   ├── ClientController.hpp
+│   ├── HelloController.hpp
+│   └── UserController.hpp
+├── Models/
+│   ├── Migration/
+│   │   └── migrations.hpp
+│   ├── client.hpp
+│   ├── session.hpp
+│   └── user.hpp
+├── templates/
+│   ├── clients/
+│   ├── documentation.html
+│   └── static/
+│       ├── css/
+│       └── js/
+├── urls/
+│   └── urls.hpp
+└── utils/
+    ├── ORM/
+    ├── render/
+    ├── request/
+    └── route/
+                </div>
+            </section>
+
+            <!-- Table of Contents -->
+            <section class="toc">
+                <h2>📚 Documentation Contents</h2>
+                <div class="toc-grid">
+                    <a href="#configuration" class="toc-item">
+                        <h3>⚙️ Configuration</h3>
+                        <p>Settings, build scripts, and project setup</p>
+                    </a>
+                    <a href="#models" class="toc-item">
+                        <h3>📊 Models & ORM</h3>
+                        <p>Database models, migrations, and ORM usage</p>
+                    </a>
+                    <a href="#controllers" class="toc-item">
+                        <h3>🎮 Controllers</h3>
+                        <p>Request handling and business logic</p>
+                    </a>
+                    <a href="#templates" class="toc-item">
+                        <h3>🎨 Templates</h3>
+                        <p>Template engine and rendering</p>
+                    </a>
+                    <a href="#routing" class="toc-item">
+                        <h3>🛣️ Routing</h3>
+                        <p>URL patterns and route definitions</p>
+                    </a>
+                    <a href="#request-handling" class="toc-item">
+                        <h3>📡 Request Handling</h3>
+                        <p>HTTP requests, responses, and context</p>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Configuration -->
+            <section id="configuration" class="section">
+                <h2>⚙️ Configuration</h2>
+                
+                <h3>settings.hpp</h3>
+                <p>The central configuration file where all framework parameters are defined:</p>
+                
+                <div class="feature-list">
+                    <div class="feature-item">
+                        <h4>PORT</h4>
+                        <p>The port the application runs on</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>TEMPLATES_DIR</h4>
+                        <p>Root folder for HTML templates</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>STATIC_DIR</h4>
+                        <p>Root folder for static files (/static)</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>DATABASE_PATH</h4>
+                        <p>Path to the SQLite database</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>showSQLQueries</h4>
+                        <p>Debug flag to show SQL queries in console</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>dropRecreateTables</h4>
+                        <p>Debug flag to drop/recreate tables on startup</p>
+                    </div>
+                </div>
+
+                <div class="alert alert-warning">
+                    <strong>Important:</strong> Don't delete any parameters from settings.hpp - you can modify them but they're all required for the framework to function properly.
+                </div>
+
+                <h3>Build Script (run.sh)</h3>
+                <p>The build script handles compilation and execution:</p>
+                
+                <div class="code-block" data-lang="bash">
+<code>#!/bin/bash
+
+# Exit on any error
+set -e
+
+# Create build directory if it doesn't exist
+mkdir -p build
+cd build
+
+# Configure the project with CMake
+cmake ..
+
+# Build the project
+make
+
+# Run the application
+./application</code>
+                </div>
+
+                <div class="alert alert-info">
+                    <strong>Usage:</strong> Make sure the script has execution privileges: <code class="inline-code">chmod +x run.sh</code>
+                </div>
+            </section>
+
+            <!-- Models -->
+            <section id="models" class="section">
+                <h2>📊 Models & ORM</h2>
+                
+                <h3>Creating Models</h3>
+                <p>Models represent database tables and must follow specific requirements:</p>
+
+                <div class="alert alert-info">
+                    <strong>Requirements:</strong>
+                    <br>• Include <code class="inline-code">utils/ORM/SQLiteORM/sqliteorm.hpp</code>
+                    <br>• Inherit from <code class="inline-code">SQLiteORM</code> publicly
+                    <br>• Implement <code class="inline-code">registerFields()</code> method
+                    <br>• Call parent constructor with table name
+                    <br>• Implement copy constructor and clone method
+                </div>
+
+                <h4>Example: User Model</h4>
+                <div class="code-block" data-lang="cpp">
+<code>#ifndef __USER_MODEL_H__
+#define __USER_MODEL_H__
+
+#include "../../utils/ORM/SQLiteORM/sqliteorm.hpp"  
+
+class User : public SQLiteORM {
+public:
+    int id;
+    std::string name;
+    std::string email;
+
+    void registerFields(){
+        fields.clear();
+        fields.push_back({"id", "INTEGER", &id, "PRIMARY KEY"});
+        fields.push_back({"name", "TEXT", &name, ""});
+        fields.push_back({"email", "TEXT", &email, "UNIQUE"});
+    }
+
+    User() : SQLiteORM("users") {
+        registerFields();
+    }
+
+    // Copy constructor
+    User(const User& other) : SQLiteORM(other), 
+                            id(other.id),
+                            name(other.name),
+                            email(other.email) {
+        registerFields();
+    }
+
+    // Parameterized constructor
+    User(const int id, const std::string& name, const std::string& email) : 
+        SQLiteORM("users"), id(id), name(name), email(email) {
+        registerFields();
+    }
+
+    virtual ~User() = default;
+
+    ORMModel* clone() const override {
+        return new User(*this);
+    }
+};
+
+#endif</code>
+                </div>
+
+                <h3>Migrations</h3>
+                <p>Database migrations are handled in <code class="inline-code">Models/Migration/migrations.hpp</code>:</p>
+
+                <div class="code-block" data-lang="cpp">
+<code>#ifndef __MHD_MIGRATIONS__
+#define __MHD_MIGRATIONS__
+
+#include <vector>
+#include <functional>
+
+// Include the tables here
+#include "../user.hpp"
+#include "../session.hpp"
+#include "../client.hpp"
+
+void initialize_tables() {
+    // Create Model objects
+    ORMModel* models[] = {
+        new User,
+        new Session,
+        new Client
+    };
+
+    if(dropRecreateTables){
+        for(int i = 0; i < sizeof(models)/sizeof(ORMModel*); i++)
+            models[i]->dropTable();
+    }
+    
+    // Call create table method
+    for(int i = 0; i < sizeof(models)/sizeof(ORMModel*); i++)
+        models[i]->createTable();
+
+    // Free allocated memory
+    for(int i = 0; i < sizeof(models)/sizeof(ORMModel*); i++)
+        delete models[i];
+}
+
+#endif</code>
+                </div>
+
+                <h3>ORM Methods</h3>
+                <p>The ORM provides these essential methods for database operations:</p>
+
+                <div class="method">
+                    <div class="method-signature">save() -> bool</div>
+                    <p>Saves an instance to the database</p>
+                </div>
+
+                <div class="method">
+                    <div class="method-signature">update(id) -> bool</div>
+                    <p>Updates an object in the database by ID</p>
+                </div>
+
+                <div class="method">
+                    <div class="method-signature">remove(id) -> bool</div>
+                    <p>Removes an object from the database by ID</p>
+                </div>
+
+                <div class="method">
+                    <div class="method-signature">find_by_id(id) -> ORMModel*</div>
+                    <p>Returns a pointer to the object or null if not found</p>
+                </div>
+
+                <div class="method">
+                    <div class="method-signature">find_all() -> vector&lt;ORMModel*&gt;</div>
+                    <p>Returns all objects in the table</p>
+                </div>
+
+                <div class="alert alert-warning">
+                    <strong>Type Casting:</strong> ORM methods return <code class="inline-code">ORMModel*</code> pointers. Use <code class="inline-code">static_cast&lt;MyModel*&gt;</code> to cast them to your specific model type.
+                </div>
+            </section>
+
+            <!-- Controllers -->
+            <section id="controllers" class="section">
+                <h2>🎮 Controllers</h2>
+                
+                <h3>Controller Structure</h3>
+                <p>Controllers handle HTTP requests and contain your application's business logic:</p>
+
+                <div class="alert alert-info">
+                    <strong>Requirements:</strong>
+                    <br>• Include <code class="inline-code">utils/request/Request.hpp</code>
+                    <br>• Include <code class="inline-code">utils/render/HttpRender.hpp</code>
+                    <br>• Methods must be public, static, void, and take only Request parameter
+                    <br>• Include required model headers
+                </div>
+
+                <h4>Example: Client Controller</h4>
+                <div class="code-block" data-lang="cpp">
+<code>#ifndef __CLIENT_Controller__
+#define __CLIENT_Controller__
+
+#include "utils/request/Request.hpp"
+#include "utils/render/HttpRender.hpp"
+#include "../Models/client.hpp"
+
+class ClientController{
+public:
+    // Display all clients
+    static void DisplayAll(Request request){
+        Client clientQuery;
+        std::vector&lt;ORMModel*&gt; clients = clientQuery.find_all();
+
+        ContextArray clientContextArray;
+        ContextObject clientContextObject;
+        
+        for(int i = 0; i < clients.size(); i++){
+            Client* converted_client = static_cast&lt;Client*&gt;(clients[i]);
+            clientContextObject["id"] = ContextValue(std::to_string(converted_client->id));
+            clientContextObject["name"] = ContextValue(converted_client->name);
+            clientContextObject["email"] = ContextValue(converted_client->email);
+            clientContextArray.push_back(clientContextObject);
+        }
+
+        Context context;
+        context["clients"] = clientContextArray;
+        renderHtml(request, "clients/list.html", context);
+    }
+
+    // Create a new client
+    static void Create(Request request){
+        Context context;
+        
+        if(request.getMethod() == "POST"){
+            std::string name = request.getFormDataParameterByParameterName("name");
+            std::string email = request.getFormDataParameterByParameterName("email");
+            
+            try{
+                Client client(0, name, email, "", "", "");
+                client.save();
+                context["success"] = ContextValue("true");
+            }catch(SQLException e){
+                context["error"] = ContextValue("true");
+            }
+        }
+        
+        renderHtml(request, "clients/create.html", context);
+    }
+};
+
+#endif</code>
+                </div>
+
+                <h3>Response Methods</h3>
+                <p>Controllers can respond in multiple ways:</p>
+
+                <div class="method">
+                    <div class="method-signature">renderHtml(Request, filepath, Context)</div>
+                    <p>Renders an HTML template with context data</p>
+                </div>
+
+                <div class="method">
+                    <div class="method-signature">renderText(Request, text)</div>
+                    <p>Renders plain text response</p>
+                </div>
+
+                <div class="method">
+                    <div class="method-signature">redirect(Request, url, statusCode)</div>
+                    <p>Redirects to another URL (default status: 302)</p>
+                </div>
+
+                <div class="alert alert-warning">
+                    <strong>Note:</strong> These functions are non-blocking. Add <code class="inline-code">return;</code> after them if you don't want to execute additional code.
+                </div>
+            </section>
+
+            <!-- Templates -->
+            <section id="templates" class="section">
+                <h2>🎨 Template Engine</h2>
+                
+                <h3>Template Syntax</h3>
+                <p>mhd++ includes a built-in template engine with powerful features:</p>
+
+                <div class="feature-list">
+                    <div class="feature-item">
+                        <h4>Variable Interpolation</h4>
+                        <code class="inline-code">{{ variable }}</code>
+                        <p>Include one space between variable name and brackets</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>Conditionals</h4>
+                        <code class="inline-code">{{ if condition }} {{ else }} {{ end }}</code>
+                        <p>Condition value must be "true" or "false" string</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>Loops</h4>
+                        <code class="inline-code">{{ for item in items }} {{ endfor }}</code>
+                        <p>Items must be ContextArray type in controller</p>
+                    </div>
+                </div>
+
+                <h4>Template Example</h4>
+                <div class="code-block" data-lang="html">
+<code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;Welcome&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;Welcome {{ name }}&lt;/h1&gt;
+
+    {{ if role }}
+    &lt;p&gt;Welcome Admin&lt;/p&gt;
+    {{ else }}
+    &lt;p&gt;Access denied&lt;/p&gt;
+    {{ end }}
+
+    {{ if users }}
+    &lt;h2&gt;Users exist!&lt;/h2&gt;
+    {{ for user in users }}
+    &lt;div&gt;
+        &lt;strong&gt;{{ user.username }}&lt;/strong&gt;
+        &lt;span&gt;Password: {{ user.password }}&lt;/span&gt;
+    &lt;/div&gt;
+    {{ endfor }}
+    {{ else }}
+    &lt;p&gt;No users&lt;/p&gt;
+    {{ end }}
+&lt;/body&gt;
+&lt;/html&gt;</code>
+                </div>
+
+                <h3>Context Types</h3>
+                <p>The template engine supports various context data types:</p>
+
+                <div class="method">
+                    <div class="method-signature">ContextString</div>
+                    <p>Plain text value stored as std::string</p>
+                </div>
+
+                <div class="method">
+                    <div class="method-signature">ContextObject</div>
+                    <p>Object/dictionary where keys map to ContextValues</p>
+                </div>
+
+                <div class="method">
+                    <div class="method-signature">ContextArray</div>
+                    <p>Array/vector of ContextValue elements</p>
+                </div>
+
+                <div class="method">
+                    <div class="method-signature">ContextValue</div>
+                    <p>Recursive variant holding string, object, or array</p>
+                </div>
+
+                <div class="method">
+                    <div class="method-signature">Context</div>
+                    <p>Alias for ContextObject, used as root structure</p>
+                </div>
+            </section>
+
+            <!-- Request Handling -->
+            <section id="request-handling" class="section">
+                <h2>📡 Request Handling</h2>
+                
+                <h3>Request Class Methods</h3>
+                <p>The Request class provides comprehensive access to HTTP request data:</p>
+
+                <div class="method">
+                    <div class="method-signature">getUrl() -> string</div>
+                    <p>Get the runtime URL (e.g., "/mypath/1")</p>
+                </div>
+
+                <div class="method">
+                    <div class="method-signature">getMethod() -> string</div>
+                    <p>Get HTTP method (GET, POST, DELETE, PUT)</p>
+                </div>
+
+                <div class="method">
+                    <div class="method-signature">getUserAgent() -> string</div>
+                    <p>Get user agent string</p>
+                </div>
+
+                <div class="method">
+                    <div class="method-signature">getHostName() -> string</div>
+                    <p>Get hostname from request</p>
+                </div>
+
+                <div class="method">
+                    <div class="method-signature">getSocket() -> int</div>
+                    <p>Get socket file descriptor</p>
+                </div>
+
+                <div class="method">
+                    <div class="method-signature">getHeaderValue(headerName) -> string</div>
+                    <p>Get specific header value by name</p>
+                </div>
+
+                <h3>Parameter Extraction</h3>
+
+                <div class="method">
+                    <div class="method-signature">getGETParameterByParameterName(parameterName) -> string</div>
+                    <p>Get URL parameter from route definition (e.g., {id} in /users/{id})</p>
+                </div>
+
+                <div class="method">
+                    <div class="method-signature">getQueryParameterByParameterName(parameterName) -> string</div>
+                    <p>Get query parameter from URL (?var=val). Returns "" if not found</p>
+                </div>
+
+                <div class="method">
+                    <div class="method-signature">getFormDataParameterByParameterName(parameterName) -> string</div>
+                    <p>Get form data parameter from POST request body</p>
+                </div>
+
+                <h4>Request Class Header</h4>
+                <div class="code-block" data-lang="cpp">
+<code>#ifndef __MHD_FRAM_REQUEST_
+#define __MHD_FRAM_REQUEST_
+#include <string>
+#include <sstream>
+#include <vector>
+#include <unordered_map>
+
+class Request{
+private:
+    std::string buffer;
+    std::string url;
+    std::string method;
+    std::string userAgent;
+    std::string hostname;
+    std::string urlFormat;
+    int socket;
+
+    void setUrlFromBuffer();
+    void setMethodFromBuffer();
+    void setUserAgentFromBuffer();
+    void setHostanameFromBuffer();
+
+public:
+    Request() = default;
+    Request(const std::string buffer);
+    
+    std::string getUrl() const;
+    std::string getMethod() const;
+    std::string getUserAgent() const;
+    std::string getHostName() const;
+    int getSocket() const;
+    
+    std::string getHeaderValue(const std::string& headerName);
+    void setUrlFormat(std::string urlFormat);
+    void setSocket(int socket);
+    
+    bool clientWantsHtml() const;
+    bool clientWantAnything() const;
+    
+    std::string getGETParameterByParameterName(const std::string parameterName);
+    std::string getQueryParameterByParameterName(const std::string parameterName);
+    std::string getFormDataParameterByParameterName(const std::string parameterName);
+};
+
+#endif</code>
+                </div>
+            </section>
+
+            <!-- Routing -->
+            <section id="routing" class="section">
+                <h2>🛣️ Routing System</h2>
+                
+                <h3>URL Patterns</h3>
+                <p>Routes are defined in <code class="inline-code">urls/urls.hpp</code>:</p>
+
+                <div class="alert alert-info">
+                    <strong>Route Format:</strong> {"route-name", "path", ControllerClass::ControllerMethod}
+                    <br><strong>Dynamic Parameters:</strong> Use {parameterName} in path for dynamic segments
+                </div>
+
+                <div class="code-block" data-lang="cpp">
+<code>#include <vector>
+#include "utils/URLPattern.hpp"
+#include "Controllers/HelloController.hpp"
+#include "Controllers/UserController.hpp"
+#include "Controllers/ClientController.hpp"
+
+// URL format = {"name", "url/{id}", HelloController::Controller}
+URLPattern urls[] = {
+    // Hello URLs
+    {"hello", "/", HelloController::Hello},
+    {"documentation", "/documentation", HelloController::Documentation},
+    {"string", "/string/{id}", HelloController::HelloString},
+    {"parse", "/test-parse", HelloController::TestParser},
+
+    // User URLs
+    {"adduser", "/adduser", UserController::createUser},
+    {"getuser", "/getuser/{userId}", UserController::getUser},
+    {"getusers", "/getusers", UserController::getAllUsers},
+    {"deluser", "/deluser/{userId}", UserController::deluser},
+    {"updateUser", "/updateuser/{userId}", UserController::updateUser},
+
+    // Client URLs
+    {"display-all", "/clients/all", ClientController::DisplayAll},
+    {"create-client", "/clients/create", ClientController::Create},
+    {"edit-client", "/clients/edit/{id}", ClientController::Update},
+    {"detail-client", "/clients/details/{id}", ClientController::Details},
+    {"delete-client", "/clients/delete/{id}", ClientController::Delete}
+};</code>
+                </div>
+
+                <h3>Dynamic URL Parameters</h3>
+                <p>Dynamic segments in URLs can be accessed in controllers:</p>
+
+                <div class="code-block" data-lang="cpp">
+<code>// Route: /users/{userId}
+// URL: /users/123
+static void getUser(Request request) {
+    std::string userId = request.getGETParameterByParameterName("userId");
+    // userId will be "123"
+    
+    // Find user by ID
+    User userQuery;
+    User* user = static_cast<User*>(userQuery.find_by_id(userId));
+    
+    if(user == nullptr) {
+        renderText(request, "User not found");
+        return;
+    }
+    
+    Context context;
+    context["user_name"] = ContextValue(user->name);
+    context["user_email"] = ContextValue(user->email);
+    
+    renderHtml(request, "user/details.html", context);
+}</code>
+                </div>
+
+                <h3>Query Parameters</h3>
+                <p>Handle query parameters in URLs:</p>
+
+                <div class="code-block" data-lang="cpp">
+<code>// URL: /search?q=mhd&category=framework
+static void search(Request request) {
+    std::string query = request.getQueryParameterByParameterName("q");
+    std::string category = request.getQueryParameterByParameterName("category");
+    
+    Context context;
+    context["search_query"] = ContextValue(query);
+    context["category"] = ContextValue(category);
+    
+    renderHtml(request, "search/results.html", context);
+}</code>
+                </div>
+            </section>
+
+            <!-- Database -->
+            <section id="database" class="section">
+                <h2>🗄️ Database</h2>
+                
+                <h3>SQLite Support</h3>
+                <p>Currently, mhd++ supports SQLite as the primary database:</p>
+
+                <div class="alert alert-info">
+                    <strong>Database Configuration:</strong> The database file path is specified in <code class="inline-code">settings.hpp</code> under <code class="inline-code">DATABASE_PATH</code>.
+                </div>
+
+                <h3>Database Operations</h3>
+                <p>Common database operations using the ORM:</p>
+
+                <h4>Creating Records</h4>
+                <p>While inserting, you can set the id to what ever number you want, it will be auto incremented</p>
+                <div class="code-block" data-lang="cpp">
+<code>// Create a new user
+User newUser(0, "John Doe", "john@example.com");
+bool success = newUser.save();
+
+if(success) {
+    std::cout << "User created successfully!" << std::endl;
+} else {
+    std::cout << "Failed to create user" << std::endl;
+}</code>
+                </div>
+
+                <h4>Reading Records</h4>
+                <div class="code-block" data-lang="cpp">
+<code>// Find user by ID
+User userQuery;
+User* user = static_cast<User*>(userQuery.find_by_id("1"));
+
+if(user != nullptr) {
+    std::cout << "User: " << user->name << std::endl;
+} else {
+    std::cout << "User not found" << std::endl;
+}
+
+// Get all users
+std::vector<ORMModel*> users = userQuery.find_all();
+for(ORMModel* userModel : users) {
+    User* user = static_cast<User*>(userModel);
+    std::cout << user->name << " - " << user->email << std::endl;
+}</code>
+                </div>
+
+                <h4>Updating Records</h4>
+                <div class="code-block" data-lang="cpp">
+<code>// Update existing user
+User updatedUser(1, "Jane Doe", "jane@example.com");
+bool success = updatedUser.update("1");
+
+if(success) {
+    std::cout << "User updated successfully!" << std::endl;
+}</code>
+                </div>
+
+                <h4>Deleting Records</h4>
+                <div class="code-block" data-lang="cpp">
+<code>// Delete user by ID
+User userQuery;
+bool success = userQuery.remove("1");
+
+if(success) {
+    std::cout << "User deleted successfully!" << std::endl;
+}</code>
+                </div>
+
+                <h3>Debug Features</h3>
+                <p>The framework includes helpful debugging features:</p>
+
+                <div class="feature-list">
+                    <div class="feature-item">
+                        <h4>showSQLQueries</h4>
+                        <p>Set to true in settings.hpp to display all SQL queries in the console</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>dropRecreateTables</h4>
+                        <p>Set to true to drop and recreate all tables on startup (useful for development)</p>
+                    </div>
+                </div>
+
+                <div class="alert alert-warning">
+                    <strong>Production Warning:</strong> Always set <code class="inline-code">dropRecreateTables</code> to false in production environments to prevent data loss.
+                </div>
+            </section>
+
+            <!-- Advanced Features -->
+            <section id="advanced" class="section">
+                <h2>🚀 Advanced Features</h2>
+                
+                <h3>Exception Handling</h3>
+                <p>The framework includes comprehensive exception handling:</p>
+
+                <div class="code-block" data-lang="cpp">
+<code>try {
+    Client client(0, name, email, phone, company, notes);
+    client.save();
+    context["success"] = ContextValue("true");
+} catch(SQLException& e) {
+    context["error"] = ContextValue("true");
+    context["message"] = ContextValue(e.getMessage());
+}</code>
+                </div>
+
+                <h3>Static File Serving</h3>
+                <p>Static files are served from the directory specified in <code class="inline-code">STATIC_DIR</code>:</p>
+
+                <div class="file-tree">
+templates/static/
+├── css/
+│   ├── client-styles.css
+│   └── hello.css
+└── js/
+    └── main.js
+                </div>
+
+                <p>Access static files using the <code class="inline-code">/static/</code> prefix in your templates:</p>
+
+                <div class="code-block" data-lang="html">
+<code>&lt;link rel="stylesheet" href="/static/css/client-styles.css"&gt;
+&lt;script src="/static/js/main.js"&gt;&lt;/script&gt;</code>
+                </div>
+
+                <h3>Template Nesting</h3>
+                <p>Templates can access nested object properties:</p>
+
+                <div class="code-block" data-lang="cpp">
+<code>// In controller
+ContextObject userObj;
+userObj["profile"] = ContextObject{
+    {"name", ContextValue("John Doe")},
+    {"email", ContextValue("john@example.com")}
+};
+
+Context context;
+context["user"] = userObj;</code>
+                </div>
+
+                <div class="code-block" data-lang="html">
+<code>&lt;!-- In template --&gt;
+&lt;h1&gt;Welcome {{ user.profile.name }}&lt;/h1&gt;
+&lt;p&gt;Email: {{ user.profile.email }}&lt;/p&gt;</code>
+                </div>
+
+                <h3>Form Handling</h3>
+                <p>Complete example of form handling in mhd++:</p>
+
+                <div class="code-block" data-lang="cpp">
+<code>static void CreateClient(Request request) {
+    Context context;
+    
+    if(request.getMethod() == "POST") {
+        // Extract form data
+        std::string name = request.getFormDataParameterByParameterName("name");
+        std::string email = request.getFormDataParameterByParameterName("email");
+        std::string phone = request.getFormDataParameterByParameterName("phone");
+        
+        // Validate data
+        if(name.empty() || email.empty()) {
+            context["error"] = ContextValue("true");
+            context["message"] = ContextValue("Name and email are required");
+        } else {
+            try {
+                Client client(0, name, email, phone, "", "");
+                client.save();
+                
+                // Redirect to success page
+                redirect(request, "/clients/all?created=true&name=" + name);
+                return;
+            } catch(SQLException& e) {
+                context["error"] = ContextValue("true");
+                context["message"] = ContextValue(e.getMessage());
+            }
+        }
+    }
+    
+    renderHtml(request, "clients/create.html", context);
+}</code>
+                </div>
+            </section>
+
+            <!-- Best Practices -->
+            <section id="best-practices" class="section">
+                <h2>✨ Best Practices</h2>
+                
+                <h3>Project Organization</h3>
+                <div class="feature-list">
+                    <div class="feature-item">
+                        <h4>Separate Concerns</h4>
+                        <p>Keep models, controllers, and templates in their respective directories</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>Naming Conventions</h4>
+                        <p>Use descriptive names for controllers, models, and routes</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>Error Handling</h4>
+                        <p>Always wrap database operations in try-catch blocks</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>Memory Management</h4>
+                        <p>Remember to delete allocated ORMModel pointers when done</p>
+                    </div>
+                </div>
+
+                <h3>Performance Tips</h3>
+                <div class="alert alert-success">
+                    <strong>Optimization:</strong>
+                    <br>• Use static methods in controllers for better performance
+                    <br>• Minimize database queries by fetching required data in single calls
+                    <br>• Use appropriate SQL constraints in model definitions
+                    <br>• Turn off debug flags in production
+                </div>
+
+                <h3>Security Considerations</h3>
+                <div class="alert alert-warning">
+                    <strong>Security:</strong>
+                    <br>• Always validate user input before database operations
+                    <br>• Use parameterized queries (handled by ORM)
+                    <br>• Implement proper error handling to avoid information leakage
+                    <br>• Sanitize template output when displaying user data
+                </div>
+
+                <h3>Development Workflow</h3>
+                <div class="code-block" data-lang="bash">
+<code># 1. Create your models
+# 2. Add them to migrations.hpp
+# 3. Create controllers
+# 4. Add routes to urls.hpp
+# 5. Create templates
+# 6. Build and test
+./run.sh</code>
+                </div>
+            </section>
+
+            <!-- Getting Started -->
+            <section id="getting-started" class="section">
+                <h2>🚀 Getting Started</h2>
+                
+                <h3>Quick Start Guide</h3>
+                <p>Follow these steps to create your first mhd++ application:</p>
+
+                <div class="alert alert-success">
+                    <strong>Step 1:</strong> Clone or download the mhd++ framework
+                </div>
+
+                <div class="alert alert-success">
+                    <strong>Step 2:</strong> Configure your project in <code class="inline-code">settings.hpp</code>
+                </div>
+
+                <div class="code-block" data-lang="cpp">
+<code>// settings.hpp
+#define PORT 8080
+#define TEMPLATES_DIR "templates"
+#define STATIC_DIR "templates/static"
+#define DATABASE_PATH "database/db.sqlite"
+#define showSQLQueries true
+#define dropRecreateTables true
+#define VERSION "1.0"</code>
+                </div>
+
+                <div class="alert alert-success">
+                    <strong>Step 3:</strong> Create your first model
+                </div>
+
+                <div class="code-block" data-lang="cpp">
+<code>// Models/post.hpp
+#ifndef __POST_MODEL_H__
+#define __POST_MODEL_H__
+
+#include "../utils/ORM/SQLiteORM/sqliteorm.hpp"
+
+class Post : public SQLiteORM {
+public:
+    int id;
+    std::string title;
+    std::string content;
+
+    void registerFields(){
+        fields.clear();
+        fields.push_back({"id", "INTEGER", &id, "PRIMARY KEY"});
+        fields.push_back({"title", "TEXT", &title, ""});
+        fields.push_back({"content", "TEXT", &content, ""});
+    }
+
+    Post() : SQLiteORM("posts") {
+        registerFields();
+    }
+
+    Post(const Post& other) : SQLiteORM(other), 
+                             id(other.id),
+                             title(other.title),
+                             content(other.content) {
+        registerFields();
+    }
+
+    Post(int id, const std::string& title, const std::string& content) : 
+        SQLiteORM("posts"), id(id), title(title), content(content) {
+        registerFields();
+    }
+
+    virtual ~Post() = default;
+
+    ORMModel* clone() const override {
+        return new Post(*this);
+    }
+};
+
+#endif</code>
+                </div>
+
+                <div class="alert alert-success">
+                    <strong>Step 4:</strong> Add your model to migrations
+                </div>
+
+                <div class="code-block" data-lang="cpp">
+<code>// Models/Migration/migrations.hpp
+#include "../post.hpp"
+
+void initialize_tables() {
+    ORMModel* models[] = {
+        new User,
+        new Session,
+        new Client,
+        new Post  // Add your new model here
+    };
+    // ... rest of the function
+}</code>
+                </div>
+
+                <div class="alert alert-success">
+                    <strong>Step 5:</strong> Create a controller
+                </div>
+
+                <div class="code-block" data-lang="cpp">
+<code>// Controllers/PostController.hpp
+#ifndef __POST_CONTROLLER__
+#define __POST_CONTROLLER__
+
+#include "utils/request/Request.hpp"
+#include "utils/render/HttpRender.hpp"
+#include "../Models/post.hpp"
+
+class PostController {
+public:
+    static void ListPosts(Request request) {
+        Post postQuery;
+        std::vector<ORMModel*> posts = postQuery.find_all();
+        
+        ContextArray postArray;
+        for(ORMModel* postModel : posts) {
+            Post* post = static_cast<Post*>(postModel);
+            ContextObject postObj;
+            postObj["id"] = ContextValue(std::to_string(post->id));
+            postObj["title"] = ContextValue(post->title);
+            postObj["content"] = ContextValue(post->content);
+            postArray.push_back(postObj);
+        }
+        
+        Context context;
+        context["posts"] = postArray;
+        
+        renderHtml(request, "posts/list.html", context);
+    }
+};
+
+#endif</code>
+                </div>
+
+                <div class="alert alert-success">
+                    <strong>Step 6:</strong> Add routes
+                </div>
+
+                <div class="code-block" data-lang="cpp">
+<code>// urls/urls.hpp
+#include "Controllers/PostController.hpp"
+
+URLPattern urls[] = {
+    // ... existing routes
+    {"post-list", "/posts", PostController::ListPosts},
+};</code>
+                </div>
+
+                <div class="alert alert-success">
+                    <strong>Step 7:</strong> Create a template
+                </div>
+
+                <div class="code-block" data-lang="html">
+<code>&lt;!-- templates/posts/list.html --&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;Posts&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;All Posts&lt;/h1&gt;
+    
+    {{ if posts }}
+        {{ for post in posts }}
+        &lt;div&gt;
+            &lt;h2&gt;{{ post.title }}&lt;/h2&gt;
+            &lt;p&gt;{{ post.content }}&lt;/p&gt;
+        &lt;/div&gt;
+        {{ endfor }}
+    {{ else }}
+        &lt;p&gt;No posts available&lt;/p&gt;
+    {{ end }}
+&lt;/body&gt;
+&lt;/html&gt;</code>
+                </div>
+
+                <div class="alert alert-success">
+                    <strong>Step 8:</strong> Build and run
+                </div>
+
+                <div class="code-block" data-lang="bash">
+<code>chmod +x run.sh
+./run.sh</code>
+                </div>
+
+                <p>Your application will be available at <code class="inline-code">http://localhost:8080</code></p>
+            </section>
+
+            <!-- Footer -->
+            <section class="section">
+                <h2>🎉 Conclusion</h2>
+                <p>You now have a comprehensive understanding of the mhd++ framework! This modern C++ web framework provides all the tools you need to build robust web applications while keeping the development process enjoyable.</p>
+                
+                <div class="alert alert-info">
+                    <strong>Remember:</strong> mhd++ is designed to make coding fun. Don't hesitate to experiment and build something amazing!
+                </div>
+
+                <div class="feature-list">
+                    <div class="feature-item">
+                        <h4>🏗️ MVC Architecture</h4>
+                        <p>Clean separation of concerns with Models, Views, and Controllers</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>🗄️ Built-in ORM</h4>
+                        <p>Powerful SQLite ORM for database operations</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>🎨 Template Engine</h4>
+                        <p>Feature-rich templating with conditionals and loops</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>🛣️ URL Routing</h4>
+                        <p>Flexible routing system with dynamic parameters</p>
+                    </div>
+                </div>
+
+                <div style="text-align: center; margin-top: 3rem; padding: 2rem; background: rgba(102, 126, 234, 0.1); border-radius: 12px;">
+                    <h3 style="color: var(--primary-color); margin-bottom: 1rem;">Happy Coding with mhd++! 🚀</h3>
+                    <p style="color: var(--text-secondary); font-style: italic;">Making C++ web development fun, one smile at a time.</p>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Highlight current section in navigation
+        function highlightCurrentSection() {
+            const sections = document.querySelectorAll('.section[id]');
+            const navLinks = document.querySelectorAll('.nav-links a');
+            
+            let currentSection = '';
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 100;
+                const sectionHeight = section.offsetHeight;
+                
+                if (window.scrollY >= sectionTop && window.scrollY < sectionTop + sectionHeight) {
+                    currentSection = section.getAttribute('id');
+                }
+            });
+            
+            navLinks.forEach(link => {
+                link.style.color = 'var(--text-secondary)';
+                if (link.getAttribute('href') === '#' + currentSection) {
+                    link.style.color = 'var(--primary-color)';
+                }
+            });
+        }
+
+        // Add scroll event listener
+        window.addEventListener('scroll', highlightCurrentSection);
+
+        // Code block copy functionality (optional enhancement)
+        document.querySelectorAll('.code-block').forEach(block => {
+            block.addEventListener('dblclick', function() {
+                const code = this.querySelector('code');
+                if (code) {
+                    const text = code.textContent;
+                    navigator.clipboard.writeText(text).then(() => {
+                        // Show temporary feedback
+                        const feedback = document.createElement('div');
+                        feedback.textContent = 'Copied!';
+                        feedback.style.cssText = `
+                            position: absolute;
+                            top: 10px;
+                            right: 10px;
+                            background: var(--success-color);
+                            color: white;
+                            padding: 5px 10px;
+                            border-radius: 4px;
+                            font-size: 12px;
+                            z-index: 1000;
+                        `;
+                        this.style.position = 'relative';
+                        this.appendChild(feedback);
+                        
+                        setTimeout(() => {
+                            feedback.remove();
+                        }, 2000);
+                    });
+                }
+            });
+        });
+
+        // Add animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animation = 'fadeInUp 0.6s ease-out';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.section').forEach(section => {
+            observer.observe(section);
+        });
+    </script>
 </body>
 </html>

@@ -4,34 +4,111 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Welcome to MHD-CPP Framework</title>
-    <link rel="stylesheet" href="/static/css/hello.css" />
-    <script src="/static/js/main.js" defer></script>
+    <link href="/static/css/hello.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+    
 </head>
 <body>
-    <div class="container">
-        <h1>🚀 Welcome to <span class="highlight">MHD++</span> Framework</h1>
-        <p class="version">Version: <strong>1.0.0</strong></p>
-        <div class="features">
-            <h2>✨ Features</h2>
-            <ul>
-                <li>🔧 Built in pure C++</li>
-                <li>🌐 Custom routing with dynamic URLs</li>
-                <li>📂 Static file support</li>
-                <li>📄 HTML Template rendering</li>
-                <li>🧩 Modular architecture</li>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav">
+            <div class="logo">MHD++</div>
+            <ul class="nav-links">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#demo">Demo</a></li>
+                <li><a href="/documentation">Documentation</a></li>
+                <li><a href="https://github.com/yourusername/mhd-cpp">GitHub</a></li>
             </ul>
-        </div>
+        </nav>
+    </header>
 
-        <!-- Demo App Link -->
-        <div class="demo-link">
-            <p>
-                🚀 <a href="/clients/all" class="demo-anchor">Try the demo app</a> - a client management app!
-            </p>
-        </div>
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Hero Section -->
+            <section class="hero">
+                <h1>🚀 Welcome to <span class="highlight">MHD++</span> Framework</h1>
+                <div class="version-badge">Version 1.0.0</div>
+                <p class="subtitle">A modern, lightweight C++ web framework for building high-performance web applications with elegant simplicity.</p>
+            </section>
 
-        <div class="footer">
-            <p>&copy; 2025 MHD Framework. Built with 💻 by Mohamed Gaye</p>
+            <!-- Features Section -->
+            <section class="features-section" id="features">
+                <h2>✨ Features</h2>
+                <div class="features-grid">
+                    <div class="feature-item">
+                        <h4>🔧 Pure C++ Implementation</h4>
+                        <p>Built entirely in modern C++ for maximum performance and minimal dependencies.</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>🌐 Dynamic Routing</h4>
+                        <p>Flexible routing system with support for dynamic URLs and parameter extraction.</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>📂 Static File Serving</h4>
+                        <p>Efficient static file serving with automatic MIME type detection and caching.</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>📄 Template Engine</h4>
+                        <p>Built-in HTML template rendering system for dynamic content generation.</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>🧩 Modular Architecture</h4>
+                        <p>Clean, modular design that's easy to extend and customize for your needs.</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>⚡ High Performance</h4>
+                        <p>Optimized for speed with minimal overhead and efficient memory usage.</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>🗄️ Built-in ORM</h4>
+                        <p>Simple Object-Relational Mapping with SQLite support using C++ OOP principles.</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>🔍 Query Builder</h4>
+                        <p>Object-oriented approach to building database queries with clear C++ syntax.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ORM Section -->
+            <section class="features-section">
+                <h2>🗄️ Object-Relational Mapping (ORM)</h2>
+                <div class="features-grid">
+                    <div class="feature-item">
+                        <h4>🗃️ SQLite Integration</h4>
+                        <p>Lightweight, file-based database with zero-configuration setup and deployment.</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>🏗️ C++ OOP Models</h4>
+                        <p>Define your data models using standard C++ classes with clear object-oriented design.</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>🔍 Simple Queries</h4>
+                        <p>Clean C++ interface for common database operations like CRUD and basic filtering.</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>📊 Basic Relations</h4>
+                        <p>Support for fundamental relationships between your C++ model objects.</p>
+                    </div>
+                </div>
+            </section>
+            <section class="action-buttons" id="demo">
+                <a href="/clients/all" class="btn btn-primary">
+                    🚀 Try Demo App
+                </a>
+                <a href="/documentation" class="btn btn-secondary">
+                    📚 View Documentation
+                </a>
+            </section>
+
+            <!-- Footer -->
+            <footer class="footer">
+                <p>&copy; 2025 MHD++ Framework. Built with 💻 by <a href="#">Mohamed Gaye</a></p>
+                <p>Open source and available on <a href="https://github.com/yourusername/mhd-cpp">GitHub</a></p>
+            </footer>
         </div>
-    </div>
+    </main>
 </body>
 </html>
