@@ -49,7 +49,7 @@
                 Context context;
     
                 // Add simple string
-                context["name"] = ContextValue("Alice");
+                context["name"] = ContextValue("Mohamed");
 
                 // add the bool guy
                 context["role"] = ContextValue("true");

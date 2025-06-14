@@ -57,3 +57,18 @@ h1 {
     font-size: 0.9rem;
     color: #888;
 }
+
+.demo-link {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.demo-anchor {
+    color: #007BFF;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.demo-anchor:hover {
+    text-decoration: underline;
+}

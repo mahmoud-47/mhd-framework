@@ -121,7 +121,7 @@ class Request{
         std::string getGETParameterByParameterName(const std::string parameterName);
 
         /**
-         * Get Query parameter by name (?var=val)
+         * Get Query parameter by name (?var=val), returns "" if not found
          */
         std::string getQueryParameterByParameterName(const std::string parameterName);
 

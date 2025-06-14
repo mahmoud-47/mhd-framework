@@ -204,3 +204,22 @@ void renderText(Request request ,const std::string& text){
     send(request.getSocket(), http_response.c_str(), http_response.length(), 0);
     close(request.getSocket());
 }
+
+// Redirect
+void redirect(const Request& request, const std::string& targetUrl, int statusCode) {
+    std::string statusText;
+
+    if (statusCode == 301)
+        statusText = "301 Moved Permanently";
+    else
+        statusText = "302 Found";  // Default
+
+    std::string response =
+        "HTTP/1.1 " + statusText + "\r\n"
+        "Location: " + targetUrl + "\r\n"
+        "Content-Length: 0\r\n"
+        "Connection: close\r\n\r\n";
+
+    send(request.getSocket(), response.c_str(), response.length(), 0);
+    close(request.getSocket());
+}

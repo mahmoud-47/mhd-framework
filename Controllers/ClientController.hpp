@@ -34,6 +34,27 @@
                 Context context;
                 context["clients"] = clientContextArray;
 
+                // if from redirected url from update, display the message
+                std::string updated = request.getQueryParameterByParameterName("updated");
+                std::string clientUpdatedName = request.getQueryParameterByParameterName("clientUpdatedName");
+                if(updated == "true"){
+                    context["updated"] = ContextString("true");
+                    context["clientUpdatedName"] = ContextString(clientUpdatedName);
+                }
+
+                // if from redirection from deletion
+                std::string deletion = request.getQueryParameterByParameterName("deletion");
+                std::string deletion_id = request.getQueryParameterByParameterName("del-id");
+                std::string deletion_name = request.getQueryParameterByParameterName("del-name");
+                if(deletion == "true"){
+                    context["ok-deletion"] = ContextString("true");
+                    context["del-name"] = ContextString(deletion_name);
+                }
+                if(deletion == "false"){
+                    context["ko-deletion"] = ContextString("true");
+                    context["del-id"] = ContextString(deletion_id);
+                }
+
                 renderHtml(request, templatename, context);
             }
 
@@ -73,11 +94,31 @@
             // create a client
             static void Update(Request request){
                 std::string templatename = "clients/edit.html";
+                Context context;
 
                 if(request.getMethod() == "POST"){
-                    
+                    std::string id = request.getGETParameterByParameterName("id");
+                    std::string name = request.getFormDataParameterByParameterName("name");
+                    std::string email = request.getFormDataParameterByParameterName("email");
+                    std::string phone = request.getFormDataParameterByParameterName("phone");
+                    std::string company = request.getFormDataParameterByParameterName("company");
+                    std::string notes = request.getFormDataParameterByParameterName("notes");
+
+                    // Update the client
+                    try{
+                        Client client = Client(std::stoi(id), name, email, phone, company, notes);
+                        client.update(id);
+                        // context["updated"] = ContextValue("true");
+                        redirect(request, "/clients/all?updated=true&clientUpdatedName="+name);
+                        return;
+                    }catch(SQLException &e){
+                        context["failed"] = ContextValue("true");
+                        context["message"] = ContextValue(e.getMessage());
+                    }
+
                 }
                 
+                // fetch the client
                 Client clientQuery;
                 Client* client = nullptr;
                 try{
@@ -92,7 +133,7 @@
                     return;
                 }
 
-                Context context;
+                
                 context["id"] = ContextValue(std::to_string(client->id));
                 context["name"] = ContextValue(client->name);
                 context["email"] = ContextValue(client->email);
@@ -134,9 +175,23 @@
 
             // Details of a client
             static void Delete(Request request){
-                std::string templatename = "clients/details.html";
-                Context context;
-                renderHtml(request, templatename, context);
+                std::string id = request.getGETParameterByParameterName("id");
+                std::string clientname;
+                try{
+                    Client clientQuery;
+                    Client* client = static_cast<Client*>(clientQuery.find_by_id(id)); 
+                    // if client not found, meaage
+                    if(client == nullptr){
+                        redirect(request, "/clients/all?deletion=false&del-id="+id);
+                        return;
+                    }
+                    clientname = client->name;
+                    clientQuery.remove(id);
+                }catch(SQLException& e){
+                    redirect(request, "/clients/all?deletion=false&del-id="+id);
+                    return;
+                }
+                redirect(request, "/clients/all?deletion=true&del-name="+ clientname);
             }
     };
 

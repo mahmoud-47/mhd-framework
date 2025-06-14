@@ -11,9 +11,23 @@
     <h1>Clients</h1>
     <a href="/clients/create" class="btn">➕ Add Client</a>
   </header>
+  <center>
+    {{ if updated }}
+    <h3 style="color: green;">The client {{ clientUpdatedName }} has been updated successfully.</h3>
+    {{ end }}
+
+    {{ if ok-deletion }}
+    <h3 style="color: green;">The client {{ del-name }} has been deleted !</h3>
+    {{ end }}
+
+    {{ if ko-deletion }}
+    <h3 style="color: red;">Error while deleting the client with id = {{ del-id }}</h3>
+    {{ end }}
+  </center>
   <main>
     <div class="client-grid">
 
+      {{ if clients }}
       {{ for client in clients }}
       <div class="client-card">
         <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="Client Image" class="client-avatar">
@@ -27,6 +41,12 @@
         </div>
       </div>
       {{ endfor }}
+      {{ else }}
+      <center>
+        <h2>No clients !</h2>
+      </center>
+      {{ end }}
+      
       
     </div>
   </main>

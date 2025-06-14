@@ -46,4 +46,7 @@
     // Render text
     void renderText(Request request ,const std::string& text);
 
+    // Redirect to new URL
+    void redirect(const Request& request, const std::string& targetUrl, int statusCode = 302);
+
 #endif

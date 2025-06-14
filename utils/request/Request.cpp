@@ -204,7 +204,7 @@ std::string Request::getGETParameterByParameterName(const std::string parameterN
 }
 
 /**
- * Get Query parameter by name (?var=val)
+ * Get Query parameter by name (?var=val), returns "" if not found
  */
 std::string Request::getQueryParameterByParameterName(const std::string parameterName){
     size_t posQuestionMark = url.find("?");
