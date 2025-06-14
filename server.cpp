@@ -55,7 +55,10 @@ int main() {
         exit(EXIT_FAILURE);
     }
 
-    std::cout << "Serveur HTTP en écoute sur le port " << PORT << "..." << std::endl;
+    std::cout << "**********************************************" << std::endl;
+    std::cout << "WELCOME TO MHD++ Version " << VERSION << "..." << std::endl;
+    std::cout << "**********************************************" << std::endl << std::endl;
+    std::cout << "Server Listening on port " << PORT << "..." << std::endl;
     std::cout << "Base dir = " << getBaseDirectory() << std::endl;
     std::cout << "Templates dir = " << TEMPLATES_DIR << std::endl;
     std::cout << "Static dir = " << STATIC_DIR << std::endl;
