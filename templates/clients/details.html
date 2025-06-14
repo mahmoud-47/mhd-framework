@@ -9,16 +9,16 @@
 <body>
   <header class="header">
     <h1>Client Details</h1>
-    <a href="client-edit.html" class="btn">Edit</a>
-    <a href="client-list.html" class="btn secondary">Back</a>
+    <a href="/clients/edit/{{ id }}" class="btn">Edit</a>
+    <a href="/clients/all" class="btn secondary">Back</a>
   </header>
   <main class="client-profile">
-    <img src="https://avatars.githubusercontent.com/u/77865928?v=4" alt="Client Image" class="client-avatar">
-    <p><strong>Name:</strong> Jane Doe</p>
-    <p><strong>Email:</strong> jane@example.com</p>
-    <p><strong>Phone:</strong> +123456789</p>
-    <p><strong>Company:</strong> Example Inc</p>
-    <p><strong>Notes:</strong> VIP client.</p>
+    <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="Client Image" class="client-avatar">
+    <p><strong>Name:</strong> {{ name }} </p>
+    <p><strong>Email:</strong> {{ email }}</p>
+    <p><strong>Phone:</strong> {{ phone }} </p>
+    <p><strong>Company:</strong> {{ company }} </p>
+    <p><strong>Notes:</strong> {{ notes }} </p>
   </main>
 </body>
 </html>

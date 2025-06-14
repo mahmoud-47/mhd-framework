@@ -9,23 +9,24 @@
 <body>
   <header class="header">
     <h1>Clients</h1>
-    <a href="client-create.html" class="btn">➕ Add Client</a>
+    <a href="/clients/create" class="btn">➕ Add Client</a>
   </header>
   <main>
     <div class="client-grid">
 
+      {{ for client in clients }}
       <div class="client-card">
-        <img src="https://avatars.githubusercontent.com/u/77865928?v=4" alt="Client Image" class="client-avatar">
-        <h2>Jane Doe</h2>
-        <p>jane@example.com</p>
-        <p>+123456789</p>
+        <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="Client Image" class="client-avatar">
+        <h2>{{ client.name }}</h2>
+        <p>{{ client.email }}</p>
+        <p>{{ client.phone }}</p>
         <div class="card-actions">
-          <a href="client-details.html" class="btn small">View</a>
-          <a href="client-edit.html" class="btn small">Edit</a>
-          <button class="btn small danger">Delete</button>
+          <a href="/clients/details/{{ client.id }}" class="btn small">View</a>
+          <a href="/clients/edit/{{ client.id }}" class="btn small">Edit</a>
+          <button class="btn small danger" ><a href="/clients/delete/{{ client.id }}" style="text-decoration: none; color: white;">Delete</a></button>
         </div>
       </div>
-
+      {{ endfor }}
       
     </div>
   </main>
