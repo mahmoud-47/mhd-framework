@@ -407,17 +407,17 @@ public:
                 <div class="feature-list">
                     <div class="feature-item">
                         <h4>Variable Interpolation</h4>
-                        <code class="inline-code">{{ variable }}</code>
+                        <code class="inline-code">{<span></span>{ variable }<span></span>}</code>
                         <p>Include one space between variable name and brackets</p>
                     </div>
                     <div class="feature-item">
                         <h4>Conditionals</h4>
-                        <code class="inline-code">{{ if condition }} {{ else }} {{ end }}</code>
+                        <code class="inline-code">{<span></span>{ if condition }<span></span>} {<span></span>{ else }<span></span>} {<span></span>{ end }<span></span>}</code>
                         <p>Condition value must be "true" or "false" string</p>
                     </div>
                     <div class="feature-item">
                         <h4>Loops</h4>
-                        <code class="inline-code">{{ for item in items }} {{ endfor }}</code>
+                        <code class="inline-code">{<span></span>{ for item in items }<span></span>} {<span></span>{ endfor }<span></span>}</code>
                         <p>Items must be ContextArray type in controller</p>
                     </div>
                 </div>
@@ -431,25 +431,25 @@ public:
     &lt;title&gt;Welcome&lt;/title&gt;
 &lt;/head&gt;
 &lt;body&gt;
-    &lt;h1&gt;Welcome {{ name }}&lt;/h1&gt;
+    &lt;h1&gt;Welcome {<span></span>{ name }<span></span>}&lt;/h1&gt;
 
-    {{ if role }}
+    {<span></span>{ if role }<span></span>}
     &lt;p&gt;Welcome Admin&lt;/p&gt;
-    {{ else }}
+    {<span></span>{ else }<span></span>}
     &lt;p&gt;Access denied&lt;/p&gt;
-    {{ end }}
+    {<span></span>{ end }<span></span>}
 
-    {{ if users }}
+    {<span></span>{ if users }<span></span>}
     &lt;h2&gt;Users exist!&lt;/h2&gt;
-    {{ for user in users }}
+    {<span></span>{ for user in users }<span></span>}
     &lt;div&gt;
-        &lt;strong&gt;{{ user.username }}&lt;/strong&gt;
-        &lt;span&gt;Password: {{ user.password }}&lt;/span&gt;
+        &lt;strong&gt;{<span></span>{ user.username }<span></span>}&lt;/strong&gt;
+        &lt;span&gt;Password: {<span></span>{ user.password }<span></span>}&lt;/span&gt;
     &lt;/div&gt;
-    {{ endfor }}
-    {{ else }}
+    {<span></span>{ endfor }<span></span>}
+    {<span></span>{ else }<span></span>}
     &lt;p&gt;No users&lt;/p&gt;
-    {{ end }}
+    {<span></span>{ end }<span></span>}
 &lt;/body&gt;
 &lt;/html&gt;</code>
                 </div>
@@ -818,8 +818,8 @@ context["user"] = userObj;</code>
 
                 <div class="code-block" data-lang="html">
 <code>&lt;!-- In template --&gt;
-&lt;h1&gt;Welcome {{ user.profile.name }}&lt;/h1&gt;
-&lt;p&gt;Email: {{ user.profile.email }}&lt;/p&gt;</code>
+&lt;h1&gt;Welcome {<span></span>{ user.profile.name }<span></span>}&lt;/h1&gt;
+&lt;p&gt;Email: {<span></span>{ user.profile.email }<span></span>}&lt;/p&gt;</code>
                 </div>
 
                 <h3>Form Handling</h3>
@@ -1075,16 +1075,16 @@ URLPattern urls[] = {
 &lt;body&gt;
     &lt;h1&gt;All Posts&lt;/h1&gt;
     
-    {{ if posts }}
-        {{ for post in posts }}
+    {<span></span>{ if posts }<span></span>}
+        {<span></span>{ for post in posts }<span></span>}
         &lt;div&gt;
-            &lt;h2&gt;{{ post.title }}&lt;/h2&gt;
-            &lt;p&gt;{{ post.content }}&lt;/p&gt;
+            &lt;h2&gt;{<span></span>{ post.title }<span></span>}&lt;/h2&gt;
+            &lt;p&gt;{<span></span>{ post.content }<span></span>}&lt;/p&gt;
         &lt;/div&gt;
-        {{ endfor }}
-    {{ else }}
+        {<span></span>{ endfor }<span></span>}
+    {<span></span>{ else }<span></span>}
         &lt;p&gt;No posts available&lt;/p&gt;
-    {{ end }}
+    {<span></span>{ end }<span></span>}
 &lt;/body&gt;
 &lt;/html&gt;</code>
                 </div>
