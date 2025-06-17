@@ -20,8 +20,10 @@ struct Field {
     std::string to_sql_value() const {
         if (type == "TEXT") {
             return "'" + *(static_cast<std::string*>(value_ptr)) + "'";
-        } else if (type == "INTEGER") {
+        } else if (type == "INTEGER" || type == "INT") {
             return std::to_string(*(static_cast<int*>(value_ptr)));
+        }else if(type == "REAL"){
+            return std::to_string(*(static_cast<float*>(value_ptr)));
         }
         // Add more types After
         return "NULL";
