@@ -21,6 +21,7 @@ public:
         fields.push_back({"phone", "TEXT", &phone, ""});
         fields.push_back({"company", "TEXT", &company, ""});
         fields.push_back({"notes", "TEXT", &notes, ""});
+        fields.push_back({"created_at", "DATETIME", &notes, ""});
     }
 
     Client() : SQLiteORM("clients") {

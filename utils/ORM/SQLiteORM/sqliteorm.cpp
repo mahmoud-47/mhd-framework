@@ -3,7 +3,7 @@
 void SQLiteORM::createTable() {
     std::string sql = "CREATE TABLE IF NOT EXISTS " + table_name + " (";
     for (size_t i = 0; i < fields.size(); ++i) {
-        sql += fields[i].name + " " + fields[i].type;
+        sql += fields[i].name + " " + (fields[i].type == "DATETIME" ? "TEXT" : fields[i].type);
         if (!fields[i].constraints.empty()) {
             sql += " " + fields[i].constraints;
         }

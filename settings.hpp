@@ -25,7 +25,7 @@
     const bool showSQLQueries = true;
 
     // DROP SQL TABLE AND Recreate them
-    const bool dropRecreateTables = false;
+    const bool dropRecreateTables = true;
 
     // Version
     #define VERSION "1.0"
