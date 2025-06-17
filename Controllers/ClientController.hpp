@@ -80,7 +80,7 @@
                     std::cout << "-----------------------------" << std::endl;
 
                     try{
-                        Client client(0, name, email, phone, company, notes);
+                        Client client(0, name, email, phone, company, notes, MhdDateTime());
                         client.save();
                         context["save"] = ContextValue("true");
                     }catch(SQLException e){
@@ -106,7 +106,7 @@
 
                     // Update the client
                     try{
-                        Client client = Client(std::stoi(id), name, email, phone, company, notes);
+                        Client client = Client(std::stoi(id), name, email, phone, company, notes, MhdDateTime()); // need to fetch the old time
                         client.update(id);
                         // context["updated"] = ContextValue("true");
                         redirect(request, "/clients/all?updated=true&clientUpdatedName="+name);

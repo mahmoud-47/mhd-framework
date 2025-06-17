@@ -26,7 +26,7 @@ struct Field {
         }else if(type == "REAL"){
             return std::to_string(*(static_cast<float*>(value_ptr)));
         }else if(type == "DATETIME"){
-            return (*(static_cast<MhdDateTime*>(value_ptr))).to_sqlite_string();
+            return "'" + (*(static_cast<MhdDateTime*>(value_ptr))).to_sqlite_string() + "'";
         }
         // Add more types After
         return "NULL";
