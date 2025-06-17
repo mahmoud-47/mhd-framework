@@ -139,8 +139,10 @@ ORMModel* SQLiteORM::find_by_id(const std::string& id) {
             std::string val = argv[i] ? argv[i] : "";
             if (cbData->model->fields[i].type == "TEXT") {
                 *static_cast<std::string*>(cbData->model->fields[i].value_ptr) = val;
-            } else if (cbData->model->fields[i].type == "INTEGER") {
+            } else if (cbData->model->fields[i].type == "INTEGER" || cbData->model->fields[i].type == "INT") {
                 *static_cast<int*>(cbData->model->fields[i].value_ptr) = std::stoi(val);
+            } else if (cbData->model->fields[i].type == "REAL") {
+                *static_cast<float*>(cbData->model->fields[i].value_ptr) = std::stof(val);
             }
         }
         return 0;
@@ -178,6 +180,8 @@ std::vector<ORMModel*> SQLiteORM::find_all() {
                 *static_cast<std::string*>(model->fields[i].value_ptr) = val;
             } else if (model->fields[i].type == "INTEGER") {
                 *static_cast<int*>(model->fields[i].value_ptr) = std::stoi(val);
+            } else if (model->fields[i].type == "REAL") {
+                *static_cast<float*>(model->fields[i].value_ptr) = std::stof(val);
             }
         }
         pair->second->push_back(model);
