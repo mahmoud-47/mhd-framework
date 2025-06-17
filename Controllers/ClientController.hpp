@@ -169,6 +169,7 @@
                 context["phone"] = ContextValue(client->phone);
                 context["company"] = ContextValue(client->company);
                 context["notes"] = ContextValue(client->notes);
+                context["created-at"] = ContextValue(client->created_at.get_day_name() + " " + client->created_at.get_month_name() + " " + std::to_string(client->created_at.get_year()));
 
                 renderHtml(request, templatename, context);
             }
