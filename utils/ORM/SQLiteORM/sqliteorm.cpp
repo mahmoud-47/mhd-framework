@@ -143,6 +143,8 @@ ORMModel* SQLiteORM::find_by_id(const std::string& id) {
                 *static_cast<int*>(cbData->model->fields[i].value_ptr) = std::stoi(val);
             } else if (cbData->model->fields[i].type == "REAL") {
                 *static_cast<float*>(cbData->model->fields[i].value_ptr) = std::stof(val);
+            } else if (cbData->model->fields[i].type == "DATETIME") {
+                *static_cast<MhdDateTime*>(cbData->model->fields[i].value_ptr) = MhdDateTime(val);
             }
         }
         return 0;
@@ -178,10 +180,12 @@ std::vector<ORMModel*> SQLiteORM::find_all() {
             std::string val = argv[i] ? argv[i] : "";
             if (model->fields[i].type == "TEXT") {
                 *static_cast<std::string*>(model->fields[i].value_ptr) = val;
-            } else if (model->fields[i].type == "INTEGER") {
+            } else if (model->fields[i].type == "INTEGER" || model->fields[i].type == "INT") {
                 *static_cast<int*>(model->fields[i].value_ptr) = std::stoi(val);
             } else if (model->fields[i].type == "REAL") {
                 *static_cast<float*>(model->fields[i].value_ptr) = std::stof(val);
+            } else if (model->fields[i].type == "DATETIME") {
+                *static_cast<MhdDateTime*>(model->fields[i].value_ptr) = MhdDateTime(val);
             }
         }
         pair->second->push_back(model);
