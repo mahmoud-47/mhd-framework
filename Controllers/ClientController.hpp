@@ -70,39 +70,13 @@
                     std::string phone = request.getFormDataParameterByParameterName("phone");
                     std::string company = request.getFormDataParameterByParameterName("company");
                     std::string notes = request.getFormDataParameterByParameterName("notes");
-                    std::string img_content = request.getFormDataParameterByParameterName("img");
 
-                    std::string savedImagePath = "";
-
-                    if(request.isFileUpload("img")){
-                        std::cout << "Image uploaded" << std::endl;
-                        std::string filename = request.getFileName("img");
-                        std::string fileContentType = request.getFileContentType("img");
-                        
-                        
-                        // Validate file type 
-                        if (fileContentType.find("image/") == 0) { // Must be an image
-                            // Create uploads directory path
-                            std::string uploadsDir = BASE_DIR + "/uploads/clients/images/";
-                            
-                            // Generate unique filename to avoid conflicts
-                            std::string uniqueFilename = generateUniqueFilename(filename);
-                            
-                            // Full file path
-                            std::string fullPath = uploadsDir + uniqueFilename;
-                            
-                            // Save the file
-                            if (saveUploadedFile(img_content, fullPath)) {
-                                savedImagePath = fullPath;
-                                std::cout << "Image saved to: " << fullPath << std::endl;
-                            } else {
-                                std::cout << "Failed to save image" << std::endl;
-                            }
-                        } else {
-                            std::cout << "Invalid file type. Only images are allowed." << std::endl;
-                        }
+                    MhdFile *image = request.getFileFromPostByName("img");
+                    if(image != nullptr){
+                        std::string savedImagePath = image->saveTo(BASE_DIR + "/uploads/clients/images/");
+                        std::cout << "Saved path = " << savedImagePath << "\n";
                     }else{
-                        std::cout << "Nooo Image uploaded" << std::endl;
+                        std::cout << "*** Image No uploaded \n";
                     }
 
                     // Debug output
@@ -112,6 +86,11 @@
                     std::cout << "Phone: " << phone << std::endl;
                     std::cout << "Company: " << company << std::endl;
                     std::cout << "Notes: " << notes << std::endl;
+                    if(image){
+                        std::cout << "Image ext : " << image->get_extension() << std::endl;
+                        std::cout << "Image name : " << image->get_name_without_extension() << std::endl;
+                        std::cout << "Image filetype : " << image->get_filecontenttype() << std::endl;
+                    }
                     std::cout << "-----------------------------" << std::endl;
 
                     try{

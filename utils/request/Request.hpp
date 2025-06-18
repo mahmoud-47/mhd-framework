@@ -5,6 +5,8 @@
 #include <vector>
 #include <unordered_map>
 
+#include "../file/file.hpp"
+
 struct FormField {
     std::string value;
     std::string filename;  // For file uploads
@@ -147,6 +149,10 @@ class Request{
         bool isFileUpload(const std::string& parameterName);
         std::string getFileName(const std::string& parameterName);
         std::string getFileContentType(const std::string& parameterName);
+        /**
+         * Get file from post, returns the pointer to the file if the file is uploaded, otherwise returns NULL
+         */
+        MhdFile* getFileFromPostByName(const std::string parameterName);
 };
 
 #endif

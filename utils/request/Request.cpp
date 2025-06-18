@@ -491,3 +491,17 @@ std::string Request::getFileContentType(const std::string& parameterName) {
     
     return "";
 }
+
+MhdFile* Request::getFileFromPostByName(const std::string parameterName){
+    // check if file uploaded
+    if(! isFileUpload(parameterName))
+        return nullptr;
+
+    // get the parameters
+    std::string file_content = this->getFormDataParameterByParameterName(parameterName);
+    std::string file_name = this->getFileName(parameterName);
+    std::string file_content_type = this->getFileContentType(parameterName);
+
+    MhdFile *file = new MhdFile(file_name, file_content, file_content_type);
+    return file;
+}
