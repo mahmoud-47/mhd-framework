@@ -4,6 +4,7 @@
     
     #include "utils/request/Request.hpp"
     #include "utils/render/HttpRender.hpp"
+    #include "utils/functions.hpp"
     #include "../Models/client.hpp"
 
     class ClientController{
@@ -69,6 +70,40 @@
                     std::string phone = request.getFormDataParameterByParameterName("phone");
                     std::string company = request.getFormDataParameterByParameterName("company");
                     std::string notes = request.getFormDataParameterByParameterName("notes");
+                    std::string img_content = request.getFormDataParameterByParameterName("img");
+
+                    std::string savedImagePath = "";
+
+                    if(request.isFileUpload("img")){
+                        std::cout << "Image uploaded" << std::endl;
+                        std::string filename = request.getFileName("img");
+                        std::string fileContentType = request.getFileContentType("img");
+                        
+                        
+                        // Validate file type 
+                        if (fileContentType.find("image/") == 0) { // Must be an image
+                            // Create uploads directory path
+                            std::string uploadsDir = BASE_DIR + "/uploads/clients/images/";
+                            
+                            // Generate unique filename to avoid conflicts
+                            std::string uniqueFilename = generateUniqueFilename(filename);
+                            
+                            // Full file path
+                            std::string fullPath = uploadsDir + uniqueFilename;
+                            
+                            // Save the file
+                            if (saveUploadedFile(img_content, fullPath)) {
+                                savedImagePath = fullPath;
+                                std::cout << "Image saved to: " << fullPath << std::endl;
+                            } else {
+                                std::cout << "Failed to save image" << std::endl;
+                            }
+                        } else {
+                            std::cout << "Invalid file type. Only images are allowed." << std::endl;
+                        }
+                    }else{
+                        std::cout << "Nooo Image uploaded" << std::endl;
+                    }
 
                     // Debug output
                     std::cout << "----- Form Data Received -----" << std::endl;
@@ -81,7 +116,7 @@
 
                     try{
                         Client client(0, name, email, phone, company, notes, MhdDateTime());
-                        client.save();
+                        // client.save();
                         context["save"] = ContextValue("true");
                     }catch(SQLException e){
                         context["fail"] = ContextValue("true");

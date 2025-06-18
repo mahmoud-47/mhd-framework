@@ -10,6 +10,9 @@
     // Port
     #define PORT 8001
 
+    // Base directory
+    const std::string BASE_DIR = getBaseDirectory();
+
     // Templates DIR 
     const std::string TEMPLATES_DIR = getBaseDirectory() + "/templates";
 

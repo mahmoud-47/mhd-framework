@@ -5,6 +5,11 @@
 #include <vector>
 #include <unordered_map>
 
+struct FormField {
+    std::string value;
+    std::string filename;  // For file uploads
+    std::string contentType;
+};
 
 /**
  * HTTP request class
@@ -63,6 +68,12 @@ class Request{
         // static std::unordered_map<std::string, std::string> parseUrlEncodedBody(const std::string& body);
 
         // static std::string urlDecode(const std::string& str);
+
+        std::unordered_map<std::string, FormField> multipartFields;
+        bool multipartParsed = false;
+        
+        void parseMultipartData();
+        void parseMultipartPart(const std::string& part);
 
         
 
@@ -130,6 +141,12 @@ class Request{
          * Get Form data parameter by name 
          */
         std::string getFormDataParameterByParameterName(const std::string parameterName);
+        /**
+         * Check if this parameter name has an uploaded file
+         */
+        bool isFileUpload(const std::string& parameterName);
+        std::string getFileName(const std::string& parameterName);
+        std::string getFileContentType(const std::string& parameterName);
 };
 
 #endif

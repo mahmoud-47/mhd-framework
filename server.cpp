@@ -15,12 +15,85 @@
 #include "utils/functions.hpp"
 #include "Models/Migration/migrations.hpp"
 
-void handle_connection(int client_socket, Route* routes) {
-    char buffer[3000] = {0};
-    read(client_socket, buffer, 3000);
-    std::cout << "Requête reçue:\n" << buffer << std::endl;
+std::string readFullRequest(int client_socket) {
+    std::string fullRequest;
+    char buffer[4096];
+    ssize_t bytesRead;
+    
+    // Read the headers first
+    std::string headers;
+    bool headersComplete = false;
+    
+    while (!headersComplete) {
+        bytesRead = recv(client_socket, buffer, sizeof(buffer) - 1, 0);
+        if (bytesRead <= 0) break;
+        
+        buffer[bytesRead] = '\0';
+        headers += std::string(buffer, bytesRead);  // Use bytesRead to handle binary data
+        
+        // Check if headers are complete (look for \r\n\r\n)
+        size_t headerEnd = headers.find("\r\n\r\n");
+        if (headerEnd != std::string::npos) {
+            headersComplete = true;
+            fullRequest = headers.substr(0, headerEnd + 4);
+            
+            // Check if there's any body data already read
+            if (headers.length() > headerEnd + 4) {
+                fullRequest += headers.substr(headerEnd + 4);
+            }
+            break;
+        }
+    }
+    
+    // Parse Content-Length from headers
+    size_t contentLengthPos = fullRequest.find("Content-Length:");
+    if (contentLengthPos != std::string::npos) {
+        size_t start = fullRequest.find(":", contentLengthPos) + 1;
+        size_t end = fullRequest.find("\r\n", start);
+        std::string lengthStr = fullRequest.substr(start, end - start);
+        
+        // Remove whitespace
+        lengthStr.erase(0, lengthStr.find_first_not_of(" \t"));
+        lengthStr.erase(lengthStr.find_last_not_of(" \t") + 1);
+        
+        int contentLength = std::stoi(lengthStr);
+        size_t headerEnd = fullRequest.find("\r\n\r\n");
+        int bodyBytesAlreadyRead = fullRequest.length() - (headerEnd + 4);
+        int remainingBytes = contentLength - bodyBytesAlreadyRead;
+        
+        // std::cout << "Content-Length: " << contentLength << std::endl;
+        // std::cout << "Body bytes already read: " << bodyBytesAlreadyRead << std::endl;
+        // std::cout << "Remaining bytes to read: " << remainingBytes << std::endl;
+        
+        // Read remaining body data
+        while (remainingBytes > 0) {
+            int toRead = std::min(remainingBytes, (int)sizeof(buffer));
+            bytesRead = recv(client_socket, buffer, toRead, 0);
+            if (bytesRead <= 0) break;
+            
+            fullRequest += std::string(buffer, bytesRead);  // Use bytesRead for binary data
+            remainingBytes -= bytesRead;
+            
+            // std::cout << "Read " << bytesRead << " bytes, " << remainingBytes << " remaining" << std::endl;
+        }
+    }
+    
+    return fullRequest;
+}
 
-    Request request(buffer);
+void handle_connection(int client_socket, Route* routes) {
+    std::string requestData = readFullRequest(client_socket);
+    // std::cout << "Full request size: " << requestData.length() << " bytes" << std::endl;
+    
+    // Only print first 1000 characters for debugging (to avoid flooding console)
+    std::cout << "Requête reçue (first 1000 chars):\n" 
+              << requestData.substr(0, 1000) << std::endl;
+    if (requestData.length() > 1000) {
+        std::cout << "... (truncated, total " << requestData.length() << " bytes)" << std::endl;
+    }
+
+    Request request(requestData);
+    
     std::cout << "Request Hostname " << request.getHostName() << std::endl;
     std::cout << "Request method " << request.getMethod() << std::endl;
     std::cout << "Request userAgent " << request.getUserAgent() << std::endl;
@@ -55,30 +128,30 @@ void handle_connection(int client_socket, Route* routes) {
 
         close(client_socket);
         return;
-    }
-
-    URLPattern* urlpattern = routes->getUrlPattern(request.getUrl());
-
-    if ((request.clientWantAnything() || request.clientWantsHtml()) && urlpattern) {
-        request.setUrlFormat(urlpattern->url);
-        request.setSocket(client_socket);
-        urlpattern->controller(request);
-    } else if (request.clientWantsHtml()) {
-        const char *http_response_404 =
-            "HTTP/1.1 404 Not Found\r\n"
-            "Content-Type: text/html\r\n"
-            "Connection: close\r\n"
-            "\r\n"
-            "<html><body><h1>404 - Page Not Found</h1></body></html>";
-        send(client_socket, http_response_404, strlen(http_response_404), 0);
     } else {
-        const char *http_response =
-            "HTTP/1.1 200 OK\r\n"
-            "Content-Type: text/html\r\n"
-            "Connection: close\r\n"
-            "\r\n"
-            "<html><body><h1>Bonjour depuis un serveur HTTP C++ !</h1></body></html>";
-        send(client_socket, http_response, strlen(http_response), 0);
+        URLPattern* urlpattern = routes->getUrlPattern(request.getUrl());
+
+        if ((request.clientWantAnything() || request.clientWantsHtml()) && urlpattern) {
+            request.setUrlFormat(urlpattern->url);
+            request.setSocket(client_socket);
+            urlpattern->controller(request);
+        } else if (request.clientWantsHtml()) {
+            const char *http_response_404 =
+                "HTTP/1.1 404 Not Found\r\n"
+                "Content-Type: text/html\r\n"
+                "Connection: close\r\n"
+                "\r\n"
+                "<html><body><h1>404 - Page Not Found</h1></body></html>";
+            send(client_socket, http_response_404, strlen(http_response_404), 0);
+        } else {
+            const char *http_response =
+                "HTTP/1.1 200 OK\r\n"
+                "Content-Type: text/html\r\n"
+                "Connection: close\r\n"
+                "\r\n"
+                "<html><body><h1>Bonjour depuis un serveur HTTP C++ !</h1></body></html>";
+            send(client_socket, http_response, strlen(http_response), 0);
+        }
     }
 
     close(client_socket);

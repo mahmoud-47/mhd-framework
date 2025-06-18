@@ -20,8 +20,9 @@
 {{ end }}
 </center>
   <main>
-    <form method="post" class="client-form">
+    <form method="post" class="client-form" enctype="multipart/form-data">
       <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="Client Avatar" class="client-avatar center">
+      <input type="file" name="img">
       <input type="text" placeholder="Name" required name="name">
       <input type="email" placeholder="Email" name="email">
       <input type="tel" placeholder="Phone" name="phone">

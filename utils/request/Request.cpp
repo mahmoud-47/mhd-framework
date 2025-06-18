@@ -314,7 +314,20 @@ static std::unordered_map<std::string, std::string> parseUrlEncodedBody(const st
 
 
 std::string Request::getFormDataParameterByParameterName(const std::string parameterName) {
-    // Find body start
+    std::string contentType = getHeaderValue("Content-Type");
+    
+    // Handle multipart/form-data
+    if (contentType.find("multipart/form-data") != std::string::npos) {
+        if (!multipartParsed) {
+            parseMultipartData();
+            multipartParsed = true;
+        }
+        
+        auto it = multipartFields.find(parameterName);
+        return it != multipartFields.end() ? it->second.value : "";
+    }
+    
+    // Handle application/x-www-form-urlencoded 
     size_t headerEnd = buffer.find("\r\n\r\n");
     if (headerEnd == std::string::npos) return "";
 
@@ -323,4 +336,158 @@ std::string Request::getFormDataParameterByParameterName(const std::string param
 
     auto it = params.find(parameterName);
     return it != params.end() ? it->second : "";
+}
+
+void Request::parseMultipartData() {
+    std::string contentType = getHeaderValue("Content-Type");
+    
+    // Extract boundary
+    size_t boundaryPos = contentType.find("boundary=");
+    if (boundaryPos == std::string::npos) return;
+    
+    std::string boundary = "--" + contentType.substr(boundaryPos + 9);
+    
+    // Find body start
+    size_t headerEnd = buffer.find("\r\n\r\n");
+    if (headerEnd == std::string::npos) return;
+    
+    std::string body = buffer.substr(headerEnd + 4);
+    
+    // Split by boundary
+    std::vector<std::string> parts;
+    size_t pos = 0;
+    
+    while (pos < body.length()) {
+        size_t nextBoundary = body.find(boundary, pos);
+        if (nextBoundary == std::string::npos) break;
+        
+        if (pos > 0) {  // Skip the first empty part
+            std::string part = body.substr(pos, nextBoundary - pos);
+            // Clean up the part (remove leading/trailing CRLF)
+            if (part.substr(0, 2) == "\r\n") part = part.substr(2);
+            if (part.length() >= 2 && part.substr(part.length() - 2) == "\r\n") {
+                part = part.substr(0, part.length() - 2);
+            }
+            if (!part.empty()) {
+                parts.push_back(part);
+            }
+        }
+        
+        pos = nextBoundary + boundary.length();
+        // Skip CRLF after boundary
+        if (pos < body.length() && body.substr(pos, 2) == "\r\n") {
+            pos += 2;
+        }
+    }
+    
+    // Parse each part
+    for (const auto& part : parts) {
+        if (part.empty() || part == "--") continue;
+        parseMultipartPart(part);
+    }
+}
+
+void Request::parseMultipartPart(const std::string& part) {
+    // Find separation between headers and content
+    size_t headerEnd = part.find("\r\n\r\n");
+    if (headerEnd == std::string::npos) return;
+    
+    std::string headers = part.substr(0, headerEnd);
+    std::string content = part.substr(headerEnd + 4);
+    
+    FormField field;
+    std::string fieldName;
+    
+    // Parse Content-Disposition header
+    std::istringstream headerStream(headers);
+    std::string line;
+    
+    while (std::getline(headerStream, line)) {
+        if (line.find("Content-Disposition:") == 0) {
+            // Extract name
+            size_t namePos = line.find("name=\"");
+            if (namePos != std::string::npos) {
+                namePos += 6; // Skip 'name="'
+                size_t nameEnd = line.find("\"", namePos);
+                if (nameEnd != std::string::npos) {
+                    fieldName = line.substr(namePos, nameEnd - namePos);
+                }
+            }
+            
+            // Extract filename (for file uploads)
+            size_t filenamePos = line.find("filename=\"");
+            if (filenamePos != std::string::npos) {
+                filenamePos += 10; // Skip 'filename="'
+                size_t filenameEnd = line.find("\"", filenamePos);
+                if (filenameEnd != std::string::npos) {
+                    field.filename = line.substr(filenamePos, filenameEnd - filenamePos);
+                }
+            }
+        } else if (line.find("Content-Type:") == 0) {
+            field.contentType = line.substr(14); // Skip "Content-Type: "
+            // Trim whitespace
+            size_t start = field.contentType.find_first_not_of(" \t\r");
+            if (start != std::string::npos) {
+                field.contentType = field.contentType.substr(start);
+            }
+            size_t end = field.contentType.find_last_not_of(" \t\r");
+            if (end != std::string::npos) {
+                field.contentType = field.contentType.substr(0, end + 1);
+            }
+        }
+    }
+    
+    field.value = content;
+    
+    if (!fieldName.empty()) {
+        multipartFields[fieldName] = field;
+    }
+}
+
+bool Request::isFileUpload(const std::string& parameterName) {
+    std::string contentType = getHeaderValue("Content-Type");
+
+    if (contentType.find("multipart/form-data") != std::string::npos) {
+        if (!multipartParsed) {
+            parseMultipartData();
+            multipartParsed = true;
+        }
+        
+        auto it = multipartFields.find(parameterName);
+        return it != multipartFields.end() && !it->second.filename.empty();
+    }
+
+    return false;
+}
+
+std::string Request::getFileName(const std::string& parameterName) {
+    std::string contentType = getHeaderValue("Content-Type");
+    
+    if (contentType.find("multipart/form-data") != std::string::npos) {
+        if (!multipartParsed) {
+            parseMultipartData();
+            multipartParsed = true;
+        }
+        
+        auto it = multipartFields.find(parameterName);
+        return it != multipartFields.end() ? it->second.filename : "";
+    }
+    
+    return "";
+}
+
+std::string Request::getFileContentType(const std::string& parameterName) {
+    std::string contentType = getHeaderValue("Content-Type");
+    
+    if (contentType.find("multipart/form-data") != std::string::npos) {
+        if (!multipartParsed) {
+            parseMultipartData();
+            multipartParsed = true;
+        }
+        
+        auto it = multipartFields.find(parameterName);
+        return it != multipartFields.end() ? it->second.contentType : "";
+    }
+    
+    return "";
 }
