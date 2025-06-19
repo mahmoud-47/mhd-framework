@@ -181,7 +181,7 @@
                     client = static_cast<Client*>(clientQuery.find_by_id(request.getGETParameterByParameterName("id")));
                     if(client == nullptr){
                         renderText(request, "No client found with this id");
-                        return;
+                        return; 
                     }
                     
                 }catch(SQLException& e){
