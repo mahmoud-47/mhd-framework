@@ -19,6 +19,9 @@
     // Static Files Folder
     const std::string STATIC_DIR = TEMPLATES_DIR + "/static";
 
+    // Uploaded Files Folder
+    const std::string UPLOADS_DIR = STATIC_DIR + "/uploads";
+
     /* DATABASE CONFIG*/
 
     // SQLITE

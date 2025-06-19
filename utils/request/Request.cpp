@@ -5,6 +5,22 @@
  *   Computations 
  */
 
+static std::string urlDecode(const std::string& str) {
+    std::string result;
+    for (size_t i = 0; i < str.length(); ++i) {
+        if (str[i] == '+') {
+            result += ' ';
+        } else if (str[i] == '%' && i + 2 < str.length()) {
+            std::string hex = str.substr(i + 1, 2);
+            result += static_cast<char>(std::stoi(hex, nullptr, 16));
+            i += 2;
+        } else {
+            result += str[i];
+        }
+    }
+    return result;
+}
+
 /**
  * Set the url from the buffer
  */
@@ -75,7 +91,7 @@ Request::Request(const std::string buffer){
  * Get the url in runtime, in string format ex : /mypath/1
  */
 std::string Request::getUrl() const{
-    return url;
+    return urlDecode(url);
 }
 /**
  * Get the Method as string exemple : GET / POST / DELETE / PUT
@@ -278,45 +294,341 @@ std::string Request::getQueryParameterByParameterName(const std::string paramete
 //     return "";
 // }
 
-static std::string urlDecode(const std::string& str) {
-    std::string result;
-    for (size_t i = 0; i < str.length(); ++i) {
-        if (str[i] == '+') {
-            result += ' ';
-        } else if (str[i] == '%' && i + 2 < str.length()) {
-            std::string hex = str.substr(i + 1, 2);
-            result += static_cast<char>(std::stoi(hex, nullptr, 16));
-            i += 2;
-        } else {
-            result += str[i];
-        }
+
+
+// static std::unordered_map<std::string, std::string> parseUrlEncodedBody(const std::string& body) {
+//     std::unordered_map<std::string, std::string> result;
+//     std::istringstream stream(body);
+//     std::string pair;
+
+//     while (std::getline(stream, pair, '&')) {
+//         size_t equalPos = pair.find('=');
+//         if (equalPos != std::string::npos) {
+//             std::string key = urlDecode(pair.substr(0, equalPos));
+//             std::string value = urlDecode(pair.substr(equalPos + 1));
+//             result[key] = value;
+//         }
+//     }
+
+//     return result;
+// }
+
+
+
+// std::string Request::getFormDataParameterByParameterName(const std::string parameterName) {
+//     std::string contentType = getHeaderValue("Content-Type");
+    
+//     // Handle multipart/form-data
+//     if (contentType.find("multipart/form-data") != std::string::npos) {
+//         if (!multipartParsed) {
+//             parseMultipartData();
+//             multipartParsed = true;
+//         }
+        
+//         auto it = multipartFields.find(parameterName);
+//         return it != multipartFields.end() ? it->second.value : "";
+//     }
+    
+//     // Handle application/x-www-form-urlencoded 
+//     size_t headerEnd = buffer.find("\r\n\r\n");
+//     if (headerEnd == std::string::npos) return "";
+
+//     std::string body = buffer.substr(headerEnd + 4);
+//     std::unordered_map<std::string, std::string> params = parseUrlEncodedBody(body);
+
+//     auto it = params.find(parameterName);
+//     return it != params.end() ? it->second : "";
+// }
+
+
+// #include <iostream>
+// #include <iomanip>
+
+// Add this debug helper function
+void debugPrintString(const std::string& str, const std::string& label) {
+    std::cout << "=== " << label << " ===" << std::endl;
+    std::cout << "Length: " << str.length() << std::endl;
+    std::cout << "Content: [" << str << "]" << std::endl;
+    std::cout << "Hex dump: ";
+    for (unsigned char c : str) {
+        std::cout << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(c) << " ";
     }
-    return result;
+    std::cout << std::dec << std::endl;
+    std::cout << "========================" << std::endl << std::endl;
 }
 
+// Debug version of parseUrlEncodedBody
 static std::unordered_map<std::string, std::string> parseUrlEncodedBody(const std::string& body) {
+    std::cout << "\n=== DEBUGGING parseUrlEncodedBody ===" << std::endl;
+    debugPrintString(body, "Original Body");
+    
     std::unordered_map<std::string, std::string> result;
-    std::istringstream stream(body);
-    std::string pair;
-
-    while (std::getline(stream, pair, '&')) {
-        size_t equalPos = pair.find('=');
-        if (equalPos != std::string::npos) {
-            std::string key = urlDecode(pair.substr(0, equalPos));
-            std::string value = urlDecode(pair.substr(equalPos + 1));
-            result[key] = value;
-        }
+    
+    // Remove any trailing whitespace or carriage returns
+    std::string cleanBody = body;
+    while (!cleanBody.empty() && (cleanBody.back() == '\r' || cleanBody.back() == '\n' || cleanBody.back() == ' ')) {
+        cleanBody.pop_back();
     }
-
+    
+    debugPrintString(cleanBody, "Cleaned Body");
+    
+    // Split by '&' manually instead of using getline
+    size_t start = 0;
+    size_t pos = 0;
+    int pairCount = 0;
+    
+    while (pos <= cleanBody.length()) {
+        // Find next '&' or end of string
+        pos = cleanBody.find('&', start);
+        if (pos == std::string::npos) {
+            pos = cleanBody.length();
+        }
+        
+        std::cout << "Processing pair " << pairCount << ": start=" << start << ", pos=" << pos << std::endl;
+        
+        // Extract the key-value pair
+        if (pos > start) {
+            std::string pair = cleanBody.substr(start, pos - start);
+            debugPrintString(pair, "Pair " + std::to_string(pairCount));
+            
+            size_t equalPos = pair.find('=');
+            if (equalPos != std::string::npos) {
+                std::string key = pair.substr(0, equalPos);
+                std::string value = pair.substr(equalPos + 1);
+                
+                std::cout << "Raw key: [" << key << "]" << std::endl;
+                std::cout << "Raw value: [" << value << "]" << std::endl;
+                
+                key = urlDecode(key);
+                value = urlDecode(value);
+                
+                std::cout << "Decoded key: [" << key << "]" << std::endl;
+                std::cout << "Decoded value: [" << value << "]" << std::endl;
+                
+                result[key] = value;
+                pairCount++;
+            } else {
+                std::cout << "No '=' found in pair: [" << pair << "]" << std::endl;
+            }
+        }
+        
+        start = pos + 1;
+        if (start > cleanBody.length()) break;
+    }
+    
+    std::cout << "\nFinal result map contains " << result.size() << " entries:" << std::endl;
+    for (const auto& kv : result) {
+        std::cout << "  [" << kv.first << "] = [" << kv.second << "]" << std::endl;
+    }
+    std::cout << "=== END DEBUG ===" << std::endl << std::endl;
+    
     return result;
 }
 
 
+// std::string removeWebKitBoundaryLines(const std::string& input) {
+//     const std::string boundary = "------WebKitFormBoundary";
+//     std::string result = input;
+    
+//     // Remove any trailing boundary markers
+//     size_t boundary_pos = result.find(boundary);
+//     if (boundary_pos != std::string::npos) {
+//         // Find the actual end of the line (could be \n or \r\n)
+//         size_t line_end = result.find_first_of("\r\n", boundary_pos);
+//         if (line_end != std::string::npos) {
+//             // Remove from boundary start to line end
+//             result.erase(boundary_pos, line_end - boundary_pos);
+//         } else {
+//             // No line ending found, just remove from boundary to end
+//             result.erase(boundary_pos);
+//         }
+        
+//         // Also remove any trailing newlines after the boundary
+//         while (!result.empty() && (result.back() == '\n' || result.back() == '\r')) {
+//             result.pop_back();
+//         }
+//     }
+    
+//     return result;
+// }
+
+
+// // Debug version of getFormDataParameterByParameterName
+// std::string Request::getFormDataParameterByParameterName(const std::string parameterName) {
+//     std::cout << "\n=== DEBUGGING getFormDataParameterByParameterName ===" << std::endl;
+//     std::cout << "Looking for parameter: [" << parameterName << "]" << std::endl;
+    
+//     std::string contentType = getHeaderValue("Content-Type");
+//     std::cout << "Content-Type: [" << contentType << "]" << std::endl;
+    
+//     // Handle multipart/form-data
+//     if (contentType.find("multipart/form-data") != std::string::npos) {
+//         std::cout << "Processing as multipart/form-data" << std::endl;
+//         if (!multipartParsed) {
+//             parseMultipartData();
+//             multipartParsed = true;
+//         }
+        
+//         std::cout << "Multipart fields available:" << std::endl;
+//         for (const auto& field : multipartFields) {
+//             std::cout << "  [" << field.first << "] = [" << field.second.value << "]" << std::endl;
+//         }
+        
+//         auto it = multipartFields.find(parameterName);
+//         std::string result = it != multipartFields.end() ? it->second.value : "";
+//         std::cout << "Multipart result: [" << result << "]" << std::endl;
+//         return removeWebKitBoundaryLines(result);
+//     }
+    
+//     std::cout << "Processing as URL-encoded form data" << std::endl;
+    
+//     // Handle application/x-www-form-urlencoded 
+//     size_t headerEnd = buffer.find("\r\n\r\n");
+//     if (headerEnd == std::string::npos) {
+//         std::cout << "ERROR: Could not find end of headers (\\r\\n\\r\\n)" << std::endl;
+//         debugPrintString(buffer, "Full Buffer");
+//         return "";
+//     }
+    
+//     std::cout << "Headers end at position: " << headerEnd << std::endl;
+//     std::string body = buffer.substr(headerEnd + 4);
+//     debugPrintString(body, "Extracted Body");
+    
+//     std::unordered_map<std::string, std::string> params = parseUrlEncodedBody(body);
+
+//     auto it = params.find(parameterName);
+//     std::string result = it != params.end() ? it->second : "";
+//     std::cout << "Final result for [" << parameterName << "]: [" << result << "]" << std::endl;
+//     std::cout << "=== END getFormDataParameterByParameterName DEBUG ===" << std::endl << std::endl;
+    
+//     return removeWebKitBoundaryLines(result);
+// }
+
+
+// void Request::parseMultipartData() {
+//     std::string contentType = getHeaderValue("Content-Type");
+//     size_t boundaryPos = contentType.find("boundary=");
+//     if (boundaryPos == std::string::npos) return;
+    
+//     std::string boundary = "--" + contentType.substr(boundaryPos + 9);
+//     size_t headerEnd = buffer.find("\r\n\r\n");
+//     if (headerEnd == std::string::npos) return;
+    
+//     std::string body = buffer.substr(headerEnd + 4);
+//     size_t finalBoundaryPos = body.find(boundary + "--");
+//     if (finalBoundaryPos == std::string::npos) finalBoundaryPos = body.length();
+
+//     std::vector<std::string> parts;
+//     size_t pos = 0;
+    
+//     while (pos < finalBoundaryPos) {
+//         size_t nextBoundary = body.find(boundary, pos);
+//         if (nextBoundary == std::string::npos || nextBoundary >= finalBoundaryPos) break;
+        
+//         if (pos > 0) {  // Skip initial empty part
+//             std::string part = body.substr(pos, nextBoundary - pos);
+//             if (part.size() >= 2 && part.substr(0, 2) == "\r\n") part = part.substr(2);
+//             if (!part.empty()) parts.push_back(part);
+//         }
+        
+//         pos = nextBoundary + boundary.length();
+//         if (body.substr(pos, 2) == "\r\n") pos += 2;
+//     }
+    
+//     // Handle final part before the closing boundary
+//     if (pos < finalBoundaryPos) {
+//         std::string finalPart = body.substr(pos, finalBoundaryPos - pos);
+//         if (finalPart.size() >= 2 && finalPart.substr(0, 2) == "\r\n") finalPart = finalPart.substr(2);
+//         if (!finalPart.empty()) parts.push_back(finalPart);
+//     }
+
+//     for (const auto& part : parts) {
+//         parseMultipartPart(part);
+//     }
+// }
+
+// void Request::parseMultipartPart(const std::string& part) {
+//     size_t headerEnd = part.find("\r\n\r\n");
+//     if (headerEnd == std::string::npos) return;
+    
+//     std::string headers = part.substr(0, headerEnd);
+//     std::string content = part.substr(headerEnd + 4);
+    
+//     // Trim trailing newlines from content
+//     size_t contentEnd = content.find_last_not_of("\r\n");
+//     if (contentEnd != std::string::npos) {
+//         content = content.substr(0, contentEnd + 1);
+//     } else {
+//         content.clear();
+//     }
+
+//     FormField field;
+//     std::string fieldName;
+    
+//     std::istringstream headerStream(headers);
+//     std::string line;
+    
+//     while (std::getline(headerStream, line)) {
+//         if (!line.empty() && line.back() == '\r') line.pop_back();
+        
+//         if (line.find("Content-Disposition:") == 0) {
+//             size_t namePos = line.find("name=\"");
+//             if (namePos != std::string::npos) {
+//                 namePos += 6;
+//                 size_t nameEnd = line.find("\"", namePos);
+//                 if (nameEnd != std::string::npos) {
+//                     fieldName = line.substr(namePos, nameEnd - namePos);
+//                 }
+//             }
+            
+//             size_t filenamePos = line.find("filename=\"");
+//             if (filenamePos != std::string::npos) {
+//                 filenamePos += 10;
+//                 size_t filenameEnd = line.find("\"", filenamePos);
+//                 if (filenameEnd != std::string::npos) {
+//                     field.filename = line.substr(filenamePos, filenameEnd - filenamePos);
+//                 }
+//             }
+//         }
+//         else if (line.find("Content-Type:") == 0) {
+//             field.contentType = line.substr(13);
+//             // Trim whitespace
+//             field.contentType.erase(0, field.contentType.find_first_not_of(" \t"));
+//             field.contentType.erase(field.contentType.find_last_not_of(" \t") + 1);
+//         }
+//     }
+    
+//     field.value = content;
+    
+//     if (!fieldName.empty()) {
+//         multipartFields[fieldName] = field;
+//     }
+// }
+
+std::string removeWebKitBoundaryLines(const std::string& input) {
+    const std::string boundary = "------WebKitFormBoundary";
+    std::string result = input;
+    
+    size_t boundary_pos = result.find(boundary);
+    if (boundary_pos != std::string::npos) {
+        size_t line_end = result.find_first_of("\r\n", boundary_pos);
+        if (line_end != std::string::npos) {
+            result.erase(boundary_pos, line_end - boundary_pos);
+        } else {
+            result.erase(boundary_pos);
+        }
+        
+        while (!result.empty() && (result.back() == '\n' || result.back() == '\r')) {
+            result.pop_back();
+        }
+    }
+    
+    return result;
+}
 
 std::string Request::getFormDataParameterByParameterName(const std::string parameterName) {
     std::string contentType = getHeaderValue("Content-Type");
     
-    // Handle multipart/form-data
     if (contentType.find("multipart/form-data") != std::string::npos) {
         if (!multipartParsed) {
             parseMultipartData();
@@ -324,13 +636,12 @@ std::string Request::getFormDataParameterByParameterName(const std::string param
         }
         
         auto it = multipartFields.find(parameterName);
-        return it != multipartFields.end() ? it->second.value : "";
+        return it != multipartFields.end() ? removeWebKitBoundaryLines(it->second.value) : "";
     }
     
-    // Handle application/x-www-form-urlencoded 
     size_t headerEnd = buffer.find("\r\n\r\n");
     if (headerEnd == std::string::npos) return "";
-
+    
     std::string body = buffer.substr(headerEnd + 4);
     std::unordered_map<std::string, std::string> params = parseUrlEncodedBody(body);
 
@@ -340,100 +651,91 @@ std::string Request::getFormDataParameterByParameterName(const std::string param
 
 void Request::parseMultipartData() {
     std::string contentType = getHeaderValue("Content-Type");
-    
-    // Extract boundary
     size_t boundaryPos = contentType.find("boundary=");
     if (boundaryPos == std::string::npos) return;
     
     std::string boundary = "--" + contentType.substr(boundaryPos + 9);
-    
-    // Find body start
     size_t headerEnd = buffer.find("\r\n\r\n");
     if (headerEnd == std::string::npos) return;
     
     std::string body = buffer.substr(headerEnd + 4);
-    
-    // Split by boundary
+    size_t finalBoundaryPos = body.find(boundary + "--");
+    if (finalBoundaryPos == std::string::npos) finalBoundaryPos = body.length();
+
     std::vector<std::string> parts;
     size_t pos = 0;
     
-    while (pos < body.length()) {
+    while (pos < finalBoundaryPos) {
         size_t nextBoundary = body.find(boundary, pos);
-        if (nextBoundary == std::string::npos) break;
+        if (nextBoundary == std::string::npos || nextBoundary >= finalBoundaryPos) break;
         
-        if (pos > 0) {  // Skip the first empty part
+        if (pos > 0) {
             std::string part = body.substr(pos, nextBoundary - pos);
-            // Clean up the part (remove leading/trailing CRLF)
-            if (part.substr(0, 2) == "\r\n") part = part.substr(2);
-            if (part.length() >= 2 && part.substr(part.length() - 2) == "\r\n") {
-                part = part.substr(0, part.length() - 2);
-            }
-            if (!part.empty()) {
-                parts.push_back(part);
-            }
+            if (part.size() >= 2 && part.substr(0, 2) == "\r\n") part = part.substr(2);
+            if (!part.empty()) parts.push_back(part);
         }
         
         pos = nextBoundary + boundary.length();
-        // Skip CRLF after boundary
-        if (pos < body.length() && body.substr(pos, 2) == "\r\n") {
-            pos += 2;
-        }
+        if (body.substr(pos, 2) == "\r\n") pos += 2;
     }
     
-    // Parse each part
+    if (pos < finalBoundaryPos) {
+        std::string finalPart = body.substr(pos, finalBoundaryPos - pos);
+        if (finalPart.size() >= 2 && finalPart.substr(0, 2) == "\r\n") finalPart = finalPart.substr(2);
+        if (!finalPart.empty()) parts.push_back(finalPart);
+    }
+
     for (const auto& part : parts) {
-        if (part.empty() || part == "--") continue;
         parseMultipartPart(part);
     }
 }
 
 void Request::parseMultipartPart(const std::string& part) {
-    // Find separation between headers and content
     size_t headerEnd = part.find("\r\n\r\n");
     if (headerEnd == std::string::npos) return;
     
     std::string headers = part.substr(0, headerEnd);
     std::string content = part.substr(headerEnd + 4);
     
+    size_t contentEnd = content.find_last_not_of("\r\n");
+    if (contentEnd != std::string::npos) {
+        content = content.substr(0, contentEnd + 1);
+    } else {
+        content.clear();
+    }
+
     FormField field;
     std::string fieldName;
     
-    // Parse Content-Disposition header
     std::istringstream headerStream(headers);
     std::string line;
     
     while (std::getline(headerStream, line)) {
+        if (!line.empty() && line.back() == '\r') line.pop_back();
+        
         if (line.find("Content-Disposition:") == 0) {
-            // Extract name
             size_t namePos = line.find("name=\"");
             if (namePos != std::string::npos) {
-                namePos += 6; // Skip 'name="'
+                namePos += 6;
                 size_t nameEnd = line.find("\"", namePos);
                 if (nameEnd != std::string::npos) {
                     fieldName = line.substr(namePos, nameEnd - namePos);
                 }
             }
             
-            // Extract filename (for file uploads)
             size_t filenamePos = line.find("filename=\"");
             if (filenamePos != std::string::npos) {
-                filenamePos += 10; // Skip 'filename="'
+                filenamePos += 10;
                 size_t filenameEnd = line.find("\"", filenamePos);
                 if (filenameEnd != std::string::npos) {
                     field.filename = line.substr(filenamePos, filenameEnd - filenamePos);
                 }
             }
-        } else if (line.find("Content-Type:") == 0) {
-            field.contentType = line.substr(14); // Skip "Content-Type: "
-            // Trim whitespace
-            size_t start = field.contentType.find_first_not_of(" \t\r");
-            if (start != std::string::npos) {
-                field.contentType = field.contentType.substr(start);
-            }
-            size_t end = field.contentType.find_last_not_of(" \t\r");
-            if (end != std::string::npos) {
-                field.contentType = field.contentType.substr(0, end + 1);
-            }
+        }
+        else if (line.find("Content-Type:") == 0) {
+            field.contentType = line.substr(13);
+            field.contentType.erase(0, field.contentType.find_first_not_of(" \t"));
+            field.contentType.erase(field.contentType.find_last_not_of(" \t") + 1);
         }
     }
     
@@ -443,6 +745,7 @@ void Request::parseMultipartPart(const std::string& part) {
         multipartFields[fieldName] = field;
     }
 }
+
 
 bool Request::isFileUpload(const std::string& parameterName) {
     std::string contentType = getHeaderValue("Content-Type");

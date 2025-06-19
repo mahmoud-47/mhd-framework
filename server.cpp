@@ -100,6 +100,7 @@ void handle_connection(int client_socket, Route* routes) {
     std::cout << "Request Url " << request.getUrl() << std::endl;
 
     std::string url = request.getUrl();
+    
 
     if (url.find("/static/") == 0) {
         std::string relativePath = url.substr(8); // remove "/static/"

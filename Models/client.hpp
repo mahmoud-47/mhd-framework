@@ -12,12 +12,14 @@ public:
     std::string phone;
     std::string company;
     std::string notes;
+    std::string profile_image;
     MhdDateTime created_at;
 
 
     void registerFields(){
         fields.clear();
         fields.push_back({"id", "INTEGER", &id, "PRIMARY KEY "});
+        fields.push_back({"profile_image", "TEXT", &profile_image, ""});
         fields.push_back({"name", "TEXT", &name, ""});
         fields.push_back({"email", "TEXT", &email, "UNIQUE"});
         fields.push_back({"phone", "TEXT", &phone, ""});
@@ -38,13 +40,14 @@ public:
                             phone(other.phone),
                             company(other.company),
                             notes(other.notes),
+                            profile_image(other.profile_image),
                             created_at(other.created_at) {
         registerFields();  // This updates the pointers to our new members
     }
 
     // Parameterized constructor
-    Client(const int id, const std::string& name, const std::string& email, const std::string& phone, const std::string& company, const std::string& notes, const MhdDateTime& created_at) : 
-        SQLiteORM("clients"), id(id), name(name), email(email), phone(phone), company(company), notes(notes), created_at(created_at) {
+    Client(const int id, const std::string& profile_image, const std::string& name, const std::string& email, const std::string& phone, const std::string& company, const std::string& notes, const MhdDateTime& created_at) : 
+        SQLiteORM("clients"), id(id), name(name), email(email), phone(phone), company(company), notes(notes), created_at(created_at), profile_image(profile_image) {
         registerFields();
     }
 

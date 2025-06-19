@@ -28,6 +28,7 @@
                     clientContextObject["email"] = ContextValue(converted_client->email);
                     clientContextObject["company"] = ContextValue(converted_client->company);
                     clientContextObject["notes"] = ContextValue(converted_client->notes);
+                    clientContextObject["profile-image"] = ContextValue(converted_client->profile_image);
                     clientContextArray.push_back(clientContextObject);
                 }
 
@@ -72,11 +73,12 @@
                     std::string notes = request.getFormDataParameterByParameterName("notes");
 
                     MhdFile *image = request.getFileFromPostByName("img");
+                    std::string savedImagePath = "";
                     if(image != nullptr){
-                        std::string savedImagePath = image->saveTo(BASE_DIR + "/uploads/clients/images/");
+                        savedImagePath = image->saveTo("/clients/images");
                         std::cout << "Saved path = " << savedImagePath << "\n";
                     }else{
-                        std::cout << "*** Image No uploaded \n";
+                        std::cout << "*** Image Not uploaded \n";
                     }
 
                     // Debug output
@@ -94,8 +96,8 @@
                     std::cout << "-----------------------------" << std::endl;
 
                     try{
-                        Client client(0, name, email, phone, company, notes, MhdDateTime());
-                        // client.save();
+                        Client client(0, savedImagePath, name, email, phone, company, notes, MhdDateTime());
+                        client.save();
                         context["save"] = ContextValue("true");
                     }catch(SQLException e){
                         context["fail"] = ContextValue("true");
@@ -110,28 +112,6 @@
                 std::string templatename = "clients/edit.html";
                 Context context;
 
-                if(request.getMethod() == "POST"){
-                    std::string id = request.getGETParameterByParameterName("id");
-                    std::string name = request.getFormDataParameterByParameterName("name");
-                    std::string email = request.getFormDataParameterByParameterName("email");
-                    std::string phone = request.getFormDataParameterByParameterName("phone");
-                    std::string company = request.getFormDataParameterByParameterName("company");
-                    std::string notes = request.getFormDataParameterByParameterName("notes");
-
-                    // Update the client
-                    try{
-                        Client client = Client(std::stoi(id), name, email, phone, company, notes, MhdDateTime()); // need to fetch the old time
-                        client.update(id);
-                        // context["updated"] = ContextValue("true");
-                        redirect(request, "/clients/all?updated=true&clientUpdatedName="+name);
-                        return;
-                    }catch(SQLException &e){
-                        context["failed"] = ContextValue("true");
-                        context["message"] = ContextValue(e.getMessage());
-                    }
-
-                }
-                
                 // fetch the client
                 Client clientQuery;
                 Client* client = nullptr;
@@ -147,6 +127,39 @@
                     return;
                 }
 
+                if(request.getMethod() == "POST"){
+                    std::string id = request.getGETParameterByParameterName("id");
+                    std::string name = request.getFormDataParameterByParameterName("name");
+                    std::string email = request.getFormDataParameterByParameterName("email");
+                    std::string phone = request.getFormDataParameterByParameterName("phone");
+                    std::string company = request.getFormDataParameterByParameterName("company");
+                    std::string notes = request.getFormDataParameterByParameterName("notes");
+                    
+                    MhdFile *image = request.getFileFromPostByName("img");
+
+                    std::string savedImagePath = "";
+                    if(image != nullptr){
+                        savedImagePath = image->saveTo("/clients/images");
+                        std::cout << "Saved path = " << savedImagePath << "\n";
+                    }else{
+                        savedImagePath = client->profile_image;
+                        std::cout << "*** Image No uploaded \n";
+                    }
+
+                    // Update the client
+                    try{
+                        Client client_ = Client(std::stoi(id), savedImagePath, name, email, phone, company, notes, client->created_at); // need to fetch the old time
+                        client_.update(id);
+                        // context["updated"] = ContextValue("true");
+                        redirect(request, "/clients/all?updated=true&clientUpdatedName="+name);
+                        return;
+                    }catch(SQLException &e){
+                        context["failed"] = ContextValue("true");
+                        context["message"] = ContextValue(e.getMessage());
+                    }
+
+                }
+                
                 
                 context["id"] = ContextValue(std::to_string(client->id));
                 context["name"] = ContextValue(client->name);
@@ -183,8 +196,10 @@
                 context["phone"] = ContextValue(client->phone);
                 context["company"] = ContextValue(client->company);
                 context["notes"] = ContextValue(client->notes);
+                context["profile-image"] = ContextValue(client->profile_image);
                 context["created-at"] = ContextValue(
-                    client->created_at.get_day_name() + " " + client->created_at.get_month_name() 
+                    client->created_at.get_day_name() + " " + std::to_string(client->created_at.get_day()) + " " + 
+                    client->created_at.get_month_name() 
                     + " " + std::to_string(client->created_at.get_year())
                 );
 
@@ -204,6 +219,8 @@
                         return;
                     }
                     clientname = client->name;
+                    if(client->profile_image.length() > 0)
+                        MhdFile::remove_uploaded_file(client->profile_image);
                     clientQuery.remove(id);
                 }catch(SQLException& e){
                     redirect(request, "/clients/all?deletion=false&del-id="+id);

@@ -76,7 +76,8 @@ class Request{
         
         void parseMultipartData();
         void parseMultipartPart(const std::string& part);
-
+        void cleanMultipartPart(std::string& part);
+        void trim(std::string& str);
         
 
     public:

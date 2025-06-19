@@ -55,6 +55,12 @@ MhdFile::MhdFile(const std::string& filename, const std::string& filecontent, co
 
 std::string MhdFile::saveTo(const std::string path, bool with_original_name) {
     std::string final_filename;
+    std::string correct_path = path;
+
+    if(correct_path.length() > 0){
+        if(correct_path[0] != '/')
+            correct_path = std::string("/") + correct_path;
+    }
     
     if (with_original_name) {
         final_filename = filename;
@@ -62,10 +68,10 @@ std::string MhdFile::saveTo(const std::string path, bool with_original_name) {
         final_filename = generateUniqueFilename(filename);
     }
 
-    fs::path full_path = fs::path(path) / final_filename;
-    
+    fs::path full_path = fs::path(UPLOADS_DIR + correct_path) / final_filename;
+
     if(saveUploadedFile(filecontent, full_path.string()))
-        return full_path.string();
+        return (fs::path(correct_path) / final_filename).c_str();
     return "";
 }
 
@@ -83,4 +89,22 @@ std::string MhdFile::get_name_without_extension() const {
         return filename.substr(0, dot_pos);
     }
     return filename;
+}
+
+// remove uploaded file
+bool MhdFile::remove_uploaded_file(const std::string path, bool is_absolute_path){
+    std::string final_path;
+    if(is_absolute_path)
+        final_path = path;
+    else
+        final_path = UPLOADS_DIR + path;
+    
+    std::cout << "******* removed " << final_path << "\n";
+    
+    if (std::remove(final_path.c_str()) == 0) {
+        return true; 
+    } else {
+        std::cerr << "Failed to delete file: " << path << std::endl;
+        return false; 
+    }
 }

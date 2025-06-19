@@ -30,7 +30,7 @@
       {{ if clients }}
       {{ for client in clients }}
       <div class="client-card">
-        <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="Client Image" class="client-avatar">
+        <img src="/static/uploads{{ client.profile-image }}" alt="Client Image" class="client-avatar">
         <h2>{{ client.name }}</h2>
         <p>{{ client.email }}</p>
         <p>{{ client.phone }}</p>
