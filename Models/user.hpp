@@ -41,6 +41,7 @@ public:
     ORMModel* clone() const override {
         return new User(*this);
     }
+
 };
 
 #endif

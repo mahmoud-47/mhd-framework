@@ -97,9 +97,7 @@ bool MhdFile::remove_uploaded_file(const std::string path, bool is_absolute_path
     if(is_absolute_path)
         final_path = path;
     else
-        final_path = UPLOADS_DIR + path;
-    
-    std::cout << "******* removed " << final_path << "\n";
+        final_path = (fs::path(UPLOADS_DIR) / path).string();
     
     if (std::remove(final_path.c_str()) == 0) {
         return true; 
