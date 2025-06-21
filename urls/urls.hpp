@@ -13,11 +13,9 @@ URLPattern urls[] = {
     {"parse", "/test-parse", HelloController::TestParser},
 
     // User URLS
-    {"adduser", "/adduser", UserController::createUser},
-    {"getuser", "/getuser/{userId}", UserController::getUser},
-    {"getusers", "/getusers", UserController::getAllUsers},
-    {"deluser", "/deluser/{userId}", UserController::deluser},
-    {"updateUser", "/updateuser/{userId}", UserController::updateUser},
+    {"register", "/user/register", UserController::regirer},
+    {"login", "/user/login", UserController::login},
+    
 
     // Client URLS
     {"display-all", "/clients/all", ClientController::DisplayAll},

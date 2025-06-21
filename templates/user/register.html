@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Register</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f3f4f6;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .container {
+      background: #fff;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+      max-width: 400px;
+      width: 100%;
+    }
+    h2 {
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+    input {
+      width: 100%;
+      padding: 0.8rem;
+      margin-bottom: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+    button {
+      width: 100%;
+      padding: 0.8rem;
+      border: none;
+      background-color: #4f46e5;
+      color: white;
+      font-size: 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #4338ca;
+    }
+    .message {
+      display: none;
+      margin-bottom: 1rem;
+      padding: 0.8rem;
+      border-radius: 6px;
+    }
+    .success {
+      background-color: #d1fae5;
+      color: #065f46;
+    }
+    .error {
+      background-color: #fee2e2;
+      color: #991b1b;
+    }
+    .switch {
+      text-align: center;
+      margin-top: 1rem;
+    }
+    .switch a {
+      color: #4f46e5;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Register</h2>
+    <div class="message success" id="register-success">Registration successful!</div>
+    <div class="message error" id="register-error">Error during registration.</div>
+    <input type="text" placeholder="First Name" id="first-name" />
+    <input type="text" placeholder="Last Name" id="last-name" />
+    <input type="email" placeholder="Email" id="email" />
+    <input type="text" placeholder="Username" id="username-reg" />
+    <input type="password" placeholder="Password" id="password-reg" />
+    <input type="password" placeholder="Repeat Password" id="repeat-password" />
+    <button onclick="register()">Register</button>
+    <div class="switch">
+      Already have an account? <a href="login.html">Login</a>
+    </div>
+  </div>
+
+  <script>
+    function register() {
+      const success = true; // Placeholder for real logic
+      document.getElementById('register-success').style.display = success ? 'block' : 'none';
+      document.getElementById('register-error').style.display = success ? 'none' : 'block';
+    }
+  </script>
+</body>
+</html>
