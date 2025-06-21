@@ -57,7 +57,7 @@ public:
     ORMModel* find_by_id(const std::string& id) override;
 
     // find by column and value, the first parameter is the column name, the second one is the value
-    std::vector<ORMModel*> SQLiteORM::find_by(const std::string& column_name, const std::string& value);
+    std::vector<ORMModel*> find_by(const std::string& column_name, const std::string& value);
 
     std::vector<ORMModel*> find_all() override;
 };
