@@ -76,7 +76,7 @@ public:
      * User Authentication methods
      */
 
-    // Returns the user id after successfuly created the user, or returns -1
+    // Returns the user pointer after successfuly created the user, or returns -1
     static User* create_user(
         const std::string &firstname, 
         const std::string &lastname, 
@@ -85,7 +85,6 @@ public:
         const std::string &password
     ){
         std::string hashed_password = hash_password(password);
-        std::cout << " *********** Hashed password = " << hash_password << "\n";
 
         User user(0, firstname, lastname, email, username, hashed_password);
         // capture the time right now
@@ -94,15 +93,29 @@ public:
         user.created_at = now;
         user.updated_at = now;
 
-        try{
-            user.save();
-        }catch(SQLException &e){
-            std::cerr << "*** Error while saving user : " << e.getMessage() << "\n";
-            return nullptr;
-        }
+        // this can raise an exception, it should be caught while creating the user
+        user.save();
         
         // return the only user found
-        return static_cast<User*>(user.find_by("email", email)[0]);
+        return static_cast<User*>(user.find_by("username", username)[0]);
+    }
+
+    // Returns a pointer to the user if the authentication worked or null otherwise
+    static User* authenticate(const std::string &username, const std::string &password){
+        User userQuery;
+        auto users = userQuery.find_by("username", username);
+
+        // if we don't have exactly one user with this username, return NULL
+        if(users.size() != 1)
+            return nullptr;
+
+        User* user = static_cast<User*>(users[0]);
+
+        // if the hashed password is not the same as the stored password
+        if(user->password != hash_password(password))
+            return nullptr;
+        
+        return user;
     }
 
 };

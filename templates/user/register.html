@@ -19,20 +19,30 @@
       padding: 2rem;
       border-radius: 12px;
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-      max-width: 400px;
+      max-width: 500px;
       width: 100%;
+      box-sizing: border-box;
     }
     h2 {
       margin-bottom: 1.5rem;
       text-align: center;
     }
-    input {
+    form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .form-group {
+      width: 100%;
+      margin-bottom: 1rem;
+    }
+    .form-group input {
       width: 100%;
       padding: 0.8rem;
-      margin-bottom: 1rem;
       border: 1px solid #ccc;
       border-radius: 8px;
       font-size: 1rem;
+      box-sizing: border-box;
     }
     button {
       width: 100%;
@@ -49,7 +59,6 @@
       background-color: #4338ca;
     }
     .message {
-      display: none;
       margin-bottom: 1rem;
       padding: 0.8rem;
       border-radius: 6px;
@@ -75,26 +84,42 @@
 <body>
   <div class="container">
     <h2>Register</h2>
-    <div class="message success" id="register-success">Registration successful!</div>
-    <div class="message error" id="register-error">Error during registration.</div>
-    <input type="text" placeholder="First Name" id="first-name" />
-    <input type="text" placeholder="Last Name" id="last-name" />
-    <input type="email" placeholder="Email" id="email" />
-    <input type="text" placeholder="Username" id="username-reg" />
-    <input type="password" placeholder="Password" id="password-reg" />
-    <input type="password" placeholder="Repeat Password" id="repeat-password" />
-    <button onclick="register()">Register</button>
+
+    {{ if success }}
+    <div class="message success" id="register-success">{{ message }}</div>
+    {{ end }}
+
+    {{ if error }}
+    <div class="message error" id="register-error">{{ message }}</div>
+    {{ end }}
+
+    <form method="post">
+      <div class="form-group">
+        <input name="firstname" type="text" placeholder="First Name" id="first-name" />
+      </div>
+      <div class="form-group">
+        <input name="lastname" type="text" placeholder="Last Name" id="last-name" />
+      </div>
+      <div class="form-group">
+        <input name="email" type="email" placeholder="Email" id="email" />
+      </div>
+      <div class="form-group">
+        <input name="username" type="text" placeholder="Username" id="username-reg" />
+      </div>
+      <div class="form-group">
+        <input name="password1" type="password" placeholder="Password" id="password-reg" />
+      </div>
+      <div class="form-group">
+        <input name="password2" type="password" placeholder="Repeat Password" id="repeat-password" />
+      </div>
+      <button type="submit">Register</button>
+    </form>
+
     <div class="switch">
-      Already have an account? <a href="login.html">Login</a>
+      Already have an account? <a href="/user/login">Login</a>
     </div>
   </div>
 
-  <script>
-    function register() {
-      const success = true; // Placeholder for real logic
-      document.getElementById('register-success').style.display = success ? 'block' : 'none';
-      document.getElementById('register-error').style.display = success ? 'none' : 'block';
-    }
-  </script>
+  
 </body>
 </html>

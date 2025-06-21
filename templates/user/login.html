@@ -19,20 +19,30 @@
       padding: 2rem;
       border-radius: 12px;
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-      max-width: 400px;
+      max-width: 500px;
       width: 100%;
+      box-sizing: border-box;
     }
     h2 {
       margin-bottom: 1.5rem;
       text-align: center;
     }
-    input {
+    form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .form-group {
+      width: 100%;
+      margin-bottom: 1rem;
+    }
+    .form-group input {
       width: 100%;
       padding: 0.8rem;
-      margin-bottom: 1rem;
       border: 1px solid #ccc;
       border-radius: 8px;
       font-size: 1rem;
+      box-sizing: border-box;
     }
     button {
       width: 100%;
@@ -49,7 +59,6 @@
       background-color: #4338ca;
     }
     .message {
-      display: none;
       margin-bottom: 1rem;
       padding: 0.8rem;
       border-radius: 6px;
@@ -75,22 +84,28 @@
 <body>
   <div class="container">
     <h2>Login</h2>
-    <div class="message success" id="login-success">Login successful!</div>
-    <div class="message error" id="login-error">Invalid credentials.</div>
-    <input type="text" placeholder="Username" id="username-login" />
-    <input type="password" placeholder="Password" id="password-login" />
-    <button onclick="login()">Login</button>
+    
+    {{ if success }}
+    <div class="message success" id="register-success">{{ message }}</div>
+    {{ end }}
+
+    {{ if error }}
+    <div class="message error" id="register-error">{{ message }}</div>
+    {{ end }}
+
+    <form method="post">
+      <div class="form-group">
+        <input name="username" type="text" placeholder="Username" id="username-login" />
+      </div>
+      <div class="form-group">
+        <input name="password" type="password" placeholder="Password" id="password-login" />
+      </div>
+      <button type="submit">Login</button>
+    </form>
+
     <div class="switch">
-      Don't have an account? <a href="register.html">Register</a>
+      Don't have an account? <a href="/user/register">Register</a>
     </div>
   </div>
-
-  <script>
-    function login() {
-      const success = true; // Placeholder for real logic
-      document.getElementById('login-success').style.display = success ? 'block' : 'none';
-      document.getElementById('login-error').style.display = success ? 'none' : 'block';
-    }
-  </script>
 </body>
 </html>

@@ -246,21 +246,8 @@ std::string Request::getQueryParameterByParameterName(const std::string paramete
 }
 
 /*---------------- POST METHOD*/
-void debugPrintString(const std::string& str, const std::string& label) {
-    std::cout << "=== " << label << " ===" << std::endl;
-    std::cout << "Length: " << str.length() << std::endl;
-    std::cout << "Content: [" << str << "]" << std::endl;
-    std::cout << "Hex dump: ";
-    for (unsigned char c : str) {
-        std::cout << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(c) << " ";
-    }
-    std::cout << std::dec << std::endl;
-    std::cout << "========================" << std::endl << std::endl;
-}
 
 static std::unordered_map<std::string, std::string> parseUrlEncodedBody(const std::string& body) {
-    std::cout << "\n=== DEBUGGING parseUrlEncodedBody ===" << std::endl;
-    debugPrintString(body, "Original Body");
     
     std::unordered_map<std::string, std::string> result;
     
@@ -270,7 +257,6 @@ static std::unordered_map<std::string, std::string> parseUrlEncodedBody(const st
         cleanBody.pop_back();
     }
     
-    debugPrintString(cleanBody, "Cleaned Body");
     
     // Split by '&' manually instead of using getline
     size_t start = 0;
@@ -284,43 +270,30 @@ static std::unordered_map<std::string, std::string> parseUrlEncodedBody(const st
             pos = cleanBody.length();
         }
         
-        std::cout << "Processing pair " << pairCount << ": start=" << start << ", pos=" << pos << std::endl;
         
         // Extract the key-value pair
         if (pos > start) {
             std::string pair = cleanBody.substr(start, pos - start);
-            debugPrintString(pair, "Pair " + std::to_string(pairCount));
             
             size_t equalPos = pair.find('=');
             if (equalPos != std::string::npos) {
                 std::string key = pair.substr(0, equalPos);
                 std::string value = pair.substr(equalPos + 1);
                 
-                std::cout << "Raw key: [" << key << "]" << std::endl;
-                std::cout << "Raw value: [" << value << "]" << std::endl;
-                
                 key = urlDecode(key);
                 value = urlDecode(value);
                 
-                std::cout << "Decoded key: [" << key << "]" << std::endl;
-                std::cout << "Decoded value: [" << value << "]" << std::endl;
                 
                 result[key] = value;
                 pairCount++;
             } else {
-                std::cout << "No '=' found in pair: [" << pair << "]" << std::endl;
+                //
             }
         }
         
         start = pos + 1;
         if (start > cleanBody.length()) break;
     }
-    
-    std::cout << "\nFinal result map contains " << result.size() << " entries:" << std::endl;
-    for (const auto& kv : result) {
-        std::cout << "  [" << kv.first << "] = [" << kv.second << "]" << std::endl;
-    }
-    std::cout << "=== END DEBUG ===" << std::endl << std::endl;
     
     return result;
 }
