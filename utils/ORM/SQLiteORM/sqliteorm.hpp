@@ -5,6 +5,7 @@
 #include <iostream>
 #include <sstream>
 #include <cstring>
+#include <algorithm>
 #include "../orm.hpp"
 #include "../../../settings.hpp"
 #include "../../Exception/exception.hpp"
@@ -46,12 +47,17 @@ public:
     // Save object to the DB
     bool save() override;
 
-    // Update Object
+    // Update Object, takes the id of the record
     bool update(const std::string& id) override;
 
+    // remove by id
     bool remove(const std::string& id) override;
 
+    // find by id
     ORMModel* find_by_id(const std::string& id) override;
+
+    // find by column and value, the first parameter is the column name, the second one is the value
+    std::vector<ORMModel*> SQLiteORM::find_by(const std::string& column_name, const std::string& value);
 
     std::vector<ORMModel*> find_all() override;
 };

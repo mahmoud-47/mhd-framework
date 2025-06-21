@@ -168,6 +168,67 @@ ORMModel* SQLiteORM::find_by_id(const std::string& id) {
     return nullptr;
 }
 
+
+std::vector<ORMModel*> SQLiteORM::find_by(const std::string& column_name, const std::string& value) {
+    std::vector<ORMModel*> results;
+
+    auto callback = [](void* data, int argc, char** argv, char** colName) -> int {
+        auto* pair = static_cast<std::pair<SQLiteORM*, std::vector<ORMModel*>*>*>(data);
+        SQLiteORM* proto = pair->first;
+        ORMModel* base_model = proto->clone();
+        SQLiteORM* model = dynamic_cast<SQLiteORM*>(base_model);
+
+        for (int i = 0; i < argc; ++i) {
+            std::string val = argv[i] ? argv[i] : "";
+            if (model->fields[i].type == "TEXT") {
+                *static_cast<std::string*>(model->fields[i].value_ptr) = val;
+            } else if (model->fields[i].type == "INTEGER" || model->fields[i].type == "INT") {
+                *static_cast<int*>(model->fields[i].value_ptr) = std::stoi(val);
+            } else if (model->fields[i].type == "REAL") {
+                *static_cast<float*>(model->fields[i].value_ptr) = std::stof(val);
+            } else if (model->fields[i].type == "DATETIME") {
+                *static_cast<MhdDateTime*>(model->fields[i].value_ptr) = MhdDateTime(val);
+            }
+        }
+
+        pair->second->push_back(model);
+        return 0;
+    };
+
+    // Find the field type for the column
+    std::string column_type;
+    for (const auto& field : fields) {
+        if (field.name == column_name) {
+            column_type = field.type;
+            break;
+        }
+    }
+
+    if (column_type.empty()) {
+        std::cerr << "Error: Column '" << column_name << "' not found in table '" << table_name << "'." << std::endl;
+        return results;
+    }
+
+    // Quote value if needed
+    std::string formatted_value = value;
+    if (column_type == "TEXT" || column_type == "DATETIME") {
+        formatted_value = "'" + value + "'";
+    }
+
+    std::string sql = "SELECT * FROM " + table_name + " WHERE " + column_name + " = " + formatted_value + ";";
+
+    if (showSQLQueries) {
+        std::cout << "**** SQL  : " << sql << std::endl;
+    }
+
+    std::pair<SQLiteORM*, std::vector<ORMModel*>*> context = {this, &results};
+    query(sql, callback, &context);
+
+    return results;
+}
+
+
+
 std::vector<ORMModel*> SQLiteORM::find_all() {
     std::vector<ORMModel*> results;
 

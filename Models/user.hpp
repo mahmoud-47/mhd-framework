@@ -1,7 +1,13 @@
 #ifndef __USER_MODEL_H__
 #define __USER_MODEL_H__
 
-#include "../../utils/ORM/SQLiteORM/sqliteorm.hpp"  
+/**
+ * Dont modify this class, you can inherit it for your custom users table or reference it
+ * Or if you are ready to adapt the authentication methods with your new attributes you can go ahead and modify it
+ */
+
+#include "../../utils/ORM/SQLiteORM/sqliteorm.hpp" 
+#include "utils/hash_password.hpp" 
 
 class User : public SQLiteORM {
 public:
@@ -11,16 +17,20 @@ public:
     std::string email;
     std::string username;
     std::string password;
+    MhdDateTime created_at;
+    MhdDateTime updated_at;
 
 
     void registerFields(){
         fields.clear();
         fields.push_back({"id", "INTEGER", &id, "PRIMARY KEY"});
-        fields.push_back({"firstname", "VARCHAR(50)", &firstname, ""});
-        fields.push_back({"lastname", "VARCHAR(20)", &lastname, ""});
-        fields.push_back({"email", "VARCHAR(100)", &email, ""});
-        fields.push_back({"username", "VARCHAR(100)", &username, "UNIQUE"});
-        fields.push_back({"password", "VARCHAR(255)", &password});
+        fields.push_back({"firstname", "TEXT", &firstname, ""});
+        fields.push_back({"lastname", "TEXT", &lastname, ""});
+        fields.push_back({"email", "TEXT", &email, ""});
+        fields.push_back({"username", "TEXT", &username, "UNIQUE"});
+        fields.push_back({"password", "TEXT", &password});
+        fields.push_back({"created_at", "DATETIME", &created_at});
+        fields.push_back({"updated_at", "DATETIME", &updated_at});
     }
 
     User() : SQLiteORM("users") {
@@ -34,7 +44,10 @@ public:
         lastname(other.lastname),
         email(other.email),
         username(other.username),
-        password(other.password) {
+        password(other.password),
+        created_at(other.created_at),
+        updated_at(other.updated_at)
+    {
         registerFields();
     }
 
@@ -62,15 +75,34 @@ public:
     /**
      * User Authentication methods
      */
+
     // Returns the user id after successfuly created the user, or returns -1
-    static int create_user(
+    static User* create_user(
         const std::string &firstname, 
         const std::string &lastname, 
         const std::string &email, 
         const std::string &username, 
         const std::string &password
     ){
+        std::string hashed_password = hash_password(password);
+        std::cout << " *********** Hashed password = " << hash_password << "\n";
+
+        User user(0, firstname, lastname, email, username, hashed_password);
+        // capture the time right now
+        MhdDateTime now;
+        // set the timestamps
+        user.created_at = now;
+        user.updated_at = now;
+
+        try{
+            user.save();
+        }catch(SQLException &e){
+            std::cerr << "*** Error while saving user : " << e.getMessage() << "\n";
+            return nullptr;
+        }
         
+        // return the only user found
+        return static_cast<User*>(user.find_by("email", email)[0]);
     }
 
 };
