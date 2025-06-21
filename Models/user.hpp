@@ -8,13 +8,17 @@ public:
     int id;
     std::string name;
     std::string email;
+    std::string username;
+    std::string password;
 
 
     void registerFields(){
         fields.clear();
         fields.push_back({"id", "INTEGER", &id, "PRIMARY KEY"});
-        fields.push_back({"name", "TEXT", &name, ""});
-        fields.push_back({"email", "TEXT", &email, "UNIQUE"});
+        fields.push_back({"name", "VARCHAR(50)", &name, ""});
+        fields.push_back({"email", "VARCHAR(100)", &email, "UNIQUE"});
+        fields.push_back({"username", "VARCHAR(100)", &username, "UNIQUE"});
+        fields.push_back({"password", "VARCHAR(255)", &password});
     }
 
     User() : SQLiteORM("users") {
