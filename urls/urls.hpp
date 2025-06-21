@@ -9,13 +9,10 @@ URLPattern urls[] = {
     // Hello URLS
     {"hello", "/", HelloController::Hello},
     {"documentation", "/documentation", HelloController::Documentation},
-    {"string", "/string/{id}", HelloController::HelloString},
-    {"parse", "/test-parse", HelloController::TestParser},
 
     // User URLS
     {"register", "/user/register", UserController::regirer},
     {"login", "/user/login", UserController::login},
-    
 
     // Client URLS
     {"display-all", "/clients/all", ClientController::DisplayAll},
