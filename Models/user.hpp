@@ -9,6 +9,7 @@
 #include "../../utils/ORM/SQLiteORM/sqliteorm.hpp" 
 #include "utils/hash_password.hpp" 
 #include "../utils/session/session.hpp"
+#include "../utils/request/Request.hpp"
 
 class User : public SQLiteORM {
 public:

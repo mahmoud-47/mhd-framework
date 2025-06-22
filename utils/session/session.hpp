@@ -1,7 +1,9 @@
 #ifndef __MHD_SESSION__
 #define __MHD_SESSION__
     #include <string>
-    #include "../request/Request.hpp"
+    // #include "../request/Request.hpp"
+    // forward declaration to avoid circular includes coz request too includes session
+    class Request;
 
     // Session class 
     class Session{

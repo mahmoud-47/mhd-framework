@@ -6,8 +6,9 @@
 #include <unordered_map>
 
 #include "../file/file.hpp"
-#include "../../Models/user.hpp"
+
 #include "../../Models/session.hpp"
+
 
 struct FormField {
     std::string value;
@@ -179,7 +180,7 @@ class Request{
         /**
          * Get user pointer if authenticated, returns null if not
          */
-        User* getUser();
+        // User* getUser();
 
 };
 

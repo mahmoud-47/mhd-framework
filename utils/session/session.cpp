@@ -1,5 +1,7 @@
 #include "session.hpp"
 #include "../../Models/session.hpp"
+#include "../request/Request.hpp"
+
 
 // Session constructor
 Session::Session(Request& request){
