@@ -13,20 +13,23 @@ std::string normalize_constraint(const std::string& str) {
     return result;
 }
 
-std::string escape_sql_quotes(const std::string& input) {
-    std::string escaped;
-    escaped.reserve(input.size()); // reserve memory for performance
-
-    for (char c : input) {
-        if (c == '\'') {
-            escaped += "''";  // replace ' with ''
-        } else {
-            escaped += c;
-        }
+std::string escape_inner_quotes(const std::string& input) {
+    if (input.size() < 2 || input.front() != '\'' || input.back() != '\'') {
+        return input; // Not quoted, return as-is
     }
 
+    std::string escaped = "'";
+    for (size_t i = 1; i < input.size() - 1; ++i) {
+        if (input[i] == '\'') {
+            escaped += "''"; // escape inner quote
+        } else {
+            escaped += input[i];
+        }
+    }
+    escaped += "'"; // re-append closing quote
     return escaped;
 }
+
 
 void SQLiteORM::createTable() {
     std::string sql = "CREATE TABLE IF NOT EXISTS " + table_name + " (";
@@ -85,7 +88,7 @@ bool SQLiteORM::save() {
         if(normalize_constraint(fields[i].constraints).find("primarykey") != std::string::npos)
             sql += "NULL";
         else
-            sql += escape_sql_quotes(fields[i].to_sql_value());
+            sql += escape_inner_quotes(fields[i].to_sql_value());
         if (i < fields.size() - 1) sql += ", ";
     }
     sql += ");";
@@ -100,7 +103,7 @@ bool SQLiteORM::save() {
 bool SQLiteORM::update(const std::string& id) {
     std::string sql = "UPDATE " + table_name + " SET ";
     for (size_t i = 1; i < fields.size(); ++i) {
-        sql += fields[i].name + " = " + escape_sql_quotes(fields[i].to_sql_value());
+        sql += fields[i].name + " = " + escape_inner_quotes(fields[i].to_sql_value());
         if (i < fields.size() - 1) sql += ", ";
     }
     sql += " WHERE " + fields[0].name + " = '" + id + "';";
