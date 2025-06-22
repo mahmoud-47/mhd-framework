@@ -6,6 +6,7 @@
     #include "utils/render/HttpRender.hpp"
     #include "../Models/user.hpp"
     #include "utils/Exception/exception.hpp"
+    #include "../utils/session/session.hpp"
 
     class UserController{
 
@@ -83,7 +84,7 @@
                     if(user){
                         context["success"] = ContextValue("true");
                         context["message"] = ContextValue("Welcome " + user->firstname);
-
+                        
                         delete user;
                     }else{
                         context["error"] = ContextValue("true");

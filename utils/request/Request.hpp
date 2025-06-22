@@ -1,5 +1,5 @@
-#ifndef __MHD_FRAM_REQUEST_
-#define __MHD_FRAM_REQUEST_
+#ifndef __MHD_FRAM_REQUEST__
+#define __MHD_FRAM_REQUEST__
 #include <string>
 #include <sstream>
 #include <vector>
@@ -46,6 +46,13 @@ class Request{
          * Socket
          */
         int socket;
+
+        /**
+         * Cookies ****
+         */
+
+        // session_id to save
+        std::string session_id = "";
 
 
         /**********  Computations */
@@ -154,6 +161,18 @@ class Request{
          * Get file from post, returns the pointer to the file if the file is uploaded, otherwise returns NULL
          */
         MhdFile* getFileFromPostByName(const std::string parameterName);
+
+        /**
+         * Cookies
+         */
+
+        // get cookie by name
+        std::string get_cookie(const std::string &name) const;
+
+        // set session_id
+        void set_session_id(const std::string &session_id){this->session_id = session_id;}
+        // get session_id
+        std::string get_session_id() const{return session_id;}
 };
 
-#endif
+#endif // __MHD_FRAM_REQUEST__

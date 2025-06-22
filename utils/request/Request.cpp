@@ -506,3 +506,52 @@ MhdFile* Request::getFileFromPostByName(const std::string parameterName){
     MhdFile *file = new MhdFile(file_name, file_content, file_content_type);
     return file;
 }
+
+
+// get cookie by name
+std::string Request::get_cookie(const std::string &name) const{
+    const std::string needle = "\r\nCookie: ";
+    size_t start = buffer.find(needle);
+
+    if (start == std::string::npos) {
+        // Also check if it's at the beginning (no \r\n before)
+        if (buffer.rfind("Cookie: ", 0) == 0) {
+            start = 0;
+        } else {
+            return "";
+        }
+    } else {
+        start += 2; // skip \r\n
+    }
+
+    // Extract cookie line
+    size_t cookie_line_start = buffer.find("Cookie: ", start);
+    size_t end = buffer.find("\r\n", cookie_line_start);
+    if (cookie_line_start == std::string::npos || end == std::string::npos)
+        return "";
+
+    std::string cookie_line = buffer.substr(cookie_line_start + 8, end - (cookie_line_start + 8));
+
+    // Parse cookies
+    std::istringstream stream(cookie_line);
+    std::string token;
+    while (std::getline(stream, token, ';')) {
+        size_t eq = token.find('=');
+        if (eq != std::string::npos) {
+            std::string key = token.substr(0, eq);
+            std::string val = token.substr(eq + 1);
+
+            // Trim whitespace
+            key.erase(0, key.find_first_not_of(" \t"));
+            key.erase(key.find_last_not_of(" \t") + 1);
+            val.erase(0, val.find_first_not_of(" \t"));
+            val.erase(val.find_last_not_of(" \t") + 1);
+
+            if (key == name) {
+                return val;
+            }
+        }
+    }
+
+    return "";
+}

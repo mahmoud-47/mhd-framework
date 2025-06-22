@@ -19,7 +19,7 @@
         // *** Add your classes here (new Model)
         ORMModel* models[] = {
             new User,
-            new Session,
+            new SessionTable,
             new Client
         };
 

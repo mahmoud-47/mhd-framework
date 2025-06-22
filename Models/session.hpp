@@ -3,44 +3,44 @@
 
 #include "../../utils/ORM/SQLiteORM/sqliteorm.hpp"  
 
-class Session : public SQLiteORM {
+class SessionTable : public SQLiteORM {
 public:
+    int id;
     std::string session_id;
-    std::string key;
     std::string value;
 
     void registerFields(){
         fields.clear();
 
-        fields.push_back({"id", "TEXT", &session_id, ""});
-        fields.push_back({"key", "TEXT", &key, ""});
+        fields.push_back({"id", "INTEGER", &id, "PRIMARY KEY"});
+        fields.push_back({"session_id", "TEXT", &session_id, "UNIQUE"});
         fields.push_back({"value", "TEXT", &value, ""});
     }
 
-    Session() : SQLiteORM("sessions") {
+    SessionTable() : SQLiteORM("sessions") {
         registerFields();
     };
 
-    Session(const std::string& session_id, const std::string& key, const std::string& value) : SQLiteORM("sessions") {
+    SessionTable(int id, const std::string& session_id, const std::string& value) : SQLiteORM("sessions") {
+        this->id = id;
         this->session_id = session_id;
-        this->key = key;
         this->value = value;
         registerFields();
     }
 
     // Proper copy constructor
-    Session(const Session& other) : SQLiteORM(other), 
+    SessionTable(const SessionTable& other) : SQLiteORM(other), 
+                            id(other.id),
                             session_id(other.session_id),
-                            key(other.key),
                             value(other.value) {
         registerFields();  // This updates the pointers to our new members
     }
 
     // Virtual destructor
-    virtual ~Session() = default;
+    virtual ~SessionTable() = default;
 
     ORMModel* clone() const override {
-        return new Session(*this);
+        return new SessionTable(*this);
     }
 
 };
