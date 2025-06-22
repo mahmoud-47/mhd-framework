@@ -16,6 +16,14 @@
                 Context context;
                 User userQuery;
 
+                // check if user is authenticated and redirect to home page if yes
+                User* user = User::getAuthenticatedUser(request);
+                if(user != nullptr){
+                    delete user;
+                    redirect(request, "/user/home");
+                    return;
+                }
+
                 if(request.getMethod() == "POST"){
                     std::string firstname = request.getFormDataParameterByParameterName("firstname");
                     std::string lastname = request.getFormDataParameterByParameterName("lastname");
@@ -75,6 +83,14 @@
                 std::string template_name = "user/login.html";
                 Context context;
 
+                // check if user is authenticated and redirect to home page if yes
+                User* user = User::getAuthenticatedUser(request);
+                if(user != nullptr){
+                    delete user;
+                    redirect(request, "/user/home");
+                    return;
+                }
+
                 if(request.getMethod() == "POST"){
                     std::string username = request.getFormDataParameterByParameterName("username");
                     std::string password = request.getFormDataParameterByParameterName("password");
@@ -85,6 +101,9 @@
                         context["message"] = ContextValue("Welcome " + user->firstname);
             
                         delete user;
+                        // redirect to home page
+                        redirect(request, "/user/home");
+                        return;
                     }else{
                         context["error"] = ContextValue("true");
                         context["message"] = ContextValue("Username or password not correct");
@@ -110,9 +129,22 @@
                         {"lastname", ContextValue(user->lastname)},
                         {"username", ContextValue(user->username)}
                     };
+                    // free memory
+                    delete user;
                 }
                 
                 return renderHtml(request, template_name, context);
+            }
+
+            static void logout_user(Request request){
+                // check if user is authenticated and redirect to login page if not
+                User* user = User::getAuthenticatedUser(request);
+                if(user != nullptr){
+                    User::logout(request);
+                    delete user; // free allocated memory
+                }
+                redirect(request, "/user/login");
+                return;
             }
 
     };
