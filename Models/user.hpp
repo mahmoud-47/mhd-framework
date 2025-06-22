@@ -8,6 +8,7 @@
 
 #include "../../utils/ORM/SQLiteORM/sqliteorm.hpp" 
 #include "utils/hash_password.hpp" 
+#include "../utils/session/session.hpp"
 
 class User : public SQLiteORM {
 public:
@@ -101,7 +102,7 @@ public:
     }
 
     // Returns a pointer to the user if the authentication worked or null otherwise
-    static User* authenticate(const std::string &username, const std::string &password){
+    static User* authenticate(Request &request, const std::string &username, const std::string &password){
         User userQuery;
         auto users = userQuery.find_by("username", username);
 
@@ -114,7 +115,10 @@ public:
         // if the hashed password is not the same as the stored password
         if(user->password != hash_password(password))
             return nullptr;
-        
+        // add it to the session
+        Session session(request);
+        session.set_value("user_id", std::to_string(user->id));
+        session.set_value("username", user->username);
         return user;
     }
 

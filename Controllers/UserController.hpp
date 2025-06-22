@@ -6,7 +6,6 @@
     #include "utils/render/HttpRender.hpp"
     #include "../Models/user.hpp"
     #include "utils/Exception/exception.hpp"
-    #include "../utils/session/session.hpp"
 
     class UserController{
 
@@ -80,11 +79,11 @@
                     std::string username = request.getFormDataParameterByParameterName("username");
                     std::string password = request.getFormDataParameterByParameterName("password");
 
-                    User *user = User::authenticate(username, password);
+                    User *user = User::authenticate(request, username, password);
                     if(user){
                         context["success"] = ContextValue("true");
                         context["message"] = ContextValue("Welcome " + user->firstname);
-                        
+            
                         delete user;
                     }else{
                         context["error"] = ContextValue("true");

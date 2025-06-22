@@ -181,18 +181,22 @@ std::string parseHtmlCode(const std::string &html, Context& context) {
 
 
 // Has to take context after
-void renderHtml(Request request ,const std::string& filepath, Context& context){
+void renderHtml(Request request, const std::string& filepath, Context& context) {
     std::string html = readHtmlFile(filepath);
     std::string rendered = parseHtmlCode(html, context);
-    
-    std::string cookie = "session_id=" + request.get_session_id() + "; Path=/; HttpOnly";
+
+    std::string cookie;
+    if (request.get_session_id().size() > 0)
+        cookie = "Set-Cookie: session_id=" + request.get_session_id() + "; Path=/; HttpOnly\r\n";
+    else
+        cookie = "";
 
     std::string http_response =
-                "HTTP/1.1 200 OK\r\n" 
-                "Content-Type: text/html\r\n" 
-                "Set-Cookie: " + cookie + "\r\n"
-                "Connection: close\r\n" 
-                "\r\n" + rendered;
+        "HTTP/1.1 200 OK\r\n"
+        "Content-Type: text/html\r\n" +
+        cookie +
+        "Connection: close\r\n"
+        "\r\n" + rendered;
 
     send(request.getSocket(), http_response.c_str(), http_response.length(), 0);
     close(request.getSocket());
