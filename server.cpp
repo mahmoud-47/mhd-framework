@@ -14,6 +14,7 @@
 #include "urls/urls.hpp"
 #include "utils/functions.hpp"
 #include "Models/Migration/migrations.hpp"
+#include "utils/nice-display/display.hpp"
 
 std::string readFullRequest(int client_socket) {
     std::string fullRequest;
@@ -192,6 +193,9 @@ int main() {
     std::cout << "**********************************************" << std::endl;
     std::cout << "WELCOME TO MHD++ Version " << VERSION << "..." << std::endl;
     std::cout << "**********************************************" << std::endl << std::endl;
+
+    display_banner();
+
     std::cout << "Server Listening on port " << PORT << "..." << std::endl;
     std::cout << "Base dir = " << getBaseDirectory() << std::endl;
     std::cout << "Templates dir = " << TEMPLATES_DIR << std::endl;
