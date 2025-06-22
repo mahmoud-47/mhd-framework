@@ -6,6 +6,7 @@
 #include <thread>
 #include <fstream>
 #include <sstream>
+#include <random>
 
 #include "settings.hpp"
 #include "utils/request/Request.hpp"
@@ -15,6 +16,17 @@
 #include "utils/functions.hpp"
 #include "Models/Migration/migrations.hpp"
 #include "utils/nice-display/display.hpp"
+
+
+std::string generateRandomToken(size_t length = 32) {
+    static const char charset[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    static std::mt19937 rng(std::random_device{}());
+    std::uniform_int_distribution<> dist(0, sizeof(charset) - 2);
+    std::string token;
+    for (size_t i = 0; i < length; ++i)
+        token += charset[dist(rng)];
+    return token;
+}
 
 std::string readFullRequest(int client_socket) {
     std::string fullRequest;
@@ -93,8 +105,15 @@ void handle_connection(int client_socket, Route* routes) {
         std::cout << "... (truncated, total " << requestData.length() << " bytes)" << std::endl;
     }
 
+    /**
+     * SET session_id and csrf_token if not exists
+     */
     Request request(requestData);
+    Session session(request);
+    if(session.get_value("csrf_token") == "")
+        session.set_value("csrf_token", generateRandomToken());
     
+
     std::cout << "Request Hostname " << request.getHostName() << std::endl;
     std::cout << "Request method " << request.getMethod() << std::endl;
     std::cout << "Request userAgent " << request.getUserAgent() << std::endl;
@@ -136,6 +155,18 @@ void handle_connection(int client_socket, Route* routes) {
         if ((request.clientWantAnything() || request.clientWantsHtml()) && urlpattern) {
             request.setUrlFormat(urlpattern->url);
             request.setSocket(client_socket);
+
+            // check if the csrf_token is correct before calling any controller in case this bro is posting
+            if (request.getMethod() == "POST" || request.getMethod() == "PUT" || request.getMethod() == "DELETE") {
+                std::string submitted = request.getFormDataParameterByParameterName("csrf_token");
+                std::string expected = session.get_value("csrf_token");
+
+                if (submitted.empty() || submitted != expected) {
+                    renderText(request, "CSRF token is missing or invalid");
+                    return;
+                }
+            }
+
             urlpattern->controller(request);
         } else if (request.clientWantsHtml()) {
             const char *http_response_404 =

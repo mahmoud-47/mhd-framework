@@ -181,7 +181,7 @@ std::string parseHtmlCode(const std::string &html, Context& context) {
 
 
 // Has to take context after
-void renderHtml(Request request, const std::string& filepath, Context& context) {
+void renderHtml(Request &request, const std::string& filepath, Context& context) {
     std::string html = readHtmlFile(filepath);
     std::string rendered = parseHtmlCode(html, context);
 
@@ -198,28 +198,34 @@ void renderHtml(Request request, const std::string& filepath, Context& context) 
         "Connection: close\r\n"
         "\r\n" + rendered;
 
-    send(request.getSocket(), http_response.c_str(), http_response.length(), 0);
-    close(request.getSocket());
+    ssize_t sent = send(request.getSocket(), http_response.c_str(), http_response.length(), 0);
+    if (sent == -1) {
+        std::cerr << "[ERROR] Failed to send: " << strerror(errno) << std::endl;
+    }
 }
 
 // Render text
-void renderText(Request request ,const std::string& text){
+void renderText(Request &request, const std::string& text) {
     std::string cookie;
-    if (request.get_session_id().size() > 0)
+    if (!request.get_session_id().empty())
         cookie = "Set-Cookie: session_id=" + request.get_session_id() + "; Path=/; HttpOnly\r\n";
-    else
-        cookie = "";
 
     std::string http_response =
-        "HTTP/1.1 200 OK\r\n" 
+        "HTTP/1.1 200 OK\r\n"
         "Content-Type: text/html\r\n" +
         cookie +
-        "Connection: close\r\n" 
-        "\r\n" + text;
+        "Content-Length: " + std::to_string(text.size()) + "\r\n"
+        "Connection: close\r\n\r\n" +
+        text;
 
-    send(request.getSocket(), http_response.c_str(), http_response.length(), 0);
+    ssize_t sent = send(request.getSocket(), http_response.c_str(), http_response.length(), 0);
+    if (sent == -1) {
+        std::cerr << "[ERROR] Failed to send: " << strerror(errno) << std::endl;
+    }
+
     close(request.getSocket());
 }
+
 
 // Redirect
 void redirect(const Request& request, const std::string& targetUrl, int statusCode) {
