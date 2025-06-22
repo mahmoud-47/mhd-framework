@@ -6,6 +6,8 @@
 #include <unordered_map>
 
 #include "../file/file.hpp"
+#include "../../Models/user.hpp"
+#include "../../Models/session.hpp"
 
 struct FormField {
     std::string value;
@@ -173,6 +175,12 @@ class Request{
         void set_session_id(const std::string &session_id){this->session_id = session_id;}
         // get session_id
         std::string get_session_id() const{return session_id;}
+
+        /**
+         * Get user pointer if authenticated, returns null if not
+         */
+        User* getUser();
+
 };
 
 #endif // __MHD_FRAM_REQUEST__

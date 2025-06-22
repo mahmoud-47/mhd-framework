@@ -555,3 +555,23 @@ std::string Request::get_cookie(const std::string &name) const{
 
     return "";
 }
+
+/**
+ * Get user pointer if authenticated, returns null if not
+ */
+User* Request::getUser(){
+    std::string session_id = get_cookie("session_id");
+    if(session_id == "")
+        return nullptr;
+        
+    SessionTable sessionQuery;
+    User userQuery;
+
+    auto session_query = sessionQuery.find_by("session_id", session_id);
+    if(session_query.size() > 0){
+        int id = static_cast<SessionTable*>(session_query[0])->id;
+        return static_cast<User*>(userQuery.find_by_id(std::to_string(id)));
+    }
+
+    return nullptr;
+}
