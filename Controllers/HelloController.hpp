@@ -16,7 +16,7 @@
 
             // Documentation Controller
             static void Documentation(Request request){
-                std::string templatename = "documentation.html";
+                std::string templatename = "documentation-v1.1.html";
                 Context context;
                 renderHtml(request, templatename, context);
             }

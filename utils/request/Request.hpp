@@ -176,12 +176,6 @@ class Request{
         void set_session_id(const std::string &session_id){this->session_id = session_id;}
         // get session_id
         std::string get_session_id() const{return session_id;}
-
-        /**
-         * Get user pointer if authenticated, returns null if not
-         */
-        // User* getUser();
-
 };
 
 #endif // __MHD_FRAM_REQUEST__

@@ -1,0 +1,1517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>mhd++ Framework Documentation v1.1</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #667eea;
+            --primary-dark: #5a6fd8;
+            --secondary-color: #764ba2;
+            --accent-color: #f093fb;
+            --bg-primary: #0f0f23;
+            --bg-secondary: #1a1a2e;
+            --bg-card: #16213e;
+            --text-primary: #e2e8f0;
+            --text-secondary: #94a3b8;
+            --text-accent: #fbbf24;
+            --border-color: #334155;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --code-bg: #000000;
+            --sidebar-bg: rgba(22, 33, 62, 0.95);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 280px;
+            height: 100vh;
+            background: var(--sidebar-bg);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+            padding: 2rem 0;
+            z-index: 1000;
+        }
+
+        .sidebar-header {
+            padding: 0 2rem 2rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .sidebar-logo {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .sidebar-version {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        .sidebar-nav {
+            padding: 1rem 0;
+        }
+
+        .nav-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .nav-section-title {
+            padding: 0.5rem 2rem;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 600;
+        }
+
+        .nav-item {
+            display: block;
+            padding: 0.75rem 2rem;
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .nav-item:hover {
+            background: rgba(102, 126, 234, 0.1);
+            color: var(--primary-color);
+        }
+
+        .nav-item.active {
+            background: rgba(102, 126, 234, 0.2);
+            color: var(--primary-color);
+            border-left: 3px solid var(--primary-color);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            flex: 1;
+            padding: 2rem 3rem;
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        /* Content Sections */
+        .content-section {
+            display: none;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section-header {
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--primary-color);
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .section-description {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        /* Cards */
+        .info-card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 1.5rem 0;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .info-card h3 {
+            color: var(--text-accent);
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .info-card p {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        /* Code Blocks */
+        .code-block {
+            background: var(--code-bg);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border: 1px solid var(--border-color);
+            position: relative;
+            overflow-x: auto;
+        }
+
+        .code-language {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: var(--primary-color);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        pre {
+            color: var(--text-primary);
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            margin: 0;
+        }
+
+        code {
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            background: rgba(102, 126, 234, 0.1);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            color: var(--primary-color);
+        }
+
+        /* Lists */
+        ul, ol {
+            margin: 1rem 0;
+            padding-left: 2rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            background: var(--bg-card);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background: rgba(102, 126, 234, 0.1);
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        /* Method signatures */
+        .method-signature {
+            background: rgba(102, 126, 234, 0.1);
+            padding: 1rem;
+            border-radius: 6px;
+            margin: 0.5rem 0;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            color: var(--primary-color);
+            border-left: 3px solid var(--primary-color);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 1rem;
+            }
+
+            .mobile-menu-toggle {
+                display: block;
+                position: fixed;
+                top: 1rem;
+                left: 1rem;
+                z-index: 1001;
+                background: var(--primary-color);
+                color: white;
+                padding: 0.5rem;
+                border-radius: 4px;
+                cursor: pointer;
+            }
+        }
+
+        .mobile-menu-toggle {
+            display: none;
+        }
+
+        /* Warning boxes */
+        .warning-box {
+            background: rgba(245, 158, 11, 0.1);
+            border-left: 4px solid var(--warning-color);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 6px;
+        }
+
+        .warning-box strong {
+            color: var(--warning-color);
+        }
+
+        /* Success boxes */
+        .success-box {
+            background: rgba(16, 185, 129, 0.1);
+            border-left: 4px solid var(--success-color);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 6px;
+        }
+
+        .success-box strong {
+            color: var(--success-color);
+        }
+    </style>
+</head>
+<body>
+    <!-- Mobile Menu Toggle -->
+    <div class="mobile-menu-toggle" onclick="toggleSidebar()">☰</div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">MHD++</div>
+            <div class="sidebar-version">Version 1.1</div>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="nav-section">
+                <div class="nav-section-title">Getting Started</div>
+                <a class="nav-item active" onclick="showSection('introduction')">Introduction</a>
+                <a class="nav-item" onclick="showSection('project-structure')">Project Structure</a>
+                <a class="nav-item" onclick="showSection('settings')">Settings Configuration</a>
+                <a class="nav-item" onclick="showSection('build-run')">Build & Run</a>
+            </div>
+            <div class="nav-section">
+                <div class="nav-section-title">Core Components</div>
+                <a class="nav-item" onclick="showSection('models')">Models</a>
+                <a class="nav-item" onclick="showSection('controllers')">Controllers</a>
+                <a class="nav-item" onclick="showSection('templates')">Templates</a>
+                <a class="nav-item" onclick="showSection('urls')">URL Routing</a>
+            </div>
+            <div class="nav-section">
+                <div class="nav-section-title">Database</div>
+                <a class="nav-item" onclick="showSection('migrations')">Migrations</a>
+                <a class="nav-item" onclick="showSection('orm')">ORM</a>
+                <a class="nav-item" onclick="showSection('database-config')">Database Configuration</a>
+            </div>
+            <div class="nav-section">
+                <div class="nav-section-title">HTTP & Requests</div>
+                <a class="nav-item" onclick="showSection('request-class')">Request Class</a>
+                <a class="nav-item" onclick="showSection('context')">Context & Rendering</a>
+                <a class="nav-item" onclick="showSection('sessions')">Sessions</a>
+                <a class="nav-item" onclick="showSection('authentication')">Authentication</a>
+                <a class="nav-item" onclick="showSection('csrf')">CSRF Protection</a>
+            </div>
+            <div class="nav-section">
+                <div class="nav-section-title">Utilities</div>
+                <a class="nav-item" onclick="showSection('datetime')">MhdDateTime</a>
+                <a class="nav-item" onclick="showSection('file-handling')">File Handling</a>
+            </div>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Introduction Section -->
+        <section class="content-section active" id="introduction">
+            <div class="section-header">
+                <h1 class="section-title">Welcome to mhd++ Framework</h1>
+                <p class="section-description">A modern C++ web framework designed to make developers smile while coding</p>
+            </div>
+            
+            <div class="info-card">
+                <h3>About mhd++</h3>
+                <p>My work is more of fun than commercial or opportunity seeking. I want to make people smile while coding in C++, hopefully you will enjoy it!</p>
+                <p>mhd++ is a lightweight, modern web framework built on top of microhttpd, offering:</p>
+                <ul>
+                    <li>Simple and intuitive API</li>
+                    <li>Built-in ORM with SQLite support</li>
+                    <li>Template engine with dynamic content rendering</li>
+                    <li>Session management and authentication</li>
+                    <li>CSRF protection</li>
+                    <li>File upload handling</li>
+                    <li>Clean MVC architecture</li>
+                </ul>
+            </div>
+
+            <div class="success-box">
+                <strong>Quick Start:</strong> Clone the repository, configure your settings.hpp, and run ./run.sh to start your application!
+            </div>
+        </section>
+
+        <!-- Project Structure Section -->
+        <section class="content-section" id="project-structure">
+            <div class="section-header">
+                <h1 class="section-title">Project Structure</h1>
+                <p class="section-description">Understanding the mhd++ directory layout</p>
+            </div>
+
+            <div class="code-block">
+                <span class="code-language">Directory Structure</span>
+                <pre>.
+├── CMakeLists.txt          # Build configuration
+├── Controllers/            # Application controllers
+├── Models/                 # Database models
+│   └── Migration/         # Migration files
+├── database/              # SQLite database files
+├── server.cpp             # Main server entry point
+├── settings.hpp           # Application settings
+├── templates/             # HTML templates
+│   └── static/           # Static assets (CSS, JS, uploads)
+├── urls/                  # URL routing configuration
+└── utils/                 # Framework utilities
+    ├── ORM/              # Object-Relational Mapping
+    ├── render/           # Template rendering
+    ├── request/          # HTTP request handling
+    └── session/          # Session management</pre>
+            </div>
+
+            <div class="info-card">
+                <h3>Key Directories</h3>
+                <ul>
+                    <li><code>Controllers/</code> - Contains all your application controllers</li>
+                    <li><code>Models/</code> - Database model definitions</li>
+                    <li><code>templates/</code> - HTML templates and static files</li>
+                    <li><code>urls/</code> - URL routing configuration</li>
+                    <li><code>utils/</code> - Framework core utilities</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Settings Section -->
+        <section class="content-section" id="settings">
+            <div class="section-header">
+                <h1 class="section-title">Settings Configuration</h1>
+                <p class="section-description">Configure your application through settings.hpp</p>
+            </div>
+
+            <div class="info-card">
+                <h3>settings.hpp</h3>
+                <p>This is the main configuration file where all parameters are specified. Don't delete any of them, but you can modify their values.</p>
+            </div>
+
+            <div class="code-block">
+                <span class="code-language">C++</span>
+                <pre>// settings.hpp
+#ifndef _SETTINGS_HPP_
+#define _SETTINGS_HPP_
+
+// Server Configuration
+const int PORT = 8080;                          // Port the app runs on
+
+// Directory Configuration
+const std::string BASE_DIR = "/path/to/project"; // Base directory containing settings.hpp
+const std::string TEMPLATES_DIR = BASE_DIR + "/templates"; // HTML templates location
+const std::string STATIC_DIR = BASE_DIR + "/templates/static"; // Static files location
+const std::string UPLOADS_DIR = BASE_DIR + "/templates/static/uploads"; // Upload directory
+
+// Database Configuration
+const std::string DATABASE_PATH = BASE_DIR + "/database/db.sqlite"; // SQLite database path
+
+// Debug Options
+const bool showSQLQueries = true;    // Show SQL queries in console
+const bool dropRecreateTables = false; // Drop and recreate tables on startup
+
+// Framework Version
+const std::string VERSION = "1.1";
+
+#endif</pre>
+            </div>
+
+            <div class="warning-box">
+                <strong>Important:</strong> Always ensure your paths are correct and the directories exist before running the application.
+            </div>
+        </section>
+
+        <!-- Build & Run Section -->
+        <section class="content-section" id="build-run">
+            <div class="section-header">
+                <h1 class="section-title">Build & Run</h1>
+                <p class="section-description">Building and running your mhd++ application</p>
+            </div>
+
+            <div class="info-card">
+                <h3>run.sh Script</h3>
+                <p>The framework includes a convenient build script that handles compilation and execution. Make sure it has execution privileges:</p>
+            </div>
+
+            <div class="code-block">
+                <span class="code-language">Bash</span>
+                <pre>#!/bin/bash
+
+# Exit on any error
+set -e
+
+# Create build directory if it doesn't exist
+mkdir -p build
+cd build
+
+# Configure the project with CMake
+cmake ..
+
+# Build the project
+make
+
+# Run the application
+./application</pre>
+            </div>
+
+            <div class="info-card">
+                <h3>Running Your Application</h3>
+                <p>To build and run your application:</p>
+                <div class="code-block">
+                    <span class="code-language">Bash</span>
+                    <pre>chmod +x run.sh  # Make script executable (first time only)
+./run.sh         # Build and run</pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- Models Section -->
+        <section class="content-section" id="models">
+            <div class="section-header">
+                <h1 class="section-title">Models</h1>
+                <p class="section-description">Define your database tables using C++ classes</p>
+            </div>
+
+            <div class="info-card">
+                <h3>Model Requirements</h3>
+                <p>Each model represents a database table. Models are defined in the <code>Models/</code> folder.</p>
+                <ul>
+                    <li>Include <code>utils/ORM/SQLiteORM/sqliteorm.hpp</code></li>
+                    <li>Inherit publicly from <code>SQLiteORM</code></li>
+                    <li>Define attributes with getters and setters</li>
+                    <li>Implement <code>registerFields()</code> method</li>
+                    <li>Call parent constructor with table name</li>
+                    <li>Implement copy constructor</li>
+                    <li>Declare virtual destructor</li>
+                    <li>Implement <code>clone()</code> method</li>
+                </ul>
+            </div>
+
+            <div class="code-block">
+                <span class="code-language">C++</span>
+                <pre>#ifndef _USER_MODEL_H_
+#define _USER_MODEL_H_
+
+#include "../../utils/ORM/SQLiteORM/sqliteorm.hpp"  
+
+class User : public SQLiteORM {
+public:
+    int id;
+    std::string name;
+    std::string email;
+
+    void registerFields(){
+        fields.clear();
+        fields.push_back({"id", "INTEGER", &id, "PRIMARY KEY"});
+        fields.push_back({"name", "TEXT", &name, ""});
+        fields.push_back({"email", "TEXT", &email, "UNIQUE"});
+    }
+
+    User() : SQLiteORM("users") {
+        registerFields();
+    }
+
+    // Proper copy constructor
+    User(const User& other) : SQLiteORM(other), 
+                            id(other.id),
+                            name(other.name),
+                            email(other.email) {
+        registerFields();  // This updates the pointers to our new members
+    }
+
+    // Parameterized constructor
+    User(const int id, const std::string& name, const std::string& email) : 
+        SQLiteORM("users"), id(id), name(name), email(email) {
+        registerFields();
+    }
+
+    // Virtual destructor
+    virtual ~User() = default;
+
+    ORMModel* clone() const override {
+        return new User(*this);
+    }
+};
+
+#endif</pre>
+            </div>
+
+            <div class="info-card">
+                <h3>Supported Field Types</h3>
+                <table>
+                    <tr>
+                        <th>SQL Type</th>
+                        <th>C++ Type</th>
+                        <th>Description</th>
+                    </tr>
+                    <tr>
+                        <td>INTEGER</td>
+                        <td>int</td>
+                        <td>Integer values</td>
+                    </tr>
+                    <tr>
+                        <td>REAL</td>
+                        <td>float</td>
+                        <td>Floating point values</td>
+                    </tr>
+                    <tr>
+                        <td>TEXT</td>
+                        <td>std::string</td>
+                        <td>Text strings</td>
+                    </tr>
+                    <tr>
+                        <td>DATETIME</td>
+                        <td>MhdDateTime</td>
+                        <td>Date and time values</td>
+                    </tr>
+                </table>
+            </div>
+        </section>
+
+        <!-- Controllers Section -->
+        <section class="content-section" id="controllers">
+            <div class="section-header">
+                <h1 class="section-title">Controllers</h1>
+                <p class="section-description">Handle HTTP requests and business logic</p>
+            </div>
+
+            <div class="info-card">
+                <h3>Controller Requirements</h3>
+                <p>Controllers are stored in the <code>Controllers/</code> folder. Each controller:</p>
+                <ul>
+                    <li>Must be an HPP file</li>
+                    <li>Import <code>utils/request/Request.hpp</code> for Request class</li>
+                    <li>Import <code>utils/render/HttpRender.hpp</code> for Context and rendering</li>
+                    <li>Import required models</li>
+                    <li>Methods must be public static, return void, take Request parameter</li>
+                </ul>
+            </div>
+
+            <div class="code-block">
+                <span class="code-language">C++</span>
+                <pre>#ifndef _CLIENT_Controller_
+#define _CLIENT_Controller_
+
+#include "../utils/request/Request.hpp"
+#include "../utils/render/HttpRender.hpp"
+#include "../Models/client.hpp"
+
+class ClientController{
+    public:
+        static void Create(Request request){
+            std::string templatename = "clients/create.html";
+            Context context;
+
+            if(request.getMethod() == "POST"){
+                std::string name = request.getFormDataParameterByParameterName("name");
+                std::string email = request.getFormDataParameterByParameterName("email");
+                std::string phone = request.getFormDataParameterByParameterName("phone");
+                std::string company = request.getFormDataParameterByParameterName("company");
+                std::string notes = request.getFormDataParameterByParameterName("notes");
+
+                MhdFile *image = request.getFileFromPostByName("img");
+                std::string savedImagePath = "";
+                if(image != nullptr){
+                    savedImagePath = image->saveTo("/clients/images");
+                    std::cout << "Saved path = " << savedImagePath << "\n";
+                }else{
+                    std::cout << "*** Image Not uploaded \n";
+                }
+
+                try{
+                    Client client(0, savedImagePath, name, email, phone, company, notes, MhdDateTime());
+                    client.save();
+                    context["save"] = ContextValue("true");
+                }catch(SQLException e){
+                    context["fail"] = ContextValue("true");
+                }
+            }
+            
+            renderHtml(request, templatename, context);
+        }
+
+        static void Delete(Request request){
+            std::string id = request.getGETParameterByParameterName("id");
+            std::string clientname;
+            
+            try{
+                Client clientQuery;
+                Client* client = static_cast<Client*>(clientQuery.find_by_id(id)); 
+                
+                if(client == nullptr){
+                    redirect(request, "/clients/all?deletion=false&del-id="+id);
+                    return;
+                }
+                
+                clientname = client->name;
+                clientQuery.remove(id);
+            }catch(SQLException& e){
+                redirect(request, "/clients/all?deletion=false&del-id="+id);
+                return;
+            }
+            
+            redirect(request, "/clients/all?deletion=true&del-name="+ clientname);
+        }
+};
+
+#endif</pre>
+            </div>
+
+            <div class="success-box">
+                <strong>Tip:</strong> Always handle both GET and POST requests in forms. Use POST for data submission and GET for displaying the form.
+            </div>
+        </section>
+
+        <!-- Templates Section -->
+        <section class="content-section" id="templates">
+            <div class="section-header">
+                <h1 class="section-title">Templates</h1>
+                <p class="section-description">MHD template engine for dynamic HTML rendering</p>
+            </div>
+
+            <div class="info-card">
+                <h3>Template Engine Features</h3>
+                <p>Templates are stored in the folder specified in <code>TEMPLATES_DIR</code>. The MHD template engine supports:</p>
+                <ul>
+                    <li><code>{<span></span>{ value }<span></span>}</code> - Variable substitution (with spaces)</li>
+                    <li><code>{<span></span>{ if cond }<span></span>} ... {<span></span>{ else }<span></span>} ... {<span></span>{ end }<span></span>}</code> - Conditional rendering</li>
+                    <li><code>{<span></span>{ for item in items }<span></span>} ... {<span></span>{ endfor }<span></span>}</code> - Loop through arrays</li>
+                </ul>
+            </div>
+
+            <div class="code-block">
+                <span class="code-language">HTML</span>
+                <pre>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;Document&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;Welcome {<span></span>{ name }<span></span>}&lt;/h1&gt;
+
+    {<span></span>{ if role }<span></span>}
+    &lt;p&gt;Welcome Admin&lt;/p&gt;
+    &lt;b&gt;bloc 1&lt;/b&gt;
+    {<span></span>{ else }<span></span>}
+    &lt;p&gt;Access denied&lt;/p&gt;
+    &lt;b&gt;bloc 2&lt;/b&gt;
+    {<span></span>{ end }<span></span>}
+
+    &lt;!-- Conditional on arrays --&gt;
+    {<span></span>{ if users }<span></span>}
+    &lt;h2&gt;Users exist!&lt;/h2&gt;
+    &lt;!-- Loop through array of objects --&gt;
+    {<span></span>{ for user in users }<span></span>}
+    &lt;p&gt;User: {<span></span>{ user.username }<span></span>} ({<span></span>{ user.password }<span></span>})&lt;/p&gt;
+    {<span></span>{ endfor }<span></span>}
+    {<span></span>{ else }<span></span>}
+    &lt;p&gt;No users&lt;/p&gt;
+    {<span></span>{ end }<span></span>}
+
+    &lt;!-- Access nested properties --&gt;
+    {<span></span>{ for user in users }<span></span>}
+    &lt;div&gt;
+        &lt;strong&gt;{<span></span>{ user.username }<span></span>}&lt;/strong&gt;
+        &lt;span&gt;Password: {<span></span>{ user.password }<span></span>}&lt;/span&gt;
+    &lt;/div&gt;
+    {<span></span>{ endfor }<span></span>}
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+            </div>
+
+            <div class="warning-box">
+                <strong>Important:</strong> Always include spaces between variable names and brackets: <code>{<span></span>{ value }<span></span>}</code> not <code>{<span></span>{value}<span></span>}</code>
+            </div>
+        </section>
+
+        <!-- URLs Section -->
+        <section class="content-section" id="urls">
+            <div class="section-header">
+                <h1 class="section-title">URL Routing</h1>
+                <p class="section-description">Define URL patterns and map them to controllers</p>
+            </div>
+
+            <div class="info-card">
+                <h3>URL Configuration</h3>
+                <p>Routes are defined in <code>urls/urls.hpp</code>. Each route maps a URL pattern to a controller method.</p>
+            </div>
+
+            <div class="code-block">
+                <span class="code-language">C++</span>
+                <pre>#include &lt;vector&gt;
+#include "../utils/URLPattern.hpp"
+#include "../Controllers/HelloController.hpp"
+#include "../Controllers/UserController.hpp"
+#include "../Controllers/ClientController.hpp"
+
+// Url format = {"name", "url/{id}", HelloController::Controller}
+URLPattern urls[] = {
+    // Hello URLS
+    {"hello", "/", HelloController::Hello},
+    {"documentation", "/documentation", HelloController::Documentation},
+    {"string", "/string/{id}", HelloController::HelloString},
+    {"parse", "/test-parse", HelloController::TestParser},
+
+    // User URLS
+    {"adduser", "/adduser", UserController::createUser},
+    {"getuser", "/getuser/{userId}", UserController::getUser},
+    {"getusers", "/getusers", UserController::getAllUsers},
+    {"deluser", "/deluser/{userId}", UserController::deluser},
+    {"updateUser", "/updateuser/{userId}", UserController::updateUser},
+
+    // Client URLS
+    {"display-all", "/clients/all", ClientController::DisplayAll},
+    {"create-client", "/clients/create", ClientController::Create},
+    {"edit-client", "/clients/edit/{id}", ClientController::Update},
+    {"detail-client", "/clients/details/{id}", ClientController::Details},
+    {"delete-client", "/clients/delete/{id}", ClientController::Delete}
+};</pre>
+            </div>
+
+            <div class="info-card">
+                <h3>Dynamic URLs</h3>
+                <p>Use curly braces to define URL parameters: <code>/user/{id}</code></p>
+                <p>Access these parameters in controllers using: <code>request.getGETParameterByParameterName("id")</code></p>
+            </div>
+        </section>
+
+        <!-- Migrations Section -->
+        <section class="content-section" id="migrations">
+            <div class="section-header">
+                <h1 class="section-title">Migrations</h1>
+                <p class="section-description">Manage database schema creation and updates</p>
+            </div>
+
+            <div class="info-card">
+                <h3>Migration Setup</h3>
+                <p>Migrations are handled in <code>Models/Migration/migrations.hpp</code>. The framework automatically handles table dependencies.</p>
+            </div>
+
+            <div class="code-block">
+                <span class="code-language">C++</span>
+                <pre>#ifndef _MHD_MIGRATIONS_
+#define _MHD_MIGRATIONS_
+
+/**
+ * Add your model pointers in the models array
+ */
+
+#include &lt;vector&gt;
+#include &lt;functional&gt;
+
+// Include the tables here
+#include "../user.hpp"
+#include "../session.hpp"
+#include "../client.hpp"
+
+void initialize_tables() {
+    // Create Model objects
+    // *** Add your classes here (new Model)
+    ORMModel* models[] = {
+        new User,
+        new Session,
+        new Client
+    };
+
+    run_migrations(models, sizeof(models) / sizeof(ORMModel*));
+}
+
+#endif</pre>
+            </div>
+
+            <div class="success-box">
+                <strong>Note:</strong> The framework automatically resolves table dependencies, so you don't need to worry about creation order.
+            </div>
+        </section>
+
+        <!-- ORM Section -->
+        <section class="content-section" id="orm">
+            <div class="section-header">
+                <h1 class="section-title">ORM (Object-Relational Mapping)</h1>
+                <p class="section-description">Database operations without writing SQL</p>
+            </div>
+
+            <div class="info-card">
+                <h3>ORM Methods</h3>
+                <p>The MHD ORM provides object-oriented database access. Methods return <code>ORMModel*</code> pointers that can be cast to your model type.</p>
+            </div>
+
+            <div class="info-card">
+                <h3>Available Methods</h3>
+                <div class="method-signature">save() -> bool</div>
+                <p>Saves an instance to the database</p>
+
+                <div class="method-signature">update(id) -> bool</div>
+                <p>Updates an object in the database</p>
+
+                <div class="method-signature">remove(id) -> bool</div>
+                <p>Removes an object by its ID</p>
+
+                <div class="method-signature">find_by_id(id) -> ORMModel*</div>
+                <p>Returns a pointer to the object or null if not exists</p>
+
+                <div class="method-signature">find_all() -> vector&lt;ORMModel*&gt;</div>
+                <p>Returns all objects in a table</p>
+
+                <div class="method-signature">find_by(columnname, value) -> vector&lt;ORMModel*&gt;</div>
+                <p>Returns all objects where column equals value</p>
+            </div>
+
+            <div class="code-block">
+                <span class="code-language">C++</span>
+                <pre>// Example usage
+User user;
+user.name = "John Doe";
+user.email = "john@example.com";
+user.save();
+
+// Find by ID
+User userQuery;
+User* foundUser = static_cast&lt;User*&gt;(userQuery.find_by_id("1"));
+if(foundUser != nullptr) {
+    std::cout << "Found: " << foundUser->name << std::endl;
+}
+
+// Find all users
+std::vector&lt;ORMModel*&gt; allUsers = userQuery.find_all();
+for(auto* model : allUsers) {
+    User* u = static_cast&lt;User*&gt;(model);
+    std::cout << u->name << std::endl;
+}
+
+// Find by column
+std::vector&lt;ORMModel*&gt; admins = userQuery.find_by("role", "admin");</pre>
+            </div>
+        </section>
+
+        <!-- Database Configuration Section -->
+        <section class="content-section" id="database-config">
+            <div class="section-header">
+                <h1 class="section-title">Database Configuration</h1>
+                <p class="section-description">SQLite database setup and management</p>
+            </div>
+
+            <div class="info-card">
+                <h3>SQLite Support</h3>
+                <p>Currently, mhd++ supports SQLite as the database engine. The database file path is specified in <code>settings.hpp</code>.</p>
+            </div>
+
+            <div class="info-card">
+                <h3>Field Type Mapping</h3>
+                <p>When registering table fields, use these type mappings:</p>
+                <table>
+                    <tr>
+                        <th>Database Type</th>
+                        <th>C++ Type</th>
+                        <th>Example</th>
+                    </tr>
+                    <tr>
+                        <td>INTEGER</td>
+                        <td>int</td>
+                        <td>id, count, age</td>
+                    </tr>
+                    <tr>
+                        <td>REAL</td>
+                        <td>float</td>
+                        <td>price, rating, percentage</td>
+                    </tr>
+                    <tr>
+                        <td>TEXT</td>
+                        <td>std::string</td>
+                        <td>name, email, description</td>
+                    </tr>
+                    <tr>
+                        <td>DATETIME</td>
+                        <td>MhdDateTime</td>
+                        <td>created_at, updated_at</td>
+                    </tr>
+                </table>
+            </div>
+        </section>
+
+        <!-- Request Class Section -->
+        <section class="content-section" id="request-class">
+            <div class="section-header">
+                <h1 class="section-title">Request Class</h1>
+                <p class="section-description">Access HTTP request data in your controllers</p>
+            </div>
+
+            <div class="info-card">
+                <h3>Request Methods</h3>
+                <p>The Request class provides comprehensive access to HTTP request data:</p>
+            </div>
+
+            <div class="info-card">
+                <h3>Basic Request Methods</h3>
+                <div class="method-signature">getUrl() -> string</div>
+                <p>Get the URL path (e.g., "/mypath/1")</p>
+
+                <div class="method-signature">getMethod() -> string</div>
+                <p>Get HTTP method (GET, POST, PUT, DELETE)</p>
+
+                <div class="method-signature">getUserAgent() -> string</div>
+                <p>Get user agent string</p>
+
+                <div class="method-signature">getHostName() -> string</div>
+                <p>Get hostname</p>
+
+                <div class="method-signature">getHeaderValue(headerName) -> string</div>
+                <p>Get specific header value</p>
+            </div>
+
+            <div class="info-card">
+                <h3>Parameter Methods</h3>
+                <div class="method-signature">getGETParameterByParameterName(parameterName) -> string</div>
+                <p>Get URL path parameter (e.g., {id} in route)</p>
+
+                <div class="method-signature">getQueryParameterByParameterName(parameterName) -> string</div>
+                <p>Get query string parameter (?key=value)</p>
+
+                <div class="method-signature">getFormDataParameterByParameterName(parameterName) -> string</div>
+                <p>Get POST form data parameter</p>
+
+                <div class="method-signature">getFileFromPostByName(parameterName) -> MhdFile*</div>
+                <p>Get uploaded file pointer</p>
+            </div>
+
+            <div class="code-block">
+                <span class="code-language">C++</span>
+                <pre>// Example usage in controller
+static void MyController(Request request) {
+    // Get URL parameter from route /user/{id}
+    std::string userId = request.getGETParameterByParameterName("id");
+    
+    // Get query parameter ?search=term
+    std::string searchTerm = request.getQueryParameterByParameterName("search");
+    
+    // Check request method
+    if(request.getMethod() == "POST") {
+        // Get form data
+        std::string name = request.getFormDataParameterByParameterName("name");
+        
+        // Handle file upload
+        MhdFile* file = request.getFileFromPostByName("avatar");
+        if(file != nullptr) {
+            std::string savedPath = file->saveTo("/avatars");
+        }
+    }
+}</pre>
+            </div>
+        </section>
+
+        <!-- Context Section -->
+        <section class="content-section" id="context">
+            <div class="section-header">
+                <h1 class="section-title">Context & Rendering</h1>
+                <p class="section-description">Pass data to templates and render responses</p>
+            </div>
+
+            <div class="info-card">
+                <h3>Context Types</h3>
+                <ul>
+                    <li><code>ContextString</code> - Plain text value</li>
+                    <li><code>ContextObject</code> - Key-value pairs (like JSON object)</li>
+                    <li><code>ContextArray</code> - Array of values</li>
+                    <li><code>ContextValue</code> - Can hold string, object, or array</li>
+                    <li><code>Context</code> - Alias for ContextObject (root structure)</li>
+                </ul>
+            </div>
+
+            <div class="info-card">
+                <h3>Rendering Functions</h3>
+                <div class="method-signature">renderHtml(request, filepath, context) -> void</div>
+                <p>Renders HTML template with context data</p>
+
+                <div class="method-signature">renderText(request, text) -> void</div>
+                <p>Renders plain text response</p>
+
+                <div class="method-signature">redirect(request, targetUrl, statusCode) -> void</div>
+                <p>Redirects to another URL (default status: 302)</p>
+            </div>
+
+            <div class="code-block">
+                <span class="code-language">C++</span>
+                <pre>// Example: Using context in controller
+static void UserList(Request request) {
+    Context context;
+    
+    // Add simple values
+    context["title"] = ContextValue("User List");
+    context["count"] = ContextValue("10");
+    
+    // Add array of objects
+    ContextArray users;
+    
+    // Create user objects
+    ContextObject user1;
+    user1["username"] = ContextValue("john_doe");
+    user1["email"] = ContextValue("john@example.com");
+    users.push_back(ContextValue(user1));
+    
+    ContextObject user2;
+    user2["username"] = ContextValue("jane_doe");
+    user2["email"] = ContextValue("jane@example.com");
+    users.push_back(ContextValue(user2));
+    
+    context["users"] = ContextValue(users);
+    
+    // Conditional values
+    context["is_admin"] = ContextValue("true"); // Use "true" or "false" strings
+    
+    renderHtml(request, "users/list.html", context);
+}</pre>
+            </div>
+
+            <div class="warning-box">
+                <strong>Note:</strong> Rendering functions are non-blocking. Add <code>return;</code> after rendering if you don't want to execute remaining code.
+            </div>
+        </section>
+
+        <!-- Sessions Section -->
+        <section class="content-section" id="sessions">
+            <div class="section-header">
+                <h1 class="section-title">Sessions</h1>
+                <p class="section-description">Manage user sessions and persistent data</p>
+            </div>
+
+            <div class="info-card">
+                <h3>Session Management</h3>
+                <p>The Session class provides server-side session storage with automatic session ID generation.</p>
+            </div>
+
+            <div class="code-block">
+                <span class="code-language">C++</span>
+                <pre>// Session class usage
+#include "../utils/session/session.hpp"
+
+static void MyController(Request request) {
+    // Create or get existing session
+    Session session(request);
+    
+    // Get session value (returns "" if not found)
+    std::string username = session.get_value("username");
+    
+    // Set session value
+    session.set_value("username", "john_doe");
+    session.set_value("user_id", "123");
+    
+    // Remove session key
+    session.remove_key("temp_data");
+}</pre>
+            </div>
+
+            <div class="info-card">
+                <h3>Session Methods</h3>
+                <div class="method-signature">Session(request)</div>
+                <p>Constructor - creates or retrieves session</p>
+
+                <div class="method-signature">get_value(key) -> string</div>
+                <p>Get session value, returns empty string if not found</p>
+
+                <div class="method-signature">set_value(key, value) -> void</div>
+                <p>Set session value and update database</p>
+
+                <div class="method-signature">remove_key(key) -> void</div>
+                <p>Remove key from session if exists</p>
+            </div>
+        </section>
+
+        <!-- Authentication Section -->
+        <section class="content-section" id="authentication">
+            <div class="section-header">
+                <h1 class="section-title">Authentication</h1>
+                <p class="section-description">User authentication and management</p>
+            </div>
+
+            <div class="info-card">
+                <h3>Built-in Authentication</h3>
+                <p>The User model includes static methods for authentication. Passwords are automatically hashed using SHA256.</p>
+            </div>
+
+            <div class="info-card">
+                <h3>Authentication Methods</h3>
+                <div class="method-signature">create_user(firstname, lastname, email, username, password) -> User*</div>
+                <p>Creates a new user with hashed password, returns user pointer or nullptr on failure</p>
+
+                <div class="method-signature">authenticate(request, username, password) -> User*</div>
+                <p>Authenticates user, returns user pointer or nullptr if authentication fails</p>
+
+                <div class="method-signature">logout(request) -> void</div>
+                <p>Logs out user by clearing session data (user_id, username, csrf_token)</p>
+
+                <div class="method-signature">getAuthenticatedUser(request) -> User*</div>
+                <p>Get currently authenticated user or nullptr if not authenticated</p>
+            </div>
+
+            <div class="code-block">
+                <span class="code-language">C++</span>
+                <pre>// Authentication example
+static void LoginController(Request request) {
+    Context context;
+    
+    if(request.getMethod() == "POST") {
+        std::string username = request.getFormDataParameterByParameterName("username");
+        std::string password = request.getFormDataParameterByParameterName("password");
+        
+        // Authenticate user
+        User* user = User::authenticate(request, username, password);
+        
+        if(user != nullptr) {
+            // Authentication successful
+            redirect(request, "/dashboard");
+            return;
+        } else {
+            // Authentication failed
+            context["error"] = ContextValue("Invalid credentials");
+        }
+    }
+    
+    renderHtml(request, "user/login.html", context);
+}
+
+// Check authentication in other controllers
+static void ProtectedController(Request request) {
+    User* user = User::getAuthenticatedUser(request);
+    
+    if(user == nullptr) {
+        redirect(request, "/login");
+        return;
+    }
+    
+    // User is authenticated, proceed...
+    Context context;
+    context["username"] = ContextValue(user->username);
+    renderHtml(request, "protected.html", context);
+}</pre>
+            </div>
+        </section>
+
+        <!-- CSRF Section -->
+        <section class="content-section" id="csrf">
+            <div class="section-header">
+                <h1 class="section-title">CSRF Protection</h1>
+                <p class="section-description">Cross-Site Request Forgery protection</p>
+            </div>
+
+            <div class="info-card">
+                <h3>CSRF Token Usage</h3>
+                <p>All POST, PUT, and DELETE requests should include a CSRF token. The token is automatically available in templates.</p>
+            </div>
+
+            <div class="code-block">
+                <span class="code-language">HTML</span>
+                <pre>&lt;form method="POST" action="/submit"&gt;
+    &lt;!-- CSRF token is automatically available in all templates --&gt;
+    &lt;input type="hidden" name="csrf_token" value="{<span></span>{ csrf_token }<span></span>}"&gt;
+    
+    &lt;input type="text" name="username" required&gt;
+    &lt;input type="password" name="password" required&gt;
+    &lt;button type="submit"&gt;Submit&lt;/button&gt;
+&lt;/form&gt;</pre>
+            </div>
+
+            <div class="success-box">
+                <strong>Important:</strong> The <code>csrf_token</code> variable is automatically rendered in all templates. Always include it in your forms for security.
+            </div>
+        </section>
+
+        <!-- MhdDateTime Section -->
+        <section class="content-section" id="datetime">
+            <div class="section-header">
+                <h1 class="section-title">MhdDateTime</h1>
+                <p class="section-description">Comprehensive date and time handling</p>
+            </div>
+
+            <div class="info-card">
+                <h3>MhdDateTime Class</h3>
+                <p>A powerful date/time class for handling temporal data in your application.</p>
+            </div>
+
+            <div class="info-card">
+                <h3>Constructors</h3>
+                <div class="method-signature">MhdDateTime()</div>
+                <p>Default constructor - current date/time</p>
+
+                <div class="method-signature">MhdDateTime(day, month, year)</div>
+                <p>Date only (time set to 00:00:00)</p>
+
+                <div class="method-signature">MhdDateTime(day, month, year, hour, minute, second)</div>
+                <p>Full datetime</p>
+
+                <div class="method-signature">MhdDateTime(string)</div>
+                <p>From string ("yyyy-mm-dd hh:mm:ss" or "dd-mm-yyyy")</p>
+            </div>
+
+            <div class="code-block">
+                <span class="code-language">C++</span>
+                <pre>// Create datetime objects
+MhdDateTime now;                                    // Current datetime
+MhdDateTime birthday(15, 6, 1990);                 // June 15, 1990
+MhdDateTime meeting(20, 12, 2025, 14, 30, 0);     // Dec 20, 2025 2:30 PM
+MhdDateTime fromString("2025-06-15 10:30:00");    // From string
+
+// Date operations
+MhdDateTime tomorrow = now.next_day();
+MhdDateTime yesterday = now.previous_day();
+MhdDateTime inTwoHours = now.add_hours(2);
+
+// Comparisons
+if(meeting > now) {
+    std::cout << "Meeting is in the future" << std::endl;
+}
+
+// Differences
+int daysDiff = meeting.diff_days(now);
+int hoursDiff = meeting.diff_hours(now);
+
+// Formatting
+std::string sqlFormat = now.to_sqlite_string();    // 2025-06-17 19:17:52
+std::string isoFormat = now.to_iso_string();       // 2025-06-17T19:17:52
+std::string defaultFormat = now.to_string();       // 17-06-2025 19:17:52
+
+// Check properties
+if(now.is_today()) {
+    std::cout << "This date is today!" << std::endl;
+}</pre>
+            </div>
+
+            <div class="info-card">
+                <h3>Key Methods</h3>
+                <table>
+                    <tr>
+                        <th>Method</th>
+                        <th>Description</th>
+                    </tr>
+                    <tr>
+                        <td>get_day(), get_month(), get_year()</td>
+                        <td>Get date components</td>
+                    </tr>
+                    <tr>
+                        <td>get_hour(), get_minute(), get_second()</td>
+                        <td>Get time components</td>
+                    </tr>
+                    <tr>
+                        <td>get_day_name(), get_month_name()</td>
+                        <td>Get names (Monday, January)</td>
+                    </tr>
+                    <tr>
+                        <td>is_today(), is_now()</td>
+                        <td>Check if current date/time</td>
+                    </tr>
+                    <tr>
+                        <td>diff_days(), diff_hours(), diff_minutes()</td>
+                        <td>Calculate differences</td>
+                    </tr>
+                    <tr>
+                        <td>to_string(), to_sqlite_string(), to_iso_string()</td>
+                        <td>Format conversions</td>
+                    </tr>
+                </table>
+            </div>
+        </section>
+
+        <!-- File Handling Section -->
+        <section class="content-section" id="file-handling">
+            <div class="section-header">
+                <h1 class="section-title">File Handling</h1>
+                <p class="section-description">Upload and manage files in your application</p>
+            </div>
+
+            <div class="info-card">
+                <h3>MhdFile Class</h3>
+                <p>Handle file uploads with automatic path management and unique filename generation.</p>
+            </div>
+
+            <div class="info-card">
+                <h3>File Methods</h3>
+                <div class="method-signature">saveTo(path, with_original_name) -> string</div>
+                <p>Save file to path, returns full path or empty string on failure</p>
+
+                <div class="method-signature">get_extension() -> string</div>
+                <p>Get file extension</p>
+
+                <div class="method-signature">get_name_without_extension() -> string</div>
+                <p>Get filename without extension</p>
+
+                <div class="method-signature">remove_uploaded_file(path, is_absolute_path) -> bool</div>
+                <p>Static method to remove uploaded files</p>
+            </div>
+
+            <div class="code-block">
+                <span class="code-language">C++</span>
+                <pre>// File upload example in controller
+static void UploadController(Request request) {
+    Context context;
+    
+    if(request.getMethod() == "POST") {
+        // Get uploaded file
+        MhdFile* image = request.getFileFromPostByName("avatar");
+        
+        if(image != nullptr) {
+            // Save with generated unique filename
+            std::string savedPath = image->saveTo("/avatars");
+            
+            // Or save with original filename
+            // std::string savedPath = image->saveTo("/avatars", true);
+            
+            if(!savedPath.empty()) {
+                context["success"] = ContextValue("true");
+                context["filepath"] = ContextValue(savedPath);
+                
+                // Get file info
+                std::string ext = image->get_extension();
+                std::string nameNoExt = image->get_name_without_extension();
+                std::string contentType = image->get_filecontenttype();
+                
+                std::cout << "File uploaded: " << savedPath << std::endl;
+                std::cout << "Extension: " << ext << std::endl;
+                std::cout << "Content Type: " << contentType << std::endl;
+            }
+        } else {
+            context["error"] = ContextValue("No file uploaded");
+        }
+    }
+    
+    renderHtml(request, "upload.html", context);
+}
+
+// Remove uploaded file
+bool removed = MhdFile::remove_uploaded_file("/avatars/old_avatar.jpg");</pre>
+            </div>
+
+            <div class="warning-box">
+                <strong>Note:</strong> File paths are relative to <code>UPLOADS_DIR</code> defined in settings.hpp. Always start paths with <code>/</code>.
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // JavaScript for section navigation
+        function showSection(sectionId) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.content-section');
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Show selected section
+            const selectedSection = document.getElementById(sectionId);
+            if (selectedSection) {
+                selectedSection.classList.add('active');
+            }
+            
+            // Update nav items
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Set active nav item
+            event.target.classList.add('active');
+            
+            // Close mobile sidebar
+            if (window.innerWidth <= 768) {
+                document.getElementById('sidebar').classList.remove('open');
+            }
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+
+        // Mobile sidebar toggle
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('open');
+        }
+
+        // Syntax highlighting for code blocks (basic)
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add line numbers to code blocks
+            const codeBlocks = document.querySelectorAll('pre');
+            codeBlocks.forEach(block => {
+                const lines = block.textContent.split('\n');
+                if (lines.length > 1) {
+                    // Optional: Add line numbers
+                }
+            });
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 768) {
+                document.getElementById('sidebar').classList.remove('open');
+            }
+        });
+    </script>
+</body>
+</html>
