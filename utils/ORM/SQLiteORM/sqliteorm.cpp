@@ -1,4 +1,17 @@
 #include "sqliteorm.hpp"
+#include <algorithm> // for std::transform, std::remove
+#include <cctype>    // for std::tolower
+
+// Helper function to normalize constraint string
+std::string normalize_constraint(const std::string& str) {
+    std::string result = str;
+    // Convert to lowercase
+    std::transform(result.begin(), result.end(), result.begin(),
+                   [](unsigned char c) { return std::tolower(c); });
+    // Remove spaces
+    result.erase(std::remove(result.begin(), result.end(), ' '), result.end());
+    return result;
+}
 
 void SQLiteORM::createTable() {
     std::string sql = "CREATE TABLE IF NOT EXISTS " + table_name + " (";
@@ -54,7 +67,7 @@ bool SQLiteORM::save() {
     }
     sql += ") VALUES (";
     for (size_t i = 0; i < fields.size(); ++i) {
-        if(fields[i].name == "id")
+        if(normalize_constraint(fields[i].constraints).find("primarykey") != std::string::npos)
             sql += "NULL";
         else
             sql += fields[i].to_sql_value();
