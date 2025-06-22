@@ -39,6 +39,8 @@
       <label for="notes">Notes:</label>
       <textarea id="notes" name="notes">{{ notes }}</textarea>
 
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+
       <div class="form-actions">
         <button type="submit" class="btn">Save Changes</button>
         <a href="/clients/all" class="btn secondary">Cancel</a>

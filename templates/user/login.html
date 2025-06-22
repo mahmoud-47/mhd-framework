@@ -101,6 +101,7 @@
         <input name="password" type="password" placeholder="Password" id="password-login" />
       </div>
       <button type="submit">Login</button>
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
     </form>
 
     <div class="switch">
