@@ -128,6 +128,7 @@ public:
         Session session(request);
         session.remove_key("user_id");
         session.remove_key("username");
+        session.remove_key("csrf_token");
     }
 
     // get Authenticated User pointer or null if not authenticated

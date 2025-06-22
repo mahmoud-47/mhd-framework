@@ -15,6 +15,7 @@
 #include <netinet/in.h>
 #include "utils/request/Request.hpp"
 #include "../../settings.hpp"
+#include "../session/session.hpp"
 
     // Forward declaration for recursive variant
     struct ContextValue;

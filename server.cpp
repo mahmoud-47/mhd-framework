@@ -18,7 +18,7 @@
 #include "utils/nice-display/display.hpp"
 
 
-std::string generateRandomToken(size_t length = 32) {
+std::string generateRandomToken(size_t length = 64) {
     static const char charset[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
     static std::mt19937 rng(std::random_device{}());
     std::uniform_int_distribution<> dist(0, sizeof(charset) - 2);
