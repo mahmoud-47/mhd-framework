@@ -204,11 +204,18 @@ void renderHtml(Request request, const std::string& filepath, Context& context) 
 
 // Render text
 void renderText(Request request ,const std::string& text){
+    std::string cookie;
+    if (request.get_session_id().size() > 0)
+        cookie = "Set-Cookie: session_id=" + request.get_session_id() + "; Path=/; HttpOnly\r\n";
+    else
+        cookie = "";
+
     std::string http_response =
-                "HTTP/1.1 200 OK\r\n" 
-                "Content-Type: text/html\r\n" 
-                "Connection: close\r\n" 
-                "\r\n" + text;
+        "HTTP/1.1 200 OK\r\n" 
+        "Content-Type: text/html\r\n" +
+        cookie +
+        "Connection: close\r\n" 
+        "\r\n" + text;
 
     send(request.getSocket(), http_response.c_str(), http_response.length(), 0);
     close(request.getSocket());

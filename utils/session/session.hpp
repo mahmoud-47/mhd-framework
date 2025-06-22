@@ -23,6 +23,8 @@
             std::string get_value(const std::string key); // looks into the content to get the value or returns ""
             // Set value (key, value)
             void set_value(const std::string key, const std::string value); // updates the database 
+            // remove key if exists
+            void remove_key(const std::string& key);
     };
 
 #endif

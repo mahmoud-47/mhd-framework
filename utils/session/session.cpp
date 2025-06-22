@@ -84,6 +84,41 @@ void Session::set_value(const std::string key, const std::string value) {
     }
 }
 
+// remove key if exists
+void Session::remove_key(const std::string& key) {
+    std::istringstream ss(content);
+    std::ostringstream new_content;
+    std::string pair;
+    bool changed = false;
+
+    while (std::getline(ss, pair, ';')) {
+        size_t pos = pair.find('=');
+        if (pos != std::string::npos) {
+            std::string k = pair.substr(0, pos);
+            std::string v = pair.substr(pos + 1);
+            if (k != key) {
+                new_content << k << "=" << v << ";";
+            } else {
+                changed = true; // key was found and skipped
+            }
+        }
+    }
+
+    if (changed) {
+        content = new_content.str();
+
+        // update in the db
+        SessionTable sessionQuery;
+        auto session_query = sessionQuery.find_by("session_id", session_id);
+        if (session_query.size() > 0) {
+            int id = static_cast<SessionTable*>(session_query[0])->id;
+            static_cast<SessionTable*>(session_query[0])->value = content;
+            static_cast<SessionTable*>(session_query[0])->update(std::to_string(id));
+        }
+    }
+}
+
+
 // Helper guy
 std::string Session::generateSessionID(size_t length) {
     static const char charset[] =

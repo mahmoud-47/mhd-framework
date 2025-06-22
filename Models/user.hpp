@@ -120,6 +120,7 @@ public:
         Session session(request);
         session.set_value("user_id", std::to_string(user->id));
         session.set_value("username", user->username);
+        session.set_value("is_authenticated", "true");
         return user;
     }
 
