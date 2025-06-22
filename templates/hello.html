@@ -16,99 +16,141 @@
             <div class="logo">MHD++</div>
             <ul class="nav-links">
                 <li><a href="#features">Features</a></li>
-                <li><a href="#demo">Demo</a></li>
+                <li><a href="/clients/all">Demo</a></li>
                 <li><a href="/documentation">Documentation</a></li>
-                <li><a href="https://github.com/yourusername/mhd-cpp">GitHub</a></li>
+                <li><a target="_blank" href="https://github.com/mahmoud-47/mhd-framework">GitHub</a></li>
             </ul>
         </nav>
     </header>
 
-    <!-- Main Content -->
-    <main class="main-content">
-        <div class="container">
-            <!-- Hero Section -->
-            <section class="hero">
-                <h1>🚀 Welcome to <span class="highlight">MHD++</span> Framework</h1>
-                <div class="version-badge">Version 1.1</div>
-                <p class="subtitle">A modern, lightweight C++ web framework for building high-performance web applications with elegant simplicity.</p>
-            </section>
 
-            <!-- Features Section -->
-            <section class="features-section" id="features">
-                <h2>✨ Features</h2>
-                <div class="features-grid">
-                    <div class="feature-item">
-                        <h4>🔧 Pure C++ Implementation</h4>
-                        <p>Built entirely in modern C++ for maximum performance and minimal dependencies.</p>
-                    </div>
-                    <div class="feature-item">
-                        <h4>🌐 Dynamic Routing</h4>
-                        <p>Flexible routing system with support for dynamic URLs and parameter extraction.</p>
-                    </div>
-                    <div class="feature-item">
-                        <h4>📂 Static File Serving</h4>
-                        <p>Efficient static file serving with automatic MIME type detection and caching.</p>
-                    </div>
-                    <div class="feature-item">
-                        <h4>📄 Template Engine</h4>
-                        <p>Built-in HTML template rendering system for dynamic content generation.</p>
-                    </div>
-                    <div class="feature-item">
-                        <h4>🧩 Modular Architecture</h4>
-                        <p>Clean, modular design that's easy to extend and customize for your needs.</p>
-                    </div>
-                    <div class="feature-item">
-                        <h4>⚡ High Performance</h4>
-                        <p>Optimized for speed with minimal overhead and efficient memory usage.</p>
-                    </div>
-                    <div class="feature-item">
-                        <h4>🗄️ Built-in ORM</h4>
-                        <p>Simple Object-Relational Mapping with SQLite support using C++ OOP principles.</p>
-                    </div>
-                    <div class="feature-item">
-                        <h4>🔍 Query Builder</h4>
-                        <p>Object-oriented approach to building database queries with clear C++ syntax.</p>
-                    </div>
+<!-- Main Content -->
+<main class="main-content">
+    <div class="container">
+        <!-- Hero Section -->
+        <section class="hero">
+            <h1>🚀 Welcome to <span class="highlight">MHD++</span> Framework</h1>
+            <div class="version-badge">Version 1.1 - Now with Session Support 🔑</div>
+            <p class="subtitle">A modern, lightweight C++ web framework for building high-performance web applications with elegant simplicity.</p>
+        </section>
+
+        <!-- Security Enhancements Section -->
+        <section class="features-section">
+            <h2>🛡️ Security Enhancements</h2>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <h4>🔐 Session Management</h4>
+                    <p>Lightweight `key=value` session system to persist state across requests using secure identifiers.</p>
                 </div>
-            </section>
-
-            <!-- ORM Section -->
-            <section class="features-section">
-                <h2>🗄️ Object-Relational Mapping (ORM)</h2>
-                <div class="features-grid">
-                    <div class="feature-item">
-                        <h4>🗃️ SQLite Integration</h4>
-                        <p>Lightweight, file-based database with zero-configuration setup and deployment.</p>
-                    </div>
-                    <div class="feature-item">
-                        <h4>🏗️ C++ OOP Models</h4>
-                        <p>Define your data models using standard C++ classes with clear object-oriented design.</p>
-                    </div>
-                    <div class="feature-item">
-                        <h4>🔍 Simple Queries</h4>
-                        <p>Clean C++ interface for common database operations like CRUD and basic filtering.</p>
-                    </div>
-                    <div class="feature-item">
-                        <h4>📊 Basic Relations</h4>
-                        <p>Support for fundamental relationships between your C++ model objects.</p>
-                    </div>
+                <div class="feature-item">
+                    <h4>🧬 CSRF Protection</h4>
+                    <p>All form submissions include cryptographic tokens to guard against Cross-Site Request Forgery attacks.</p>
                 </div>
-            </section>
-            <section class="action-buttons" id="demo">
-                <a href="/clients/all" class="btn btn-primary">
-                    🚀 Try Demo App
-                </a>
-                <a href="/documentation" class="btn btn-secondary">
-                    📚 View Documentation
-                </a>
-            </section>
+                <div class="feature-item">
+                    <h4>🛡️ SQL Injection Defense</h4>
+                    <p>Database queries use parameterized execution through a C++ Query Builder to prevent injection vectors.</p>
+                </div>
+                <div class="feature-item">
+                    <h4>⏰ MhdDateTime Support</h4>
+                    <p>Custom datetime utility for managing session timeouts, user activity tracking, and token expiration.</p>
+                </div>
+                <div class="feature-item">
+                    <h4>📁 Secure File Serving</h4>
+                    <p>Using <code>MhdFile</code> to expose internal headers and static files safely with path validation.</p>
+                </div>
+            </div>
+        </section>
 
-            <!-- Footer -->
-            <footer class="footer">
-                <p>&copy; 2025 MHD++ Framework. Built with 💻 by <a href="https://github.com/mahmoud-47">Mohamed Gaye</a></p>
-                <p>Open source and available on <a href="https://github.com/mahmoud-47/mhd-framework">GitHub</a></p>
-            </footer>
-        </div>
-    </main>
+
+        <!-- Features Section -->
+        <section class="features-section" id="features">
+            <h2>✨ Features</h2>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <h4>🔧 Pure C++ Implementation</h4>
+                    <p>Built entirely in modern C++ for maximum performance and minimal dependencies.</p>
+                </div>
+                <div class="feature-item">
+                    <h4>🌐 Dynamic Routing</h4>
+                    <p>Flexible routing system with support for dynamic URLs and parameter extraction.</p>
+                </div>
+                <div class="feature-item">
+                    <h4>📂 Static File Serving</h4>
+                    <p>Efficient static file serving with automatic MIME type detection and caching.</p>
+                </div>
+                <div class="feature-item">
+                    <h4>📄 Template Engine</h4>
+                    <p>Built-in HTML template rendering system for dynamic content generation.</p>
+                </div>
+                <div class="feature-item">
+                    <h4>🧩 Modular Architecture</h4>
+                    <p>Clean, modular design that's easy to extend and customize for your needs.</p>
+                </div>
+                <div class="feature-item">
+                    <h4>⚡ High Performance</h4>
+                    <p>Optimized for speed with minimal overhead and efficient memory usage.</p>
+                </div>
+                <div class="feature-item">
+                    <h4>🗄️ Built-in ORM</h4>
+                    <p>Simple Object-Relational Mapping with SQLite support using C++ OOP principles.</p>
+                </div>
+                <div class="feature-item">
+                    <h4>🔍 Query Builder</h4>
+                    <p>Object-oriented approach to building database queries with clear C++ syntax.</p>
+                </div>
+                <div class="feature-item">
+                    <h4>🧠 MhdDateTime Integration</h4>
+                    <p>Custom C++ class to manage time-sensitive logic like session control and timestamps.</p>
+                </div>
+                <div class="feature-item">
+                    <h4>📁 MhdFile Support</h4>
+                    <p>Retrieve and serve C++ headers securely and efficiently using the MhdFile handler.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ORM Section -->
+        <section class="features-section">
+            <h2>🗄️ Object-Relational Mapping (ORM)</h2>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <h4>🗃️ SQLite Integration</h4>
+                    <p>Lightweight, file-based database with zero-configuration setup and deployment.</p>
+                </div>
+                <div class="feature-item">
+                    <h4>🏗️ C++ OOP Models</h4>
+                    <p>Define your data models using standard C++ classes with clear object-oriented design.</p>
+                </div>
+                <div class="feature-item">
+                    <h4>🔍 Simple Queries</h4>
+                    <p>Clean C++ interface for common database operations like CRUD and basic filtering.</p>
+                </div>
+                <div class="feature-item">
+                    <h4>📊 Basic Relations</h4>
+                    <p>Support for fundamental relationships between your C++ model objects.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Call-to-Action -->
+        <section class="action-buttons" id="demo">
+            <a href="/clients/all" class="btn btn-primary">
+                🚀 Try Demo App (Session Enabled)
+            </a>
+            <a href="/documentation" class="btn btn-secondary">
+                📚 View Documentation (Includes CSRF & MhdDateTime)
+            </a>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>&copy; 2025 MHD++ Framework. Built with 💻 by <a target="_blank" href="https://github.com/mahmoud-47">Mohamed Gaye</a></p>
+            <p>Open source and available on <a target="_blank" href="https://github.com/mahmoud-47/mhd-framework">GitHub</a></p>
+        </footer>
+    </div>
+</main>
+
+
+
 </body>
 </html>
