@@ -120,8 +120,26 @@ public:
         Session session(request);
         session.set_value("user_id", std::to_string(user->id));
         session.set_value("username", user->username);
-        session.set_value("is_authenticated", "true");
         return user;
+    }
+
+    // Logout method
+    static void logout(Request &request){
+        Session session(request);
+        session.remove_key("user_id");
+        session.remove_key("username");
+    }
+
+    // get Authenticated User pointer or null if not authenticated
+    static User* getAuthenticatedUser(Request &request){
+        Session session(request);
+        if(session.get_value("user_id") != ""){
+            // check if user with user_id exists and return its pointer
+            User userQuery;
+            User* user = static_cast<User*>(userQuery.find_by_id(session.get_value("user_id")));
+            return user; // returns null if user is null
+        }
+        return nullptr;
     }
 
 };

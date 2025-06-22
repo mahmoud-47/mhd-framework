@@ -13,6 +13,7 @@ URLPattern urls[] = {
     // User URLS
     {"register", "/user/register", UserController::regirer},
     {"login", "/user/login", UserController::login},
+    {"home", "/user/home", UserController::private_page},
 
     // Client URLS
     {"display-all", "/clients/all", ClientController::DisplayAll},

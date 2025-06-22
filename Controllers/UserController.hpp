@@ -94,6 +94,27 @@
                 renderHtml(request, template_name, context);
             }
 
+            static void private_page(Request request){
+                std::string template_name = "user/home.html";
+                Context context;
+
+                // check if user is authenticated and redirect to login page if not
+                User* user = User::getAuthenticatedUser(request);
+                if(user == nullptr){
+                    redirect(request, "/user/login");
+                    return;
+                }else{
+                    // user is authenticated
+                    context["user"] = ContextObject{
+                        {"firstname", ContextValue(user->firstname)},
+                        {"lastname", ContextValue(user->lastname)},
+                        {"username", ContextValue(user->username)}
+                    };
+                }
+                
+                return renderHtml(request, template_name, context);
+            }
+
     };
 
 #endif
