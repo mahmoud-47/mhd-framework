@@ -535,29 +535,84 @@ make
 
         <!-- Models Section -->
         <section class="content-section" id="models">
-            <div class="section-header">
-                <h1 class="section-title">Models</h1>
-                <p class="section-description">Define your database tables using C++ classes</p>
-            </div>
+    <div class="section-header">
+        <h1 class="section-title">Models</h1>
+        <p class="section-description">Define your database tables using C++ classes</p>
+    </div>
 
-            <div class="info-card">
-                <h3>Model Requirements</h3>
-                <p>Each model represents a database table. Models are defined in the <code>Models/</code> folder.</p>
-                <ul>
-                    <li>Include <code>utils/ORM/SQLiteORM/sqliteorm.hpp</code></li>
-                    <li>Inherit publicly from <code>SQLiteORM</code></li>
-                    <li>Define attributes with getters and setters</li>
-                    <li>Implement <code>registerFields()</code> method</li>
-                    <li>Call parent constructor with table name</li>
-                    <li>Implement copy constructor</li>
-                    <li>Declare virtual destructor</li>
-                    <li>Implement <code>clone()</code> method</li>
-                </ul>
-            </div>
+    <div class="info-card">
+        <h3>Overview</h3>
+        <p>Each model represents a database table and is defined in the <code>Models/</code> folder. Models provide an object-oriented interface to interact with your database tables.</p>
+    </div>
 
-            <div class="code-block">
-                <span class="code-language">C++</span>
-                <pre>#ifndef _USER_MODEL_H_
+    <div class="info-card">
+        <h3>Quick Start - Model Generation</h3>
+        <p>The easiest way to create a new model is using the generation script:</p>
+        
+        <div class="code-block">
+            <span class="code-language">bash</span>
+            <pre>Usage: ./generate_model.sh &lt;db_type&gt; &lt;TableName&gt; &lt;field:type[:constraint]&gt; ...
+
+Example:
+./generate_model.sh sqlite Client "id:INTEGER:PRIMARY KEY" "name:TEXT" "email:TEXT:UNIQUE" "user_id:INTEGER:REFERENCES users(id) ON DELETE CASCADE" "rate:REAL" "created_at:DATETIME"</pre>
+        </div>
+        
+        <p>After generation, add the model's pointer to the <code>ORMModel* models[]</code> array in <code>Model/Migration/migrations.hpp</code></p>
+    </div>
+
+    <div class="info-card">
+        <h3>Model Requirements</h3>
+        <p>All models must follow these requirements:</p>
+        <ul>
+            <li>Include <code>utils/ORM/SQLiteORM/sqliteorm.hpp</code></li>
+            <li>Inherit publicly from <code>SQLiteORM</code></li>
+            <li>Define attributes with appropriate data types</li>
+            <li>Implement <code>registerFields()</code> method</li>
+            <li>Call parent constructor with table name</li>
+            <li>Implement copy constructor</li>
+            <li>Declare virtual destructor</li>
+            <li>Implement <code>clone()</code> method</li>
+        </ul>
+    </div>
+
+    <div class="info-card">
+        <h3>Supported Field Types</h3>
+        <table>
+            <tr>
+                <th>SQL Type</th>
+                <th>C++ Type</th>
+                <th>Description</th>
+            </tr>
+            <tr>
+                <td>INTEGER</td>
+                <td>int</td>
+                <td>Integer values</td>
+            </tr>
+            <tr>
+                <td>REAL</td>
+                <td>float</td>
+                <td>Floating point values</td>
+            </tr>
+            <tr>
+                <td>TEXT</td>
+                <td>std::string</td>
+                <td>Text strings</td>
+            </tr>
+            <tr>
+                <td>DATETIME</td>
+                <td>MhdDateTime</td>
+                <td>Date and time values</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="info-card">
+        <h3>Example Model Implementation</h3>
+        <p>Here's a complete example of a User model:</p>
+        
+        <div class="code-block">
+            <span class="code-language">C++</span>
+            <pre>#ifndef _USER_MODEL_H_
 #define _USER_MODEL_H_
 
 #include "../../utils/ORM/SQLiteORM/sqliteorm.hpp"  
@@ -602,39 +657,9 @@ public:
 };
 
 #endif</pre>
-            </div>
-
-            <div class="info-card">
-                <h3>Supported Field Types</h3>
-                <table>
-                    <tr>
-                        <th>SQL Type</th>
-                        <th>C++ Type</th>
-                        <th>Description</th>
-                    </tr>
-                    <tr>
-                        <td>INTEGER</td>
-                        <td>int</td>
-                        <td>Integer values</td>
-                    </tr>
-                    <tr>
-                        <td>REAL</td>
-                        <td>float</td>
-                        <td>Floating point values</td>
-                    </tr>
-                    <tr>
-                        <td>TEXT</td>
-                        <td>std::string</td>
-                        <td>Text strings</td>
-                    </tr>
-                    <tr>
-                        <td>DATETIME</td>
-                        <td>MhdDateTime</td>
-                        <td>Date and time values</td>
-                    </tr>
-                </table>
-            </div>
-        </section>
+        </div>
+    </div>
+</section>
 
         <!-- Controllers Section -->
         <section class="content-section" id="controllers">
