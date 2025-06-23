@@ -29,7 +29,7 @@
     const std::string DATABASE_PATH = getBaseDirectory() + "/database/db.sqlite";
 
     // Show SQL queries in console
-    const bool showSQLQueries = true;
+    const bool showSQLQueries = false;
 
     // Drop and recreate tables on startup
     const bool dropRecreateTables = false;

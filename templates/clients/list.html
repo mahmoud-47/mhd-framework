@@ -7,6 +7,14 @@
   <link rel="stylesheet" href="/static/css/client-styles.css">
 </head>
 <body>
+  <div style="padding: 10px; background-color: #f5f5f5; display: flex; justify-content: space-between; align-items: center;">
+    <div>
+      👋 Welcome, <strong>{{ firstname }} {{ lastname }}</strong>
+    </div>
+    <div>
+      <a href="/user/logout" style="color: red; text-decoration: none; font-weight: bold;">🚪 Logout</a>
+    </div>
+  </div>
   <header class="header">
     <h1>Clients</h1>
     <a href="/clients/create" class="btn">➕ Add Client</a>

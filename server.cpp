@@ -17,17 +17,6 @@
 #include "Models/Migration/migrations.hpp"
 #include "utils/nice-display/display.hpp"
 
-
-std::string generateRandomToken(size_t length = 64) {
-    static const char charset[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-    static std::mt19937 rng(std::random_device{}());
-    std::uniform_int_distribution<> dist(0, sizeof(charset) - 2);
-    std::string token;
-    for (size_t i = 0; i < length; ++i)
-        token += charset[dist(rng)];
-    return token;
-}
-
 std::string readFullRequest(int client_socket) {
     std::string fullRequest;
     char buffer[4096];
@@ -96,14 +85,6 @@ std::string readFullRequest(int client_socket) {
 
 void handle_connection(int client_socket, Route* routes) {
     std::string requestData = readFullRequest(client_socket);
-    // std::cout << "Full request size: " << requestData.length() << " bytes" << std::endl;
-    
-    // Only print first 1000 characters for debugging (to avoid flooding console)
-    // std::cout << "Requête reçue (first 1000 chars):\n" 
-    //           << requestData.substr(0, 1000) << std::endl;
-    // if (requestData.length() > 1000) {
-    //     std::cout << "... (truncated, total " << requestData.length() << " bytes)" << std::endl;
-    // }
 
     /**
      * SET session_id and csrf_token if not exists

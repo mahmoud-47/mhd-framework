@@ -1,6 +1,7 @@
 #ifndef __MHD_FRAM_URL_PATTERN__
 #define __MHD_FRAM_URL_PATTERN__
 #include <string>
+#include <functional>
 #include "request/Request.hpp"
 /**
  * URL Pattern
@@ -17,7 +18,8 @@ struct URLPattern{
     /**
      * Function from the controllers
      */
-    void (*controller)(Request);
+    // void (*controller)(Request);
+    std::function<void(Request&)> controller;
 };
 
 #endif

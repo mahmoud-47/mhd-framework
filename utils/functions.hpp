@@ -7,6 +7,16 @@
 #include <chrono>
 #include <random>
 
+std::string generateRandomToken(size_t length = 64) {
+    static const char charset[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    static std::mt19937 rng(std::random_device{}());
+    std::uniform_int_distribution<> dist(0, sizeof(charset) - 2);
+    std::string token;
+    for (size_t i = 0; i < length; ++i)
+        token += charset[dist(rng)];
+    return token;
+}
+
 
 bool endsWith(const std::string& str, const std::string& suffix) {
     return str.size() >= suffix.size() && 

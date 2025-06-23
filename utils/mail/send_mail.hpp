@@ -27,15 +27,23 @@
             static size_t read_callback(char *buffer, size_t size, size_t nitems, void *userdata);
             
         public:
-            // receiver email, subject of the mail
+            /**
+             * The constructer takes the email of the receiver and the subject of the email
+             */
             MhdSendMail(const std::string& receiver_email, const std::string& subject) : 
                 receiver_email(receiver_email),
                 subject(subject){}
-            // Add some text to be sent
+            /**
+             * Add some text to be sent
+             */
             void AttachTextMessage(const std::string& message); 
-            // Add Html content
+            /**
+             * Add Html content
+             */
             void AttachHtmlMessage(const std::string& template_path, Context& context); 
-            // send the message or raise an MailException error if fails
+            /**
+             * send the message or raise an MailException error if fails
+             */
             void send(); // raise error
     };
 

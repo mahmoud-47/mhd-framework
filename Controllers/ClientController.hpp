@@ -57,6 +57,12 @@
                     context["del-id"] = ContextString(deletion_id);
                 }
 
+                // Added the user details.. No need to check if the user is authenticated coz this controller is protected
+                User* user = User::getAuthenticatedUser(request);
+                context["firstname"] = ContextValue(user->firstname);
+                context["lastname"] = ContextValue(user->lastname);
+                delete user;
+
                 renderHtml(request, templatename, context);
             }
 

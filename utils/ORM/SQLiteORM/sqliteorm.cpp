@@ -42,7 +42,7 @@ void SQLiteORM::createTable() {
     }
     sql += ");";
     if (showSQLQueries) {
-        std::cout << "**** SQL  : " << sql << std::endl;
+        std::cout << "** SQL : " << sql << std::endl;
     }
     execute(sql);
 }
@@ -50,7 +50,7 @@ void SQLiteORM::createTable() {
 void SQLiteORM::dropTable() {
     std::string sql = "DROP TABLE IF EXISTS " + table_name + ";";
     if (showSQLQueries) {
-        std::cout << "**** SQL  : " << sql << std::endl;
+        std::cout << "** SQL : " << sql << std::endl;
     }
     execute(sql);
 }
@@ -94,7 +94,7 @@ bool SQLiteORM::save() {
     sql += ");";
 
     if (showSQLQueries) {
-        std::cout << "**** SQL  : " << sql << std::endl;
+        std::cout << "** SQL : " << sql << std::endl;
     }
 
     return execute(sql);
@@ -108,7 +108,7 @@ bool SQLiteORM::update(const std::string& id) {
     }
     sql += " WHERE " + fields[0].name + " = '" + id + "';";
     if (showSQLQueries) {
-        std::cout << "**** SQL  : " << sql << std::endl;
+        std::cout << "** SQL : " << sql << std::endl;
     }
     return execute(sql);
 }
@@ -125,7 +125,7 @@ bool SQLiteORM::remove(const std::string& id) {
     };
 
     if (showSQLQueries) {
-        std::cout << "**** Check SQL: " << check_sql << std::endl;
+        std::cout << "** SQL : " << check_sql << std::endl;
     }
     
     // Execute the existence check
@@ -142,7 +142,7 @@ bool SQLiteORM::remove(const std::string& id) {
                            " WHERE " + fields[0].name + " = '" + id + "';";
     
     if (showSQLQueries) {
-        std::cout << "**** Delete SQL: " << delete_sql << std::endl;
+        std::cout << "** SQL : " << delete_sql << std::endl;
     }
 
     return execute(delete_sql);
@@ -153,7 +153,7 @@ bool SQLiteORM::remove(const std::string& id) {
 ORMModel* SQLiteORM::find_by_id(const std::string& id) {
     std::string sql = "SELECT * FROM " + table_name + " WHERE " + fields[0].name + " = '" + id + "';";
     if (showSQLQueries) {
-        std::cout << "**** SQL  : " << sql << std::endl;
+        std::cout << "** SQL : " << sql << std::endl;
     }
 
     // Structure to track if we found a record
@@ -249,7 +249,7 @@ std::vector<ORMModel*> SQLiteORM::find_by(const std::string& column_name, const 
     std::string sql = "SELECT * FROM " + table_name + " WHERE " + column_name + " = " + formatted_value + ";";
 
     if (showSQLQueries) {
-        std::cout << "**** SQL  : " << sql << std::endl;
+        std::cout << "** SQL : " << sql << std::endl;
     }
 
     std::pair<SQLiteORM*, std::vector<ORMModel*>*> context = {this, &results};
@@ -286,7 +286,7 @@ std::vector<ORMModel*> SQLiteORM::find_all() {
 
     std::string sql = "SELECT * FROM " + table_name + ";";
     if (showSQLQueries) {
-        std::cout << "**** SQL  : " << sql << std::endl;
+        std::cout << "** SQL : " << sql << std::endl;
     }
     std::pair<SQLiteORM*, std::vector<ORMModel*>*> context = {this, &results};
     query(sql, callback, &context);

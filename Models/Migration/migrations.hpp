@@ -7,14 +7,14 @@
 #include "../user.hpp"
 #include "../session.hpp"
 #include "../client.hpp"
-#include "../user_profile.hpp"
+#include "../userprofile.hpp"
 
 
 inline void initialize_tables() {
 
     // Add table here
     ORMModel* models[] = {
-        new UserProfileTable,
+        new UserProfile,
         new User,
         new SessionTable,
         new Client

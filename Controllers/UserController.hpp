@@ -64,7 +64,25 @@
                         }
                         // sucess message
                         context["success"] = ContextValue("true");
-                        context["message"] = ContextValue("User Created successfuly !");
+                        context["message"] = ContextValue("User Created successfuly ! Check your Email !!!");
+
+                        // Send a Thank you email
+                        try{
+                            std::string receiver_email = email;
+                            std::string subject = "Tnak you for creating an account !";
+                            // creating mail object
+                            MhdSendMail sender(receiver_email, subject);
+                            // add context
+                            Context context;
+                            context["firstname"] = ContextValue(firstname);
+                            context["lastname"] = ContextValue(lastname);
+                            // link the html file
+                            sender.AttachHtmlMessage("mail/thankyou.html", context);
+                            // send
+                            sender.send();
+                        }catch(MailException e){
+                            std::cout << "--------- Did not send email " << e.getMessage() << "\n";
+                        }
 
                         delete user;
                         renderHtml(request, template_name, context);
@@ -84,36 +102,15 @@
                 std::string template_name = "user/login.html";
                 Context context;
 
-                // check if user is authenticated and redirect to home page if yes
-                User* user = User::getAuthenticatedUser(request);
-                if(user != nullptr){
-                    delete user;
-                    redirect(request, "/user/home");
-                    return;
-                }
-
                 if(request.getMethod() == "POST"){
                     std::string username = request.getFormDataParameterByParameterName("username");
                     std::string password = request.getFormDataParameterByParameterName("password");
 
-                    try{
-                        MhdSendMail sender(username, "Yupp 1!");
-                        Context context;
-                        context["name"] = ContextValue("Mohamed !!");
-                        sender.AttachTextMessage("Heyy");
-                        sender.send();
-                    }catch(MailException e){
-                        std::cout << "--------- Did not send email " << e.getMessage() << "\n";
-                    }
-
                     User *user = User::authenticate(request, username, password);
                     if(user){
-                        context["success"] = ContextValue("true");
-                        context["message"] = ContextValue("Welcome " + user->firstname);
-            
                         delete user;
                         // redirect to home page
-                        redirect(request, "/user/home");
+                        redirect(request, "/clients/all");
                         return;
                     }else{
                         context["error"] = ContextValue("true");
@@ -122,29 +119,6 @@
                 }
 
                 renderHtml(request, template_name, context);
-            }
-
-            static void private_page(Request request){
-                std::string template_name = "user/home.html";
-                Context context;
-
-                // check if user is authenticated and redirect to login page if not
-                User* user = User::getAuthenticatedUser(request);
-                if(user == nullptr){
-                    redirect(request, "/user/login");
-                    return;
-                }else{
-                    // user is authenticated
-                    context["user"] = ContextObject{
-                        {"firstname", ContextValue(user->firstname)},
-                        {"lastname", ContextValue(user->lastname)},
-                        {"username", ContextValue(user->username)}
-                    };
-                    // free memory
-                    delete user;
-                }
-                
-                return renderHtml(request, template_name, context);
             }
 
             static void logout_user(Request request){
