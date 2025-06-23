@@ -31,9 +31,9 @@
     };
 
     // Custom exception class for datetime-related errors
-    class EmailException : public Exception{
+    class MailException : public Exception{
         public:
-            EmailException(const std::string& msg) : Exception(msg) {}
+            MailException(const std::string& msg) : Exception(msg) {}
             
     };
 
