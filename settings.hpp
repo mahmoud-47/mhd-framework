@@ -6,6 +6,7 @@
      */
 
     #include "utils/current_path/current_path.hpp"
+    #include "utils/load_env/load_env.hpp"
 
     // Port
     #define PORT 8001
@@ -35,6 +36,13 @@
 
     // MHD++ Version
     #define VERSION "1.1"
+
+    /**
+     * SMTP Settings
+     */
+    const std::string SMTP_SERVER = "smtp://smtp.gmail.com:587";
+    const std::string SMTP_SENDER_EMAIL = getenv_from_env_file("SENDER_EMAIL");
+    const std::string SMTP_SENDER_PASSWORD = getenv_from_env_file("SENDER_PASSWORD");
     
 
 #endif

@@ -118,6 +118,8 @@ void handle_connection(int client_socket, Route* routes) {
     std::cout << "Request method " << request.getMethod() << std::endl;
     std::cout << "Request userAgent " << request.getUserAgent() << std::endl;
     std::cout << "Request Url " << request.getUrl() << std::endl;
+    std::cout << "SMTP_SENDER_EMAIL " << SMTP_SENDER_EMAIL << std::endl;
+    std::cout << "SMTP_SENDER_PASSWORD " << SMTP_SENDER_PASSWORD << std::endl;
 
     std::string url = request.getUrl();
     
