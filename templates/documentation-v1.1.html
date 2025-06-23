@@ -819,15 +819,12 @@ URLPattern urls[] = {
     // Hello URLS
     {"hello", "/", HelloController::Hello},
     {"documentation", "/documentation", HelloController::Documentation},
-    {"string", "/string/{id}", HelloController::HelloString},
-    {"parse", "/test-parse", HelloController::TestParser},
 
     // User URLS
-    {"adduser", "/adduser", UserController::createUser},
-    {"getuser", "/getuser/{userId}", UserController::getUser},
-    {"getusers", "/getusers", UserController::getAllUsers},
-    {"deluser", "/deluser/{userId}", UserController::deluser},
-    {"updateUser", "/updateuser/{userId}", UserController::updateUser},
+    {"register", "/user/register", UserController::regirer},
+    {"login", "/user/login", UserController::login},
+    {"home", "/user/home", UserController::private_page},
+    {"logout", "/user/logout", UserController::logout_user},
 
     // Client URLS
     {"display-all", "/clients/all", ClientController::DisplayAll},
@@ -909,7 +906,7 @@ void initialize_tables() {
             <div class="info-card">
                 <h3>Available Methods</h3>
                 <div class="method-signature">save() -> bool</div>
-                <p>Saves an instance to the database</p>
+                <p>Saves an instance to the database, set the primary key to what ever number, it will be autoincremented</p>
 
                 <div class="method-signature">update(id) -> bool</div>
                 <p>Updates an object in the database</p>
