@@ -19,6 +19,13 @@ if (NOT SQLite3_FOUND)
     message(FATAL_ERROR "SQLite3 not found. Please install it with: sudo apt-get install libsqlite3-dev")
 endif()
 
+# Find libcurl
+find_package(CURL REQUIRED)
+
+if (NOT CURL_FOUND)
+    message(FATAL_ERROR "libcurl not found. Please install it with: sudo apt install libcurl4-openssl-dev")
+endif()
+
 include_directories(
     ${CMAKE_SOURCE_DIR}
     ${CMAKE_SOURCE_DIR}/router
@@ -29,9 +36,13 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/database
     ${CMAKE_SOURCE_DIR}/server
     ${SQLite3_INCLUDE_DIRS}
+    ${CURL_INCLUDE_DIRS}
 )
 
 add_executable(application ${SRC_FILES})
 
-# Link against SQLite3
-target_link_libraries(application ${SQLite3_LIBRARIES})
+# Link against SQLite3 and libcurl
+target_link_libraries(application 
+    ${SQLite3_LIBRARIES}
+    ${CURL_LIBRARIES}
+)

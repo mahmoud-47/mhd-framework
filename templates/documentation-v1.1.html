@@ -458,28 +458,44 @@
 
             <div class="code-block">
                 <span class="code-language">C++</span>
-                <pre>// settings.hpp
-#ifndef _SETTINGS_HPP_
-#define _SETTINGS_HPP_
+                <pre>#ifndef __MHD_FRAM_SETT__
+#define __MHD_FRAM_SETT__
 
-// Server Configuration
-const int PORT = 8080;                          // Port the app runs on
+    /**
+     * These Constants are vital for the program, so don't delete them, You can modify them..
+     */
 
-// Directory Configuration
-const std::string BASE_DIR = "/path/to/project"; // Base directory containing settings.hpp
-const std::string TEMPLATES_DIR = BASE_DIR + "/templates"; // HTML templates location
-const std::string STATIC_DIR = BASE_DIR + "/templates/static"; // Static files location
-const std::string UPLOADS_DIR = BASE_DIR + "/templates/static/uploads"; // Upload directory
+    #include "utils/current_path/current_path.hpp"
 
-// Database Configuration
-const std::string DATABASE_PATH = BASE_DIR + "/database/db.sqlite"; // SQLite database path
+    // Port
+    #define PORT 8001
 
-// Debug Options
-const bool showSQLQueries = true;    // Show SQL queries in console
-const bool dropRecreateTables = false; // Drop and recreate tables on startup
+    // Base directory containing settings.hpp
+    const std::string BASE_DIR = getBaseDirectory();
 
-// Framework Version
-const std::string VERSION = "1.1";
+    // HTML templates location
+    const std::string TEMPLATES_DIR = getBaseDirectory() + "/templates";
+
+    // Static files location
+    const std::string STATIC_DIR = TEMPLATES_DIR + "/static";
+
+    // Upload directory
+    const std::string UPLOADS_DIR = STATIC_DIR + "/uploads";
+
+    /* DATABASE CONFIG*/
+
+    // SQLite database path
+    const std::string DATABASE_PATH = getBaseDirectory() + "/database/db.sqlite";
+
+    // Show SQL queries in console
+    const bool showSQLQueries = true;
+
+    // Drop and recreate tables on startup
+    const bool dropRecreateTables = false;
+
+    // MHD++ Version
+    #define VERSION "1.1"
+    
 
 #endif</pre>
             </div>

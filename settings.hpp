@@ -10,30 +10,30 @@
     // Port
     #define PORT 8001
 
-    // Base directory
+    // Base directory containing settings.hpp
     const std::string BASE_DIR = getBaseDirectory();
 
-    // Templates DIR 
+    // HTML templates location
     const std::string TEMPLATES_DIR = getBaseDirectory() + "/templates";
 
-    // Static Files Folder
+    // Static files location
     const std::string STATIC_DIR = TEMPLATES_DIR + "/static";
 
-    // Uploaded Files Folder
+    // Upload directory
     const std::string UPLOADS_DIR = STATIC_DIR + "/uploads";
 
     /* DATABASE CONFIG*/
 
-    // SQLITE
+    // SQLite database path
     const std::string DATABASE_PATH = getBaseDirectory() + "/database/db.sqlite";
 
-    // SHOW SQL queries
+    // Show SQL queries in console
     const bool showSQLQueries = true;
 
-    // DROP SQL TABLE AND Recreate them
+    // Drop and recreate tables on startup
     const bool dropRecreateTables = false;
 
-    // Version
+    // MHD++ Version
     #define VERSION "1.1"
     
 
