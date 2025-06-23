@@ -95,9 +95,12 @@
                 if(request.getMethod() == "POST"){
                     std::string username = request.getFormDataParameterByParameterName("username");
                     std::string password = request.getFormDataParameterByParameterName("password");
+
                     try{
-                        MhdSendMail sender(username, "Yupp !");
-                        sender.AttachTextMessage("Salut Mhd !");
+                        MhdSendMail sender(username, "Yupp 1!");
+                        Context context;
+                        context["name"] = ContextValue("Mohamed !!");
+                        sender.AttachTextMessage("Heyy");
                         sender.send();
                     }catch(MailException e){
                         std::cout << "--------- Did not send email " << e.getMessage() << "\n";

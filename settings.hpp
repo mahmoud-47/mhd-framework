@@ -40,6 +40,12 @@
     /**
      * SMTP Settings
      */
+    
+    // create a .env file in the same directory and store your email and app password there the file shoul look like this
+    /*
+    SENDER_EMAIL=xyz@gmail.com
+    SENDER_PASSWORD=abcd abcd abcd abcd
+    */
     const std::string SMTP_SERVER = "smtp://smtp.gmail.com:587";
     const std::string SMTP_SENDER_EMAIL = getenv_from_env_file("SENDER_EMAIL");
     const std::string SMTP_SENDER_PASSWORD = getenv_from_env_file("SENDER_PASSWORD");

@@ -47,10 +47,20 @@ void MhdSendMail::send(){
         curl_easy_setopt(curl, CURLOPT_MAIL_RCPT, recipients);
         
         // Email content
-        std::string email_content_cpp = "To: " + receiver_email + "\r\n"
-            "From: " + SMTP_SENDER_EMAIL + "\r\n"
-            "Subject: " + subject + "\r\n"
-            "\r\n" + content;
+        std::string email_content_cpp;
+        if (content.find("MIME-Version:") != std::string::npos) {
+            // HTML content with MIME headers
+            email_content_cpp = "To: " + receiver_email + "\r\n"
+                "From: " + SMTP_SENDER_EMAIL + "\r\n"
+                "Subject: " + subject + "\r\n" +
+                content;  // content already includes MIME headers and body
+        } else {
+            // Plain text content
+            email_content_cpp = "To: " + receiver_email + "\r\n"
+                "From: " + SMTP_SENDER_EMAIL + "\r\n"
+                "Subject: " + subject + "\r\n"
+                "\r\n" + content;
+        }
 
         const char* email_content = email_content_cpp.c_str();
         
@@ -70,12 +80,11 @@ void MhdSendMail::send(){
         curl_easy_setopt(curl, CURLOPT_PASSWORD, SMTP_SENDER_PASSWORD.c_str());
         
         // Enable verbose output for debugging
-        curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
+        // curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
         
         // Perform the request
         CURLcode res = curl_easy_perform(curl);
         
-
         if (res != CURLE_OK) {
             char error[1000];
             sprintf(error, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
