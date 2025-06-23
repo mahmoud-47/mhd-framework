@@ -6,6 +6,7 @@
     #include "utils/render/HttpRender.hpp"
     #include "../Models/user.hpp"
     #include "utils/Exception/exception.hpp"
+    #include "utils/mail/send_mail.hpp"
 
     class UserController{
 
@@ -94,6 +95,13 @@
                 if(request.getMethod() == "POST"){
                     std::string username = request.getFormDataParameterByParameterName("username");
                     std::string password = request.getFormDataParameterByParameterName("password");
+                    try{
+                        MhdSendMail sender(username, "Yupp !");
+                        sender.AttachTextMessage("Salut Mhd !");
+                        sender.send();
+                    }catch(MailException e){
+                        std::cout << "--------- Did not send email " << e.getMessage() << "\n";
+                    }
 
                     User *user = User::authenticate(request, username, password);
                     if(user){

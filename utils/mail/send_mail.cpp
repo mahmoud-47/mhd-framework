@@ -54,7 +54,6 @@ void MhdSendMail::send(){
 
         const char* email_content = email_content_cpp.c_str();
         
-        
         // Setup email data structure
         EmailData email_data;
         email_data.data = email_content;
@@ -67,8 +66,8 @@ void MhdSendMail::send(){
         curl_easy_setopt(curl, CURLOPT_UPLOAD, 1L);
         
         // Authentication
-        curl_easy_setopt(curl, CURLOPT_USERNAME, SMTP_SENDER_EMAIL);
-        curl_easy_setopt(curl, CURLOPT_PASSWORD, SMTP_SENDER_PASSWORD);
+        curl_easy_setopt(curl, CURLOPT_USERNAME, SMTP_SENDER_EMAIL.c_str());
+        curl_easy_setopt(curl, CURLOPT_PASSWORD, SMTP_SENDER_PASSWORD.c_str());
         
         // Enable verbose output for debugging
         curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
