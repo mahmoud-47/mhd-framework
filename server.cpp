@@ -99,11 +99,11 @@ void handle_connection(int client_socket, Route* routes) {
     // std::cout << "Full request size: " << requestData.length() << " bytes" << std::endl;
     
     // Only print first 1000 characters for debugging (to avoid flooding console)
-    std::cout << "Requête reçue (first 1000 chars):\n" 
-              << requestData.substr(0, 1000) << std::endl;
-    if (requestData.length() > 1000) {
-        std::cout << "... (truncated, total " << requestData.length() << " bytes)" << std::endl;
-    }
+    // std::cout << "Requête reçue (first 1000 chars):\n" 
+    //           << requestData.substr(0, 1000) << std::endl;
+    // if (requestData.length() > 1000) {
+    //     std::cout << "... (truncated, total " << requestData.length() << " bytes)" << std::endl;
+    // }
 
     /**
      * SET session_id and csrf_token if not exists
@@ -113,13 +113,8 @@ void handle_connection(int client_socket, Route* routes) {
     if(session.get_value("csrf_token") == "")
         session.set_value("csrf_token", generateRandomToken());
     
-
-    std::cout << "Request Hostname " << request.getHostName() << std::endl;
-    std::cout << "Request method " << request.getMethod() << std::endl;
-    std::cout << "Request userAgent " << request.getUserAgent() << std::endl;
-    std::cout << "Request Url " << request.getUrl() << std::endl;
-    std::cout << "SMTP_SENDER_EMAIL " << SMTP_SENDER_EMAIL << std::endl;
-    std::cout << "SMTP_SENDER_PASSWORD " << SMTP_SENDER_PASSWORD << std::endl;
+    // std::cout << "SMTP_SENDER_EMAIL " << SMTP_SENDER_EMAIL << std::endl;
+    // std::cout << "SMTP_SENDER_PASSWORD " << SMTP_SENDER_PASSWORD << std::endl;
 
     std::string url = request.getUrl();
     
@@ -168,6 +163,16 @@ void handle_connection(int client_socket, Route* routes) {
                     return;
                 }
             }
+
+            MhdDateTime now;
+            std::string console_out = "\n" + now.to_date_string() + " " + now.to_time_string() + " [REQUEST LOG]\n";
+            console_out += "├─ Hostname     : " + request.getHostName() + "\n";
+            console_out += "├─ Method       : " + request.getMethod() + "\n";
+            console_out += "├─ User Agent   : " + request.getUserAgent() + "\n";
+            console_out += "└─ URL          : " + request.getUrl() + "\n\n";
+
+            std::cout << console_out;
+
 
             urlpattern->controller(request);
         } else if (request.clientWantsHtml()) {
