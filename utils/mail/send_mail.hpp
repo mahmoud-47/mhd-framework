@@ -6,9 +6,18 @@
     #include <string>
     #include "../../settings.hpp"
     #include "../render/HttpRender.hpp"
+    #include "../Exception/exception.hpp"
 
+    // Send Email class
     class MhdSendMail{
         private:
+            // string content
+            std::string content;
+            // receiver email
+            std::string receiver_email;
+            // subject
+            std::string subject;
+
             struct EmailData {
                 const char* data;
                 size_t size;
@@ -16,11 +25,18 @@
             };
 
             static size_t read_callback(char *buffer, size_t size, size_t nitems, void *userdata);
-
+            
         public:
-            MhdSendMail(const std::string& to_email, const std::string& subject);
-            void sendTextMessage(const std::string& message); // raise error 
-            void sendHtmlMessage(const std::string& template_path, Context& context); // raise error
+            // receiver email, subject of the mail
+            MhdSendMail(const std::string& receiver_email, const std::string& subject) : 
+                receiver_email(receiver_email),
+                subject(subject){}
+            // Add some text to be sent
+            void AttachTextMessage(const std::string& message); 
+            // Add Html content
+            void AttachHtmlMessage(const std::string& template_path, Context& context); 
+            // send the message or raise an MailException error if fails
+            void send(); // raise error
     };
 
 #endif

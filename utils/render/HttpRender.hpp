@@ -50,4 +50,6 @@
     // Redirect to new URL
     void redirect(const Request& request, const std::string& targetUrl, int statusCode = 302);
 
+    std::string parseHtmlCode(const std::string &html, Context& context);
+
 #endif
