@@ -51,13 +51,13 @@ void MhdSendMail::send(){
         if (content.find("MIME-Version:") != std::string::npos) {
             // HTML content with MIME headers
             email_content_cpp = "To: " + receiver_email + "\r\n"
-                "From: " + SMTP_SENDER_EMAIL + "\r\n"
+                "From: " + sender_name + " <" + SMTP_SENDER_EMAIL + ">\r\n"
                 "Subject: " + subject + "\r\n" +
                 content;  // content already includes MIME headers and body
         } else {
             // Plain text content
             email_content_cpp = "To: " + receiver_email + "\r\n"
-                "From: " + SMTP_SENDER_EMAIL + "\r\n"
+                "From: " + sender_name + " <" + SMTP_SENDER_EMAIL + ">\r\n"
                 "Subject: " + subject + "\r\n"
                 "\r\n" + content;
         }

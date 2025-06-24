@@ -2,11 +2,11 @@
 #define __MHD_USER_CONTROLLER_
 
     #include <vector>
-    #include "utils/request/Request.hpp"
-    #include "utils/render/HttpRender.hpp"
+    #include "../utils/request/Request.hpp"
+    #include "../utils/render/HttpRender.hpp"
     #include "../Models/user.hpp"
-    #include "utils/Exception/exception.hpp"
-    #include "utils/mail/send_mail.hpp"
+    #include "../utils/Exception/exception.hpp"
+    #include "../utils/mail/send_mail.hpp"
 
     class UserController{
 
@@ -16,14 +16,6 @@
                 std::string template_name = "user/register.html";
                 Context context;
                 User userQuery;
-
-                // check if user is authenticated and redirect to home page if yes
-                User* user = User::getAuthenticatedUser(request);
-                if(user != nullptr){
-                    delete user;
-                    redirect(request, "/user/home");
-                    return;
-                }
 
                 if(request.getMethod() == "POST"){
                     std::string firstname = request.getFormDataParameterByParameterName("firstname");
@@ -68,10 +60,11 @@
 
                         // Send a Thank you email
                         try{
-                            std::string receiver_email = email;
+                            std::string sender_name = "MHD++";
                             std::string subject = "Tnak you for creating an account !";
+                            std::string receiver_email = email;
                             // creating mail object
-                            MhdSendMail sender(receiver_email, subject);
+                            MhdSendMail sender(sender_name, receiver_email, subject);
                             // add context
                             Context context;
                             context["firstname"] = ContextValue(firstname);

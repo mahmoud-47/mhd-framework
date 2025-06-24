@@ -1,9 +1,10 @@
 #include <vector>
-#include "utils/URLPattern.hpp"
+#include "../utils/URLPattern.hpp"
 #include "Controllers/HelloController.hpp"
 #include "Controllers/UserController.hpp"
 #include "Controllers/ClientController.hpp"
-#include "../utils/filter/filters.hpp"
+#include "../utils/filter/filters.hpp" // Filters (AuthenticatedUsersOnly and UnAuthenticatedUsersOnly)
+#include "../utils/render/HttpRender.hpp" // NOT needed but as i wanted to render the hello page directly form here, I added it
 
 // Url format = {"name", "url/{id}", HelloController::Controller}
 URLPattern urls[] = {
@@ -25,3 +26,14 @@ URLPattern urls[] = {
     {"detail-client", "/clients/details/{id}", AuthenticatedUsersOnly(ClientController::Details, "/user/login")},
     {"delete-client", "/clients/delete/{id}", AuthenticatedUsersOnly(ClientController::Delete, "/user/login")}
 };
+
+/*
+You could call a controller without any Controller class
+
+{"hello", "/", [](Request& request){
+    std::string templatename = "hello.html";
+    Context context;
+    renderHtml(request, templatename, context);
+}}
+
+*/

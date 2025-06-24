@@ -2,9 +2,9 @@
 #define __CLIENT_Controller__
 
     
-    #include "utils/request/Request.hpp"
-    #include "utils/render/HttpRender.hpp"
-    #include "utils/functions.hpp"
+    #include "../utils/request/Request.hpp"
+    #include "../utils/render/HttpRender.hpp"
+    #include "../utils/functions.hpp"
     #include "../Models/client.hpp"
 
     class ClientController{

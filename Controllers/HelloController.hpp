@@ -2,8 +2,8 @@
 #define __Hello_Controller__
 
     
-    #include "utils/request/Request.hpp"
-    #include "utils/render/HttpRender.hpp"
+    #include "../utils/request/Request.hpp"
+    #include "../utils/render/HttpRender.hpp"
 
     class HelloController{
         public:
