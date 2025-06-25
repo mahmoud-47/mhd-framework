@@ -121,6 +121,9 @@ void handle_connection(int client_socket, Route* routes) {
                 "Content-Length: " + std::to_string(content.size()) + "\r\n"
                 "Connection: close\r\n\r\n";
 
+            std::cout << "\033[32m[STATIC]\033[0m Served \033[36m/" << relativePath
+          << "\033[0m (" << getMimeType(filePath) << ", "
+          << content.size() << " bytes)" << std::endl;
             send(client_socket, header.c_str(), header.size(), 0);
             send(client_socket, content.c_str(), content.size(), 0);
         }
@@ -146,11 +149,12 @@ void handle_connection(int client_socket, Route* routes) {
             }
 
             MhdDateTime now;
-            std::string console_out = "\n" + now.to_date_string() + " " + now.to_time_string() + " [REQUEST LOG]\n";
-            console_out += "├─ Hostname     : " + request.getHostName() + "\n";
-            console_out += "├─ Method       : " + request.getMethod() + "\n";
-            console_out += "├─ User Agent   : " + request.getUserAgent() + "\n";
-            console_out += "└─ URL          : " + request.getUrl() + "\n\n";
+            std::string console_out = "\n\033[36m" + now.to_date_string() + " " + now.to_time_string() + "\033[0m \033[33m[REQUEST LOG]\033[0m\n";
+            console_out += "├─ \033[32mHostname\033[0m     : " + request.getHostName() + "\n";
+            console_out += "├─ \033[32mMethod\033[0m       : " + request.getMethod() + "\n";
+            console_out += "├─ \033[32mUser Agent\033[0m   : " + request.getUserAgent() + "\n";
+            console_out += "└─ \033[32mURL\033[0m          : " + request.getUrl() + "\n\n";
+
 
             std::cout << console_out;
 

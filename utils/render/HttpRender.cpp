@@ -246,6 +246,11 @@ void redirect(const Request& request, const std::string& targetUrl, int statusCo
         "Content-Length: 0\r\n"
         "Connection: close\r\n\r\n";
 
+    std::cout << "\033[32m[Redirect] \033[36m" << request.getUrl()
+          << "\033[32m → \033[36m" << targetUrl
+          << "\033[32m | Status: \033[33m" << statusCode
+          << "\033[0m" << std::endl;
+          
     send(request.getSocket(), response.c_str(), response.length(), 0);
     close(request.getSocket());
 }
