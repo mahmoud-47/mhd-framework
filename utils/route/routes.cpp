@@ -17,7 +17,12 @@ void Route::addRoute(URLPattern route){
     bool found = false;
     for(URLPattern urlpattern : urls){
         if(urlpattern.url == route.url || urlpattern.name == route.name){
-            std::cerr << "*** Cannot regster two routes with the same url or name" << std::endl;
+            std::cerr << "\033[1;31m"  // Bold Red
+                << "ERROR : *** Cannot register two routes with the same url or name: "
+                << urlpattern.name
+                << "\033[0m"      // Reset formatting
+                << std::endl;
+            exit(1);
             found = true;
             break;
         }
