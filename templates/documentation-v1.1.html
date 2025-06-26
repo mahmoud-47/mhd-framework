@@ -353,6 +353,7 @@
                 <a class="nav-item" onclick="showSection('controllers')">Controllers</a>
                 <a class="nav-item" onclick="showSection('templates')">Templates</a>
                 <a class="nav-item" onclick="showSection('urls')">URL Routing</a>
+                <a class="nav-item" onclick="showSection('filter-handling')">Filters</a>
             </div>
             <div class="nav-section">
                 <div class="nav-section-title">Database</div>
@@ -372,6 +373,7 @@
                 <div class="nav-section-title">Utilities</div>
                 <a class="nav-item" onclick="showSection('datetime')">MhdDateTime</a>
                 <a class="nav-item" onclick="showSection('file-handling')">File Handling</a>
+                <a class="nav-item" onclick="showSection('email-handling')">Email Handling</a>
             </div>
         </nav>
     </aside>
@@ -495,6 +497,18 @@
 
     // MHD++ Version
     #define VERSION "1.1"
+
+    // create a .env file in the same directory and store your email and app password there the file shoul look like this
+    /*
+    SENDER_EMAIL=xyz@gmail.com
+    SENDER_PASSWORD=abcd abcd abcd abcd
+    */
+    // SMTP Server
+    const std::string SMTP_SERVER = "smtp://smtp.gmail.com:587";
+    // The sender email 
+    const std::string SMTP_SENDER_EMAIL = getenv_from_env_file("SENDER_EMAIL");
+    // The app password generated from GMAIL
+    const std::string SMTP_SENDER_PASSWORD = getenv_from_env_file("SENDER_PASSWORD");
     
 
 #endif</pre>
@@ -883,6 +897,65 @@ URLPattern urls[] = {
             </div>
         </section>
 
+        <section class="content-section" id="filter-handling">
+            <div class="section-header">
+                <h1 class="section-title">Filter Handling</h1>
+                <p class="section-description">Control access to routes with authentication filters</p>
+            </div>
+
+            <div class="info-card">
+                <h3>MhdFilter Functions</h3>
+                <p>Wrap controllers with authentication checks to control access to routes based on user authentication status.</p>
+            </div>
+
+            <div class="info-card">
+                <h3>Filter Functions</h3>
+                <div class="method-signature">AuthenticatedUsersOnly(functionController, login_url) -> function</div>
+                <p>Wrap controller to allow only authenticated users, redirects to login if not authenticated</p>
+
+                <div class="method-signature">UnAuthenticatedUsersOnly(functionController, home_url) -> function</div>
+                <p>Wrap controller to allow only unauthenticated users, redirects to home if already authenticated</p>
+            </div>
+
+            <div class="code-block">
+                <span class="code-language">C++</span>
+                <pre>// URL patterns with authentication filters
+URLPattern urls[] = {
+    // Public routes (no filtering)
+    {"hello", "/", HelloController::Hello},
+    {"documentation", "/documentation", HelloController::Documentation},
+
+    // Authentication routes (unauthenticated users only)
+    {"register", "/user/register", UnAuthenticatedUsersOnly(UserController::register_user, "/clients/all")},
+    {"login", "/user/login", UnAuthenticatedUsersOnly(UserController::login, "/clients/all")},
+    
+    // Logout route (authenticated users only)
+    {"logout", "/user/logout", AuthenticatedUsersOnly(UserController::logout_user, "/user/login")},
+
+    // Protected routes (authenticated users only)
+    {"display-all", "/clients/all", AuthenticatedUsersOnly(ClientController::DisplayAll, "/user/login")},
+    {"create-client", "/clients/create", AuthenticatedUsersOnly(ClientController::Create, "/user/login")},
+    {"edit-client", "/clients/edit/{id}", AuthenticatedUsersOnly(ClientController::Update, "/user/login")},
+    {"detail-client", "/clients/details/{id}", AuthenticatedUsersOnly(ClientController::Details, "/user/login")},
+    {"delete-client", "/clients/delete/{id}", AuthenticatedUsersOnly(ClientController::Delete, "/user/login")}
+};
+
+// Custom redirect URLs
+std::function<void(Request&)> protectedRoute = AuthenticatedUsersOnly(MyController::SecretPage, "/custom/login");
+std::function<void(Request&)> guestRoute = UnAuthenticatedUsersOnly(MyController::WelcomePage, "/dashboard");</pre>
+            </div>
+
+            <div class="info-card">
+                <h3>How It Works</h3>
+                <p><strong>AuthenticatedUsersOnly:</strong> Checks if user is logged in using User::getAuthenticatedUser(). If not authenticated, redirects to login URL (default: "/login").</p>
+                <p><strong>UnAuthenticatedUsersOnly:</strong> Ensures only non-logged-in users can access the route. If user is authenticated, redirects to home URL (default: "/home").</p>
+            </div>
+
+            <div class="warning-box">
+                <strong>Note:</strong> Filters require the User model with getAuthenticatedUser() method. Memory is automatically managed by the filter functions. Always specify appropriate redirect URLs for your application flow.
+            </div>
+        </section>
+
         <!-- Migrations Section -->
         <section class="content-section" id="migrations">
             <div class="section-header">
@@ -1179,12 +1252,12 @@ static void UserList(Request request) {
         <section class="content-section" id="sessions">
             <div class="section-header">
                 <h1 class="section-title">Sessions</h1>
-                <p class="section-description">Manage user sessions and persistent data</p>
+                <p class="section-description">Manage user sessions with encrypted data storage using Monocypher</p>
             </div>
 
             <div class="info-card">
                 <h3>Session Management</h3>
-                <p>The Session class provides server-side session storage with automatic session ID generation.</p>
+                <p>The Session class provides server-side session storage with automatic session ID generation and encrypted data using Monocypher for security.</p>
             </div>
 
             <div class="code-block">
@@ -1196,31 +1269,52 @@ static void MyController(Request request) {
     // Create or get existing session
     Session session(request);
     
-    // Get session value (returns "" if not found)
-    std::string username = session.get_value<std::string>("username");
+    // Get session values with type specification
+    std::string username = session.get_value&lt;spstd::string&gt;("username");
+    int user_id = session.get_value&lt;int&gt;("user_id");
+    bool is_admin = session.get_value&lt;bool&gt;("is_admin");
     
-    // Set session value
+    // Set session values (automatically encrypted)
     session.set_value("username", "john_doe");
-    session.set_value("user_id", "123");
+    session.set_value("user_id", 123);
+    session.set_value("is_admin", true);
+    session.set_value("login_time", "2024-01-15 10:30:00");
     
     // Remove session key
     session.remove_key("temp_data");
+    
+    // Get session ID
+    std::string sessionId = session.get_session_id();
 }</pre>
             </div>
 
             <div class="info-card">
                 <h3>Session Methods</h3>
                 <div class="method-signature">Session(request)</div>
-                <p>Constructor - creates or retrieves session</p>
+                <p>Constructor - creates or retrieves session with encrypted storage</p>
 
-                <div class="method-signature">get_value(key) -> string</div>
-                <p>Get session value, returns empty string if not found</p>
+                <div class="method-signature">get_value&lt;T&gt;(key) -> T</div>
+                <p>Get session value with type specification, automatically decrypts data</p>
 
-                <div class="method-signature">set_value(key, value) -> void</div>
-                <p>Set session value and update database</p>
+                <div class="method-signature">set_value&lt;T&gt;(key, value) -> void</div>
+                <p>Set session value with automatic encryption and database update</p>
 
                 <div class="method-signature">remove_key(key) -> void</div>
                 <p>Remove key from session if exists</p>
+
+                <div class="method-signature">get_session_id() -> string</div>
+                <p>Get the current session ID</p>
+            </div>
+
+            <div class="info-card">
+                <h3>Supported Types</h3>
+                <p>The template-based session system supports various data types including:</p>
+                <p><strong>Basic types:</strong> std::string, int, bool, double, float</p>
+                <p><strong>Security:</strong> All session data is automatically encrypted using Monocypher before storage</p>
+            </div>
+
+            <div class="warning-box">
+                <strong>Note:</strong> Session data is encrypted using Monocypher for enhanced security. Always specify the correct type when retrieving values using get_value&lt;T&gt;().
             </div>
         </section>
 
@@ -1491,6 +1585,101 @@ bool removed = MhdFile::remove_uploaded_file("/avatars/old_avatar.jpg");</pre>
                 <strong>Note:</strong> File paths are relative to <code>UPLOADS_DIR</code> defined in settings.hpp. Always start paths with <code>/</code>.
             </div>
         </section>
+
+        <section class="content-section" id="email-handling">
+            <div class="section-header">
+                <h1 class="section-title">Email Handling</h1>
+                <p class="section-description">Send emails with plain text or HTML templates in your application</p>
+            </div>
+
+            <div class="info-card">
+                <h3>MhdSendMail Class</h3>
+                <p>Handle email sending with support for both plain text and HTML template messages.</p>
+            </div>
+
+            <div class="info-card">
+                <h3>Email Methods</h3>
+                <div class="method-signature">MhdSendMail(sender_name, receiver_email, subject)</div>
+                <p>Constructor to initialize email with sender name, recipient email, and subject</p>
+
+                <div class="method-signature">AttachTextMessage(message) -> void</div>
+                <p>Attach plain text message to email body</p>
+
+                <div class="method-signature">AttachHtmlMessage(template_path, context) -> void</div>
+                <p>Attach HTML content using template file and context variables</p>
+
+                <div class="method-signature">send() -> void</div>
+                <p>Send the constructed email (throws MailException on failure)</p>
+            </div>
+
+            <div class="code-block">
+                <span class="code-language">C++</span>
+                <pre>// Email sending example in controller
+static void WelcomeController(Request request) {
+    Context context;
+    
+    if(request.getMethod() == "POST") {
+        std::string email = request.getPostValue("email");
+        std::string firstname = request.getPostValue("firstname");
+        std::string lastname = request.getPostValue("lastname");
+        
+        try {
+            // Create email object
+            std::string sender_name = "MHD++";
+            std::string subject = "Thank you for creating an account!";
+            std::string receiver_email = email;
+            
+            MhdSendMail sender(sender_name, receiver_email, subject);
+            
+            // Add context for template
+            Context context;
+            context["firstname"] = ContextValue(firstname);
+            context["lastname"] = ContextValue(lastname);
+            
+            // Attach HTML template
+            sender.AttachHtmlMessage("mail/thankyou.html", context);
+            
+            // Send email
+            sender.send();
+            
+            context["success"] = ContextValue("Email sent successfully");
+            
+        } catch(MailException e) {
+            std::cout << "Failed to send email: " << e.getMessage() << std::endl;
+            context["error"] = ContextValue("Failed to send email");
+        }
+    }
+    
+    renderHtml(request, "welcome.html", context);
+}
+
+// Plain text email example
+MhdSendMail textMail("Company Name", "user@example.com", "Welcome Message");
+textMail.AttachTextMessage("Welcome to our service! Thank you for joining us.");
+textMail.send();</pre>
+            </div>
+
+            <div class="info-card">
+                <h3>SMTP Configuration</h3>
+                <p>Configure your email credentials in settings.hpp:</p>
+                <div class="code-block">
+                    <span class="code-language">C++</span>
+                    <pre>// Create a .env file in the same directory and store your email and app password
+/*
+SENDER_EMAIL=xyz@gmail.com
+SENDER_PASSWORD=abcd abcd abcd abcd
+*/
+const std::string SMTP_SERVER = "smtp://smtp.gmail.com:587";
+const std::string SMTP_SENDER_EMAIL = getenv_from_env_file("SENDER_EMAIL");
+const std::string SMTP_SENDER_PASSWORD = getenv_from_env_file("SENDER_PASSWORD");</pre>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <strong>Note:</strong> Create a .env file with SENDER_EMAIL and SENDER_PASSWORD. Template paths are relative to the templates directory. Always handle MailException when sending emails.
+            </div>
+        </section>
+
     </main>
 
     <script>
