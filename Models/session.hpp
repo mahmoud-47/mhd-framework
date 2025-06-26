@@ -7,24 +7,24 @@ class SessionTable : public SQLiteORM {
 public:
     int id;
     std::string session_id;
-    std::string value;
+    std::string content;
 
     void registerFields(){
         fields.clear();
 
         fields.push_back({"id", "INTEGER", &id, "PRIMARY KEY"});
         fields.push_back({"session_id", "TEXT", &session_id, "UNIQUE"});
-        fields.push_back({"value", "TEXT", &value, ""});
+        fields.push_back({"content", "TEXT", &content, ""});
     }
 
     SessionTable() : SQLiteORM("sessions") {
         registerFields();
     };
 
-    SessionTable(int id, const std::string& session_id, const std::string& value) : SQLiteORM("sessions") {
+    SessionTable(int id, const std::string& session_id, const std::string& content) : SQLiteORM("sessions") {
         this->id = id;
         this->session_id = session_id;
-        this->value = value;
+        this->content = content;
         registerFields();
     }
 
@@ -32,7 +32,7 @@ public:
     SessionTable(const SessionTable& other) : SQLiteORM(other), 
                             id(other.id),
                             session_id(other.session_id),
-                            value(other.value) {
+                            content(other.content) {
         registerFields();  // This updates the pointers to our new members
     }
 

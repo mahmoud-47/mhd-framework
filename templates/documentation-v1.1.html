@@ -1197,7 +1197,7 @@ static void MyController(Request request) {
     Session session(request);
     
     // Get session value (returns "" if not found)
-    std::string username = session.get_value("username");
+    std::string username = session.get_value<std::string>("username");
     
     // Set session value
     session.set_value("username", "john_doe");

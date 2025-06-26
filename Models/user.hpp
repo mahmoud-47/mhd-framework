@@ -134,10 +134,10 @@ public:
     // get Authenticated User pointer or null if not authenticated
     static User* getAuthenticatedUser(Request &request){
         Session session(request);
-        if(session.get_value("user_id") != ""){
+        if(session.get_value<std::string>("user_id") != ""){
             // check if user with user_id exists and return its pointer
             User userQuery;
-            User* user = static_cast<User*>(userQuery.find_by_id(session.get_value("user_id")));
+            User* user = static_cast<User*>(userQuery.find_by_id(session.get_value<std::string>("user_id")));
             return user; // returns null if user is null
         }
         return nullptr;

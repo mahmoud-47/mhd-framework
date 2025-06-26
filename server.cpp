@@ -91,7 +91,7 @@ void handle_connection(int client_socket, Route* routes) {
      */
     Request request(requestData);
     Session session(request);
-    if(session.get_value("csrf_token") == "")
+    if(session.get_value<std::string>("csrf_token") == "")
         session.set_value("csrf_token", generateRandomToken());
     
     // std::cout << "SMTP_SENDER_EMAIL " << SMTP_SENDER_EMAIL << std::endl;
@@ -140,7 +140,7 @@ void handle_connection(int client_socket, Route* routes) {
             // check if the csrf_token is correct before calling any controller in case this bro is posting
             if (request.getMethod() == "POST" || request.getMethod() == "PUT" || request.getMethod() == "DELETE") {
                 std::string submitted = request.getFormDataParameterByParameterName("csrf_token");
-                std::string expected = session.get_value("csrf_token");
+                std::string expected = session.get_value<std::string>("csrf_token");
 
                 if (submitted.empty() || submitted != expected) {
                     renderText(request, "CSRF token is missing or invalid");

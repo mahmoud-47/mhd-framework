@@ -184,7 +184,7 @@ std::string parseHtmlCode(const std::string &html, Context& context) {
 void renderHtml(Request &request, const std::string& filepath, Context& context) {
     // Add csrf_token to the contex
     Session session(request);
-    context["csrf_token"] = ContextValue(session.get_value("csrf_token"));
+    context["csrf_token"] = ContextValue(session.get_value<std::string>("csrf_token"));
 
     std::string html = readHtmlFile(filepath);
     std::string rendered = parseHtmlCode(html, context);

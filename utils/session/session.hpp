@@ -1,30 +1,54 @@
 #ifndef __MHD_SESSION__
 #define __MHD_SESSION__
-    #include <string>
-    // #include "../request/Request.hpp"
-    // forward declaration to avoid circular includes coz request too includes session
-    class Request;
 
-    // Session class 
-    class Session{
-        private:
-            // session id
-            std::string session_id;
-            // serialized data (key=val;key=val)
-            std::string content;
-            // Helper function to generate a session_id
-            std::string generateSessionID(size_t length = 32);
-            // Generate unique 
-            std::string generateUniqueSessionID();
-        public:
-            // Session constructor
-            Session(Request& request);
-            // Get the value of a key, returns "" if not found
-            std::string get_value(const std::string key); // looks into the content to get the value or returns ""
-            // Set value (key, value)
-            void set_value(const std::string key, const std::string value); // updates the database 
-            // remove key if exists
-            void remove_key(const std::string& key);
-    };
+#include <string>
+#include <random>
+#include "../nlohmann_json/json.hpp"
+
+class Request;
+class SessionTable;
+
+using Json = nlohmann::json;
+
+class Session {
+private:
+    std::string session_id;
+    Json content;
+
+    std::string generateSessionID(size_t length = 32);
+    std::string generateUniqueSessionID();
+    void updateDatabase();
+
+public:
+    Session(Request& request);
+
+    template<typename T>
+    T get_value(const std::string& key) const;
+
+    template<typename T>
+    void set_value(const std::string& key, const T& value);
+
+    void remove_key(const std::string& key);
+    const std::string& get_session_id() const { return session_id; }
+};
+
+// Template definitions
+template<typename T>
+T Session::get_value(const std::string& key) const {
+    if (content.contains(key)) {
+        try {
+            return content.at(key).get<T>();
+        } catch (...) {
+            return T{};
+        }
+    }
+    return T{};
+}
+
+template<typename T>
+void Session::set_value(const std::string& key, const T& value) {
+    content[key] = value;
+    updateDatabase();
+}
 
 #endif
