@@ -4,6 +4,7 @@
 #include <string>
 #include <random>
 #include "../nlohmann_json/json.hpp"
+#include "../crypto/use_monocypher.hpp"
 
 class Request;
 class SessionTable;

@@ -13,11 +13,14 @@ Session::Session(Request& request) {
             content = Json::object();
         } else {
             session_id = static_cast<SessionTable*>(session_query[0])->session_id;
-            std::string stored_value = static_cast<SessionTable*>(session_query[0])->content;
+            std::string stored_base64 = static_cast<SessionTable*>(session_query[0])->content;
+
             try {
-                content = Json::parse(stored_value);
+                std::string encrypted = base64::decode(stored_base64);
+                std::string decrypted = decrypt_message(encrypted, SECRET_KEY);
+                content = Json::parse(decrypted);
             } catch (...) {
-                content = Json::object();
+                content = Json::object(); // fallback to empty
             }
         }
     } else {
@@ -31,9 +34,15 @@ Session::Session(Request& request) {
 void Session::updateDatabase() {
     SessionTable sessionQuery;
     auto session_query = sessionQuery.find_by("session_id", session_id);
+
     if (!session_query.empty()) {
         int id = static_cast<SessionTable*>(session_query[0])->id;
-        static_cast<SessionTable*>(session_query[0])->content = content.dump();
+
+        std::string json_str = content.dump();
+        std::string encrypted = crypt_message(json_str, SECRET_KEY);
+        std::string base64_encoded = base64::encode(std::string(encrypted.data(), encrypted.size()));
+
+        static_cast<SessionTable*>(session_query[0])->content = base64_encoded;
         static_cast<SessionTable*>(session_query[0])->update(std::to_string(id));
     }
 }
@@ -64,7 +73,12 @@ std::string Session::generateUniqueSessionID() {
         std::string new_id = generateSessionID();
         auto result = sessionQuery.find_by("session_id", new_id);
         if (result.empty()) {
-            SessionTable session(0, new_id, "{}");
+            Json initial_content = Json::object();
+            std::string json_str = initial_content.dump();
+            std::string encrypted = crypt_message(json_str, SECRET_KEY);
+            std::string base64_encoded = base64::encode(std::string(encrypted.data(), encrypted.size()));
+
+            SessionTable session(0, new_id, base64_encoded);
             session.save();
             return new_id;
         }
