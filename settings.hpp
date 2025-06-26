@@ -8,6 +8,9 @@
     #include "utils/current_path/current_path.hpp"
     #include "utils/load_env/load_env.hpp"
 
+    // Secret key (generated with openssl rand -hex 32)
+    const std::string SECRET_KEY = "cbf843449b0b0a2c98963206d83a232aae8aa32977844f74486c9e2a76248e96";
+
     // Port
     #define PORT 8001
 
