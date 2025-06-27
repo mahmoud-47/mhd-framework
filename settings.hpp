@@ -9,6 +9,8 @@
     #include "utils/load_env/load_env.hpp"
 
     // Secret key (generated with openssl rand -hex 32)
+    // We advice you to generate a new secret key by running the linux command "openssl rand -hex 32"
+    // it's even better to save it in the .env file and load it after
     const std::string SECRET_KEY = "cbf843449b0b0a2c98963206d83a232aae8aa32977844f74486c9e2a76248e96";
 
     // Port

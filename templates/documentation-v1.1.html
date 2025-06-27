@@ -417,21 +417,30 @@
             <div class="code-block">
                 <span class="code-language">Directory Structure</span>
                 <pre>.
-├── CMakeLists.txt          # Build configuration
-├── Controllers/            # Application controllers
-├── Models/                 # Database models
-│   └── Migration/         # Migration files
-├── database/              # SQLite database files
-├── server.cpp             # Main server entry point
-├── settings.hpp           # Application settings
-├── templates/             # HTML templates
+├── CMakeLists.txt        # Build configuration
+├── Controllers/          # Application controllers
+├── Models/               # Database models
+│   └── Migration/        # Migration files
+├── database/             # SQLite database files
+├── generate-model.sh     # Script to generate a new model, read the doc about the models
+├── server.cpp            # Main server entry point
+├── settings.hpp          # Application settings
+├── templates/            # HTML templates
 │   └── static/           # Static assets (CSS, JS, uploads)
-├── urls/                  # URL routing configuration
-└── utils/                 # Framework utilities
+├── urls/                 # URL routing configuration
+└── utils/                # Framework utilities
+    ├── Exception/        # Implementation of the different exceptions 
     ├── ORM/              # Object-Relational Mapping
     ├── render/           # Template rendering
+    ├── mail/             # MhdSendMail Implement
+    ├── file/             # MhdFile implementation
+    ├── filter/           # AuthenticatedUsersOnly and UnAuthenticatedUsersOnly implementation
+    ├── nice-display/     # banner MHD++   
+    ├── nlohmann_json/    # imported Json library from nlohmann     
+    ├── load_env/         # .env read values implementation
     ├── request/          # HTTP request handling
     └── session/          # Session management</pre>
+
             </div>
 
             <div class="info-card">
@@ -468,6 +477,12 @@
      */
 
     #include "utils/current_path/current_path.hpp"
+    #include "utils/load_env/load_env.hpp"
+
+    // Secret key (generated with openssl rand -hex 32)
+    // We advice you to generate a new secret key by running the linux command "openssl rand -hex 32"
+    // it's even better to save it in the .env file and load it after
+    const std::string SECRET_KEY = "**************************************************";
 
     // Port
     #define PORT 8001
